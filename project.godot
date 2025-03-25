@@ -13,3 +13,7 @@ config_version=5
 config/name="MathFighters"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
+
+[dotnet]
+
+project/assembly_name="MathFighters"
