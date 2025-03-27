@@ -1,7 +1,8 @@
-[gd_scene load_steps=41 format=3 uid="uid://cwsiati3qwbjm"]
+[gd_scene load_steps=42 format=3 uid="uid://cwsiati3qwbjm"]
 
 [ext_resource type="Script" uid="uid://bw6xbksjs0cor" path="res://scripts/player/player_movement.cs" id="1_g2els"]
 [ext_resource type="Texture2D" uid="uid://dpa77ql2ufyip" path="res://assets/player/placeholder.png" id="2_qhqgy"]
+[ext_resource type="PackedScene" uid="uid://bj82mtpgl5c0b" path="res://scenes/bullet.tscn" id="3_qhqgy"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_dqkch"]
 size = Vector2(32, 51)
@@ -302,13 +303,15 @@ animations = [{
 }]
 
 [node name="Player" type="CharacterBody2D"]
+collision_mask = 2
 script = ExtResource("1_g2els")
+BulletScene = ExtResource("3_qhqgy")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(456, 242.5)
+position = Vector2(0, 0.5)
 shape = SubResource("RectangleShape2D_dqkch")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
-position = Vector2(456, 236)
+position = Vector2(0, -6)
 sprite_frames = SubResource("SpriteFrames_qlg0r")
 animation = &"walk_down"
