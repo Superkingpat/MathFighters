@@ -5,6 +5,7 @@ public partial class player_movement : CharacterBody2D {
 	[Export] public float Speed = 200.0f;
 	private AnimatedSprite2D animatedSprite;
 	private int lastDir = 0;
+	[Export] public PackedScene BulletScene;
 
 	public override void _Ready() {
 		animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
@@ -37,6 +38,10 @@ public partial class player_movement : CharacterBody2D {
 
 		Velocity = velocity;
 		MoveAndSlide();
+
+		if(Input.IsActionJustPressed("attack")) {
+			Shoot();
+		}
 	}
 
 	private void UpdateAnimation(Vector2 velocity) {
@@ -62,5 +67,16 @@ public partial class player_movement : CharacterBody2D {
 			animatedSprite.Play("still_right");
 		} 
 
+	}
+
+	private void Shoot() {
+		if (BulletScene == null) {
+			return;
+		}
+
+		Bullet bullet = (Bullet)BulletScene.Instantiate();
+		GetTree().CurrentScene.AddChild(bullet);
+
+		bullet.Init(GetGlobalMousePosition(), GlobalPosition);
 	}
 }
