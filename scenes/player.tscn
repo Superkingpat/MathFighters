@@ -1,6 +1,6 @@
 [gd_scene load_steps=42 format=3 uid="uid://cwsiati3qwbjm"]
 
-[ext_resource type="Script" uid="uid://bw6xbksjs0cor" path="res://scripts/player/player_movement.cs" id="1_g2els"]
+[ext_resource type="Script" uid="uid://bw6xbksjs0cor" path="res://scripts/player/Player.cs" id="1_g2els"]
 [ext_resource type="Texture2D" uid="uid://dpa77ql2ufyip" path="res://assets/player/placeholder.png" id="2_qhqgy"]
 [ext_resource type="PackedScene" uid="uid://bj82mtpgl5c0b" path="res://scenes/bullet.tscn" id="3_qhqgy"]
 

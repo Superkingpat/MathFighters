@@ -1,19 +1,26 @@
 using Godot;
 using System;
 
-public partial class player_movement : CharacterBody2D {
+//This is the player class.
+public partial class Player : CharacterBody2D {
+	//Export makes it so we can interact with the variable in the Godot UI
 	[Export] public float Speed = 200.0f;
+	[Export] public PackedScene BulletScene;
 	private AnimatedSprite2D animatedSprite;
 	private int lastDir = 0;
-	[Export] public PackedScene BulletScene;
 
+	//With GetNode we get the instance of the AnimatedSprite2D that was addet in the Godot UI
+	//_Ready is called when the root node (Player) entered the scene
 	public override void _Ready() {
+		//The AnimatedSprite2D handles animations
 		animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
 	}
 
+	//_PhysicsProcess updates the physics engine and animations in the background. MoveAndSlide() is used here, which means we don't need to care about delta time, it's handled automaticly
 	public override void _PhysicsProcess(double delta) {
 		Vector2 velocity = Vector2.Zero;
 
+		//All Input.IsActionPressed are bound in the Godot UI under Project > Project Settings > Input Map
 		if (Input.IsActionPressed("move_up")) {
 			velocity.Y -= 1;
 			lastDir = 0;
@@ -44,6 +51,7 @@ public partial class player_movement : CharacterBody2D {
 		}
 	}
 
+	//UpdateAnimation and PlayIdleAnimation handle the animations. Since AnimatedSprite2D::Play() is used here the animation speed is taken care of automaticly by Godot
 	private void UpdateAnimation(Vector2 velocity) {
 		if (velocity.Y < 0) {
 			animatedSprite.Play("walk_up");
@@ -69,6 +77,8 @@ public partial class player_movement : CharacterBody2D {
 
 	}
 
+	//If a scene is bound to the external BulletScene variable we create a new instance of Bullet,
+	//position it at the player characters position and send it in the direction of the mouse cursor
 	private void Shoot() {
 		if (BulletScene == null) {
 			return;
