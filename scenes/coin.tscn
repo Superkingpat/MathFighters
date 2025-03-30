@@ -172,7 +172,7 @@ frame_progress = 0.277817
 
 [node name="Pick Up Sound" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("3_11l1o")
-bus = &"Music"
+bus = &"SFX PickUp"
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
