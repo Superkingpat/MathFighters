@@ -324,3 +324,5 @@ drag_left_margin = 0.3
 drag_top_margin = 0.3
 drag_right_margin = 0.3
 drag_bottom_margin = 0.3
+
+[node name="AudioListener2D" type="AudioListener2D" parent="."]

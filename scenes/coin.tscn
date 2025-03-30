@@ -1,7 +1,7 @@
 [gd_scene load_steps=11 format=3 uid="uid://4a01lenfjwco"]
 
 [ext_resource type="Script" uid="uid://voeje6sotbkq" path="res://scripts/Coin.cs" id="1_i64fm"]
-[ext_resource type="Texture2D" uid="uid://cc2doy8644emo" path="res://assets/coins.png" id="1_rwqht"]
+[ext_resource type="Texture2D" uid="uid://cc2doy8644emo" path="res://assets/player/coin/coins.png" id="1_rwqht"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_i64fm"]
 radius = 9.0
@@ -69,3 +69,5 @@ scale = Vector2(0.45, 0.45)
 sprite_frames = SubResource("SpriteFrames_kfxoj")
 autoplay = "default"
 frame_progress = 0.277817
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
