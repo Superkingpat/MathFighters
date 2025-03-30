@@ -6,13 +6,14 @@ public partial class Bullet : CharacterBody2D {
 	//Speed is an external function that we can change in the Godot UI
 	[Export] public float Speed = 500.0f;
 	private Vector2 direction;
-
+	private CollisionShape2D collisionShape;
 	//_Ready is called when the root node (Bullet) entered the scene
 	//VisibleOnScreenNotifier2D has multiple functionalities that tell us if an object is on the screen
 	//All actions(functions) in notifier.ScreenExited are executed when the object has exited the screen
 	public override void _Ready() {
 		VisibleOnScreenNotifier2D notifier = GetNode<VisibleOnScreenNotifier2D>("VisibleOnScreenNotifier2D");
 		notifier.ScreenExited += OnScreenExited;
+		collisionShape = GetNode<CollisionShape2D>("CollisionShape2D");
 	}
 
 	//Its an initialization function. I think it's obvious what it does
