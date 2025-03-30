@@ -1,9 +1,9 @@
 [gd_scene load_steps=16 format=3 uid="uid://4a01lenfjwco"]
 
 [ext_resource type="Script" uid="uid://voeje6sotbkq" path="res://scripts/Coin.cs" id="1_i64fm"]
-[ext_resource type="Texture2D" uid="uid://cc2doy8644emo" path="res://assets/player/coin/coins.png" id="1_rwqht"]
-[ext_resource type="AudioStream" uid="uid://cd44h1objupa6" path="res://assets/player/coin/pickup.wav" id="3_11l1o"]
-[ext_resource type="AudioStream" uid="uid://dhcaxv72hdj6w" path="res://assets/player/coin/shiny.mp3" id="4_d14el"]
+[ext_resource type="Texture2D" uid="uid://cc2doy8644emo" path="res://assets/coin/coins.png" id="1_rwqht"]
+[ext_resource type="AudioStream" uid="uid://cd44h1objupa6" path="res://assets/coin/pickup.wav" id="3_11l1o"]
+[ext_resource type="AudioStream" uid="uid://dhcaxv72hdj6w" path="res://assets/coin/shiny.mp3" id="4_d14el"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_i64fm"]
 radius = 9.0
@@ -58,6 +58,45 @@ animations = [{
 "speed": 8.0
 }]
 
+[sub_resource type="Animation" id="Animation_d14el"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AnimatedSprite2D:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("CollisionShape2D:disabled")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Pick Up Sound:playing")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
 [sub_resource type="Animation" id="Animation_11l1o"]
 resource_name = "pickup"
 tracks/0/type = "value"
@@ -109,45 +148,6 @@ tracks/3/keys = {
 "args": [],
 "method": &"queue_free"
 }]
-}
-
-[sub_resource type="Animation" id="Animation_d14el"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("AnimatedSprite2D:visible")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [true]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("CollisionShape2D:disabled")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [false]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Pick Up Sound:playing")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [false]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_1ikuy"]

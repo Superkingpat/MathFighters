@@ -4,9 +4,6 @@
 [ext_resource type="Texture2D" uid="uid://dpa77ql2ufyip" path="res://assets/player/placeholder.png" id="2_qhqgy"]
 [ext_resource type="PackedScene" uid="uid://bj82mtpgl5c0b" path="res://scenes/bullet.tscn" id="3_qhqgy"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_dqkch"]
-size = Vector2(32, 51)
-
 [sub_resource type="AtlasTexture" id="AtlasTexture_gawm5"]
 atlas = ExtResource("2_qhqgy")
 region = Rect2(0, 128, 64, 64)
@@ -302,17 +299,15 @@ animations = [{
 "speed": 10.0
 }]
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_dqkch"]
+size = Vector2(21, 33)
+
 [node name="Player" type="CharacterBody2D"]
 collision_mask = 10
 script = ExtResource("1_g2els")
 BulletScene = ExtResource("3_qhqgy")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, 0.5)
-shape = SubResource("RectangleShape2D_dqkch")
-
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
-position = Vector2(0, -6)
 sprite_frames = SubResource("SpriteFrames_qlg0r")
 animation = &"walk_down"
 
@@ -324,6 +319,10 @@ drag_left_margin = 0.3
 drag_top_margin = 0.3
 drag_right_margin = 0.3
 drag_bottom_margin = 0.3
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 8)
+shape = SubResource("RectangleShape2D_dqkch")
 
 [node name="AudioListener2D" type="AudioListener2D" parent="."]
 current = true

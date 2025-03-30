@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://kwc4xv0uhu8p"]
+
+[node name="UI" type="CanvasLayer"]
+
+[node name="Label" type="Label" parent="."]
+offset_right = 114.0
+offset_bottom = 27.0
+text = "COLLECTED COINS: 0"
