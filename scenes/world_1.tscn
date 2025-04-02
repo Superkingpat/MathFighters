@@ -1,7 +1,12 @@
-[gd_scene load_steps=2 format=3 uid="uid://bboxj5sqye13t"]
+[gd_scene load_steps=4 format=3 uid="uid://bboxj5sqye13t"]
 
 [ext_resource type="PackedScene" uid="uid://cwsiati3qwbjm" path="res://scenes/player.tscn" id="1_5lqpt"]
+[ext_resource type="PackedScene" uid="uid://bahy7o2atmv8f" path="res://scenes/spawn_chunk.tscn" id="1_gawm5"]
+[ext_resource type="Script" uid="uid://22bsow8glsim" path="res://scripts/world/ChunkManager.cs" id="3_4eyuj"]
 
 [node name="World_1" type="Node2D"]
+script = ExtResource("3_4eyuj")
+
+[node name="SpawnChunk" parent="." instance=ExtResource("1_gawm5")]
 
 [node name="Player" parent="." instance=ExtResource("1_5lqpt")]

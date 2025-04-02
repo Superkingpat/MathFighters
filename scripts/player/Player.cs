@@ -8,6 +8,9 @@ public partial class Player : CharacterBody2D {
 	[Export] public PackedScene BulletScene;
 	private AnimatedSprite2D animatedSprite;
 	private int lastDir = 0;
+	
+	private Area2D screenBounds;
+	
 
 	//With GetNode we get the instance of the AnimatedSprite2D that was addet in the Godot UI
 	//_Ready is called when the root node (Player) entered the scene
