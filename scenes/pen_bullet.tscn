@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=3 uid="uid://c2or35lepdbge"]
+
+[ext_resource type="Texture2D" uid="uid://5pb2vaxfohvm" path="res://assets/weapons/basic weapon/bullet.png" id="1_525rl"]
+[ext_resource type="Script" uid="uid://csd6c13nqtbgh" path="res://scripts/weapons/pen/PenBullet.cs" id="1_ai43t"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ai43t"]
+radius = 6.0
+
+[node name="PenBullet" type="CharacterBody2D"]
+collision_layer = 4
+collision_mask = 2
+script = ExtResource("1_ai43t")
+ExpandScale = 10.0
+Speed = 250.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_ai43t")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.015, 0.015)
+texture = ExtResource("1_525rl")
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]

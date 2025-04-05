@@ -1,0 +1,41 @@
+using Godot;
+using System;
+
+public partial class Pen : Weapon {
+	[Export] public int PelletCount = 6;
+	[Export] public float SpreadAngleDegrees = 15f;
+	[Export] new public float FireCooldown = 1.0f;
+	[Export] new public PackedScene ProjectileScene;
+	[Export] new public string AttackAnimation = "attack_pen";
+
+	private float timeSinceLastShot = 0f;
+
+	public override void _Process(double delta) {
+		timeSinceLastShot += (float)delta;
+	}
+
+	public override Sprite2D GetPickupSprite() {
+		return GetNode<Sprite2D>("Sprite2D");
+	}
+
+	public override void TryShoot(Vector2 targetPosition, Vector2 shooterPosition) {
+		if (timeSinceLastShot < FireCooldown) return;
+		timeSinceLastShot = 0f;
+
+		Vector2 baseDirection = (targetPosition - shooterPosition).Normalized();
+		float baseAngle = baseDirection.Angle();
+
+		for (int i = 0; i < PelletCount; i++) {
+			float spread = (float)GD.RandRange(-SpreadAngleDegrees / 2, SpreadAngleDegrees / 2);
+			float angle = baseAngle + Mathf.DegToRad(spread);
+
+			Vector2 spreadDirection = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+
+			if (ProjectileScene != null) {
+				Bullet pellet = (Bullet)ProjectileScene.Instantiate();
+				GetTree().CurrentScene.AddChild(pellet);
+				pellet.Init(shooterPosition + spreadDirection * 8, shooterPosition);
+			}
+		}
+	}
+}
