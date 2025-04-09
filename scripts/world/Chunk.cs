@@ -45,6 +45,12 @@ public partial class Chunk : Node2D
 				//GD.Print("in chunk");
 				HandlePlayerInChunk();
 			}
+			if (!IsChunkNearPlayer())
+			{
+				_list.Remove(this);
+				QueueFree(); //odstrani chunk iz scene
+				GD.Print("Deleted chunk...");
+			}
 		}
 	}
 	
@@ -89,5 +95,17 @@ public partial class Chunk : Node2D
 		GD.Print("4");
 	}
 	
+	private bool IsChunkNearPlayer()
+	{
+		Vector2 playerPos = Player.GlobalPosition;
+		Vector2 playerChunk = new Vector2(
+			Mathf.Floor(playerPos.X / ChunkSize.X), Mathf.Floor(playerPos.Y / ChunkSize.Y)
+		);
+		Vector2 thisChunk = new Vector2(
+			Mathf.Floor(ChunkPosition.X / ChunkSize.X),
+			Mathf.Floor(ChunkPosition.Y / ChunkSize.Y)
+		);
+		return (thisChunk - playerChunk).Length() <= 2;
+	}
 	
 }
