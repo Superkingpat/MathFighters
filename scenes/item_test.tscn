@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://dct0xdxad38si"]
+[gd_scene load_steps=0 format=3 uid="uid://dct0xdxad38si"]
 
 [node name="ItemTest" type="Node2D"]
 
