@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 public partial class Chunk : Node2D
 {
+	[Export] public PackedScene ZoneScene;
 	[Export] public Vector2 ChunkPosition { get; set; }
 	[Export] public Vector2 ChunkSize { get; set; } =new Vector2(1920,1080); // Default size
 	public Player Player;  // Reference to player
@@ -33,6 +34,7 @@ public partial class Chunk : Node2D
 	{
 		Player = GetNode<Player>("../Player");
 		_list.Add(this);
+		SpawnZone();
 	}
 	
 	public override void _Process(double delta)
@@ -75,6 +77,7 @@ public partial class Chunk : Node2D
 			if (!exists)
 			{
 				var newChunk = ChunkManager.ChunkScene.Instantiate<Chunk>();
+				newChunk.ZoneScene = this.ZoneScene;
 				newChunk.Initialize(newPos, ChunkSize);
 				GetParent().AddChild(newChunk);  // Important: Add to scene tree
 			}
@@ -86,6 +89,18 @@ public partial class Chunk : Node2D
 	private bool IsChunkNearPlayer()
 	{
 		return ChunkPosition.DistanceTo(Player.GlobalPosition) <= 4000;
+	}
+	
+	private void SpawnZone()
+	{
+		if(ZoneScene == null){
+			GD.Print("=>Error: Zone Scene is null");
+			return;
+		}
+		var zone = ZoneScene.Instantiate<Area2D>();
+		zone.Position = new Vector2(GD.Randf() * ChunkSize.X, GD.Randf() * ChunkSize.Y);
+		AddChild(zone);
+		GD.Print("Spawned zone");
 	}
 	
 }

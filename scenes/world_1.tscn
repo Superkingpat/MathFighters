@@ -7,3 +7,4 @@
 script = ExtResource("3_4eyuj")
 
 [node name="Player" parent="." instance=ExtResource("1_5lqpt")]
+z_index = 1
