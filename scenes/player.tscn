@@ -317,7 +317,7 @@ sprite_frames = SubResource("SpriteFrames_qlg0r")
 animation = &"walk_down"
 
 [node name="Camera2D" type="Camera2D" parent="."]
-zoom = Vector2(0.1, 0.1)
+zoom = Vector2(0.2, 0.2)
 process_callback = 0
 position_smoothing_enabled = true
 drag_horizontal_enabled = true

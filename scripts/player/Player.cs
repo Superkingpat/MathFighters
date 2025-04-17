@@ -16,6 +16,7 @@ public partial class Player : CharacterBody2D {
 	//_Ready is called when the root node (Player) entered the scene
 	public override void _Ready() {
 		//The AnimatedSprite2D handles animations
+		AddToGroup("player"); //da ga lagka iz chunkov/spavnerjov najlaze najdemo GetTree().GetNodesInGroup("player")[0] as Player
 		animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
 	}
 
