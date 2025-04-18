@@ -10,8 +10,9 @@ public partial class Item : Area2D
 	[Export] private CollisionShape2D collisionShape;
 	//position ze ma by default or smthin
 	public Player Player; 
+	private Action function;
 
-	public void Initialize(int itemID,Vector2 itemposition,Texture2D icon) //irtemid se bo uporabu za izbiro ka item dela
+	public void Initialize(int itemID,Vector2 itemposition,Texture2D icon,Action fun) //irtemid se bo uporabu za izbiro ka item dela
 	{
 		//GD.Print($"Item at{itemposition}");
 		Position  = itemposition;
@@ -20,11 +21,14 @@ public partial class Item : Area2D
 		var rect2d =new RectangleShape2D();
 		rect2d.Size=ItemSize;
 		collisionShape.Shape=rect2d;
-
+		function=fun;
 
 		ZIndex=-1;
+		
 		//rect2=new Rect2(itemposition-chunkSize/2 , chunkSize);
 		//GD.Print($"Item created");
+		//GD.Print(function);
+		
 	}
 	
 	public override void _Ready()
@@ -36,8 +40,9 @@ public partial class Item : Area2D
 
 	private void PlayerContact(Node body){
 		if(body==Player){
-			GD.Print("Collected");
+			//GD.Print("Collected");
 			
+			function?.Invoke();
 			QueueFree();
 		}
 	}

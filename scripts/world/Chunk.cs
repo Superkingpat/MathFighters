@@ -96,7 +96,7 @@ public partial class Chunk : Node2D
 	
 	private void SpawnZone()
 	{
-		
+		return;	
 		if(ZoneScene == null){
 			GD.Print("=>Error: Zone Scene is null");
 			return;

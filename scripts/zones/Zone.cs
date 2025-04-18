@@ -26,7 +26,6 @@ public partial class Zone : Area2D
 
 		BodyEntered += _on_body_entered;
 	}
-
 	
 	private void OnTimerTimeout()
 	{

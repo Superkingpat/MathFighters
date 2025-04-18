@@ -17,6 +17,7 @@ public partial class Player : CharacterBody2D {
 	public override void _Ready() {
 		//The AnimatedSprite2D handles animations
 		AddToGroup("player"); //da ga lagka iz chunkov/spavnerjov najlaze najdemo GetTree().GetNodesInGroup("player")[0] as Player
+		GetNode<Spawner>("/root/Spawner").InitPlayer();
 		animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
 	}
 
