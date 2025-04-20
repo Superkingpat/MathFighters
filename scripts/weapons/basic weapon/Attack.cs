@@ -2,7 +2,7 @@ using Godot;
 using System;
 
 //This is the Bullet class
-public partial class Bullet : CharacterBody2D {
+public partial class Attack : CharacterBody2D {
 	//Speed is an external function that we can change in the Godot UI
 	[Export] public float Speed = 500.0f;
 	private Vector2 direction;

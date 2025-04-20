@@ -2,7 +2,7 @@ using Godot;
 using System;
 
 public partial class Weapon : Node2D {
-	[Export] public PackedScene ProjectileScene;
+	[Export] public PackedScene AttackScene;
 	[Export] public float FireCooldown = 0.5f;
 	[Export] public string AttackAnimation = "attack";
 
@@ -19,8 +19,8 @@ public partial class Weapon : Node2D {
 	public virtual void TryShoot(Vector2 targetPosition, Vector2 shooterPosition) {
 		if (timeSinceLastShot < FireCooldown) return;
 
-		if (ProjectileScene != null) {
-			Bullet bullet = (Bullet)ProjectileScene.Instantiate();
+		if (AttackScene != null) {
+			Attack bullet = (Attack)AttackScene.Instantiate();
 			GetTree().CurrentScene.AddChild(bullet);
 			bullet.Init(targetPosition, shooterPosition);
 		}

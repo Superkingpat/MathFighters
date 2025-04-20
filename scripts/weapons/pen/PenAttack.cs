@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public partial class PenBullet : Bullet {
+public partial class PenAttack : Attack {
 	[Export] public float ExpandScale = 5.0f;
 	[Export] public float TravelTime = 1.0f;
 	[Export] public float ExpandedTime = 1.0f;

@@ -5,7 +5,7 @@ public partial class Pen : Weapon {
 	[Export] public int PelletCount = 6;
 	[Export] public float SpreadAngleDegrees = 15f;
 	[Export] new public float FireCooldown = 1.0f;
-	[Export] new public PackedScene ProjectileScene;
+	[Export] new public PackedScene AttackScene;
 	[Export] new public string AttackAnimation = "attack_pen";
 
 	private float timeSinceLastShot = 0f;
@@ -31,8 +31,8 @@ public partial class Pen : Weapon {
 
 			Vector2 spreadDirection = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
 
-			if (ProjectileScene != null) {
-				Bullet pellet = (Bullet)ProjectileScene.Instantiate();
+			if (AttackScene != null) {
+				Attack pellet = (Attack)AttackScene.Instantiate();
 				GetTree().CurrentScene.AddChild(pellet);
 				pellet.Init(shooterPosition + spreadDirection * 8, shooterPosition);
 			}

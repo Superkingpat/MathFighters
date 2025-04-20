@@ -79,8 +79,7 @@ public partial class Player : CharacterBody2D {
 
 	}
 
-	public void TryPickupWeapon(WeaponPickUp pickup)
-	{
+	public void TryPickupWeapon(WeaponPickUp pickup) {
 		if (pickup == null) return;
 
 		GD.Print("Picked up new weapon!");
