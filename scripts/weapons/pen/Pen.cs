@@ -34,7 +34,7 @@ public partial class Pen : Weapon {
 			Vector2 spreadDirection = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
 
 			if (AttackScene != null) {
-				Attack pellet = (Attack)AttackScene.Instantiate();
+				PenAttack pellet = (PenAttack)AttackScene.Instantiate();
 				GetTree().CurrentScene.AddChild(pellet);
 				pellet.Init(Player.Instance.GlobalPosition + spreadDirection * 8, Player.Instance.GlobalPosition);
 			}
