@@ -9,12 +9,14 @@ public partial class Player : CharacterBody2D {
 	private int lastDir = 0;
 	private Weapon currentWeapon;
 	private Node2D weaponHolder;
+	public static Player Instance { get; private set; }
 	//With GetNode we get the instance of the AnimatedSprite2D that was addet in the Godot UI
 	//_Ready is called when the root node (Player) entered the scene
 	public override void _Ready() {
 		//The AnimatedSprite2D handles animations
 		animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
 		weaponHolder = GetNode<Node2D>("WeaponHolder");
+		Instance = this;
 	}
 
 	//_PhysicsProcess updates the physics engine and animations in the background. MoveAndSlide() is used here, which means we don't need to care about delta time, it's handled automaticly
@@ -49,7 +51,7 @@ public partial class Player : CharacterBody2D {
 
 		if(Input.IsActionJustPressed("attack")) {
 			GD.Print("Shooting");
-			currentWeapon?.TryShoot(GetGlobalMousePosition(), GlobalPosition);
+			currentWeapon?.TryShoot(GetGlobalMousePosition());
 		}
 	}
 
