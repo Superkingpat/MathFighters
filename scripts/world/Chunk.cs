@@ -48,7 +48,7 @@ public partial class Chunk : Node2D
 		//preverja ko pridemo v chunk
 		playerIsIn[0]=IsPlayerInChunk();
 		if(playerIsIn[0]!=playerIsIn[1]&&playerIsIn[0]){
-			GD.Print("Player entered");
+			//GD.Print("Player entered");
 			LoadChunks(); //spawna druge
 		}
 		playerIsIn[1]=playerIsIn[0];
@@ -86,7 +86,7 @@ public partial class Chunk : Node2D
 			}
 		}
 		
-		GD.Print(_list.Count);
+		//GD.Print(_list.Count);
 	}
 	
 	private bool IsChunkNearPlayer()
@@ -96,7 +96,7 @@ public partial class Chunk : Node2D
 	
 	private void SpawnZone()
 	{
-		return;	
+		//return;	
 		if(ZoneScene == null){
 			GD.Print("=>Error: Zone Scene is null");
 			return;
