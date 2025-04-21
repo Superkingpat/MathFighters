@@ -79,8 +79,53 @@ public abstract partial class Enemy : Node2D
 	protected virtual void MoveEnemy(float delta)
 	{
 		Vector2 direction = (player.GlobalPosition - GlobalPosition).Normalized();
+
+		// Cast a ray in the direction of movement to check for obstacles
+		Vector2 rayOrigin = GlobalPosition;
+		Vector2 rayEnd = rayOrigin + direction * 20f; // Adjust length as needed
+
+		// Use Godot's direct space state to perform the raycast
+		var spaceState = GetWorld2D().DirectSpaceState;
+		var result = spaceState.IntersectRay(rayOrigin, rayEnd, new Godot.Collections.Array { this });
+
+		if (result.Count > 0)
+		{
+			// Obstacle detected - try to go around it by changing direction
+			// Simple avoidance: try rotating the direction slightly
+			float avoidAngle = Mathf.Pi / 4; // 45 degrees
+
+			// Try to go around to the right first
+			Vector2 altDirection = direction.Rotated(avoidAngle);
+			rayEnd = rayOrigin + altDirection * 20f;
+			result = spaceState.IntersectRay(rayOrigin, rayEnd, new Godot.Collections.Array { this });
+
+			if (result.Count == 0)
+			{
+				direction = altDirection;
+			}
+			else
+			{
+				// Try to go around to the left
+				altDirection = direction.Rotated(-avoidAngle);
+				rayEnd = rayOrigin + altDirection * 20f;
+				result = spaceState.IntersectRay(rayOrigin, rayEnd, new Godot.Collections.Array { this });
+
+				if (result.Count == 0)
+				{
+					direction = altDirection;
+				}
+				else
+				{
+					// If both directions are blocked, stop movement
+					return;
+				}
+			}
+		}
+
+		// Move in the (possibly adjusted) direction
 		Position += direction * Speed * delta;
 	}
+
 	
 	public virtual void TakeDamage(int amount)
 	{
