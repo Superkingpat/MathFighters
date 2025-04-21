@@ -10,10 +10,14 @@ public partial class Player : CharacterBody2D {
 	private Weapon currentWeapon;
 	private Node2D weaponHolder;
 	public static Player Instance { get; private set; }
+	private Area2D screenBounds;
+	
 	//With GetNode we get the instance of the AnimatedSprite2D that was addet in the Godot UI
 	//_Ready is called when the root node (Player) entered the scene
 	public override void _Ready() {
 		//The AnimatedSprite2D handles animations
+		AddToGroup("player"); //da ga lagka iz chunkov/spavnerjov najlaze najdemo GetTree().GetNodesInGroup("player")[0] as Player
+		GetNode<Spawner>("/root/Spawner").InitPlayer();
 		animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
 		weaponHolder = GetNode<Node2D>("WeaponHolder");
 		Instance = this;
