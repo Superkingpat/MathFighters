@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://douwn2euljjy6"]
+
+[ext_resource type="Script" uid="uid://5an48va2o3oe" path="res://scripts/items/Item.cs" id="1_4gq7n"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_s8enn"]
+
+[node name="Item" type="Area2D" node_paths=PackedStringArray("sprite", "collisionShape")]
+script = ExtResource("1_4gq7n")
+sprite = NodePath("Sprite2D")
+collisionShape = NodePath("CollisionShape2D")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_s8enn")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
