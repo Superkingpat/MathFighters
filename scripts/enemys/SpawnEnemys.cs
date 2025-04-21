@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public class SpawnEnemys : Node
+public partial class SpawnEnemys : Node
 {
 	// Drag and drop your enemy scene into this field in the editor
 	[Export]
@@ -25,8 +25,10 @@ public class SpawnEnemys : Node
 			return;
 		}
 
-		Node2D enemyInstance = (Node2D)EnemyScene.Instance(); // Or use Node3D depending on your enemy
+		/*
+		Enemy enemyInstance = (Enemy)EnemyScene.Instance();
 		enemyInstance.Position = SpawnPosition;
 		AddChild(enemyInstance);
+		*/
 	}
 }

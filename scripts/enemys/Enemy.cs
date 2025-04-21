@@ -86,7 +86,8 @@ public abstract partial class Enemy : Node2D
 
 		// Use Godot's direct space state to perform the raycast
 		var spaceState = GetWorld2D().DirectSpaceState;
-		var result = spaceState.IntersectRay(rayOrigin, rayEnd, new Godot.Collections.Array { this });
+		var k = PhysicsRayQueryParameters2D.Create(rayOrigin, rayEnd);
+		var result = GetWorld2D().DirectSpaceState.IntersectRay(k);
 
 		if (result.Count > 0)
 		{
@@ -97,7 +98,8 @@ public abstract partial class Enemy : Node2D
 			// Try to go around to the right first
 			Vector2 altDirection = direction.Rotated(avoidAngle);
 			rayEnd = rayOrigin + altDirection * 20f;
-			result = spaceState.IntersectRay(rayOrigin, rayEnd, new Godot.Collections.Array { this });
+			k = PhysicsRayQueryParameters2D.Create(rayOrigin, rayEnd);
+			result = GetWorld2D().DirectSpaceState.IntersectRay(k);
 
 			if (result.Count == 0)
 			{
@@ -108,7 +110,8 @@ public abstract partial class Enemy : Node2D
 				// Try to go around to the left
 				altDirection = direction.Rotated(-avoidAngle);
 				rayEnd = rayOrigin + altDirection * 20f;
-				result = spaceState.IntersectRay(rayOrigin, rayEnd, new Godot.Collections.Array { this });
+				k = PhysicsRayQueryParameters2D.Create(rayOrigin, rayEnd);
+				result = GetWorld2D().DirectSpaceState.IntersectRay(k);
 
 				if (result.Count == 0)
 				{
