@@ -9,7 +9,6 @@ script = ExtResource("1_spjee")
 PelletCount = 1
 SpreadAngleDegrees = 5.0
 AttackScene = ExtResource("2_j676a")
-AttackScene = ExtResource("2_j676a")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 scale = Vector2(0.035, 0.035)

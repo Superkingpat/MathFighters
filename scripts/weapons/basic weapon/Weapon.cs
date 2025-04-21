@@ -3,28 +3,12 @@ using System;
 
 public partial class Weapon : Node2D {
 	[Export] public PackedScene AttackScene;
-	[Export] public float FireCooldown = 0.5f;
 	[Export] public string AttackAnimation = "attack";
+	[Export] public int WeaponLevel = 1;
 
-	private float timeSinceLastShot = 0.0f;
+	public override void _Process(double delta) { }
 
-	public override void _Process(double delta) {
-		timeSinceLastShot += (float)delta;
-	}
+	public virtual Sprite2D GetPickupSprite() { return null; }
 
-	public virtual Sprite2D GetPickupSprite() {
-		return null;
-	}
-
-	public virtual void TryShoot(Vector2 targetPosition, Vector2 shooterPosition) {
-		if (timeSinceLastShot < FireCooldown) return;
-
-		if (AttackScene != null) {
-			Attack bullet = (Attack)AttackScene.Instantiate();
-			GetTree().CurrentScene.AddChild(bullet);
-			bullet.Init(targetPosition, shooterPosition);
-		}
-
-		timeSinceLastShot = 0.0f;
-	}
+	public virtual void TryShoot(Vector2 targetPosition) { }
 }

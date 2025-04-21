@@ -4,12 +4,14 @@ using System;
 public partial class Pen : Weapon {
 	[Export] public int PelletCount = 6;
 	[Export] public float SpreadAngleDegrees = 15f;
-	[Export] new public float FireCooldown = 1.0f;
-	[Export] new public PackedScene AttackScene;
-	[Export] new public string AttackAnimation = "attack_pen";
+	[Export] public float FireCooldown = 1.0f;
 
 	private float timeSinceLastShot = 0f;
 
+	public override void _Ready() {
+		base._Ready();
+		AttackAnimation = "attack_pen";
+	}
 	public override void _Process(double delta) {
 		timeSinceLastShot += (float)delta;
 	}
@@ -18,11 +20,11 @@ public partial class Pen : Weapon {
 		return GetNode<Sprite2D>("Sprite2D");
 	}
 
-	public override void TryShoot(Vector2 targetPosition, Vector2 shooterPosition) {
+	public override void TryShoot(Vector2 targetPosition) {
 		if (timeSinceLastShot < FireCooldown) return;
 		timeSinceLastShot = 0f;
 
-		Vector2 baseDirection = (targetPosition - shooterPosition).Normalized();
+		Vector2 baseDirection = (targetPosition - Player.Instance.GlobalPosition).Normalized();
 		float baseAngle = baseDirection.Angle();
 
 		for (int i = 0; i < PelletCount; i++) {
@@ -32,9 +34,9 @@ public partial class Pen : Weapon {
 			Vector2 spreadDirection = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
 
 			if (AttackScene != null) {
-				Attack pellet = (Attack)AttackScene.Instantiate();
+				PenAttack pellet = (PenAttack)AttackScene.Instantiate();
 				GetTree().CurrentScene.AddChild(pellet);
-				pellet.Init(shooterPosition + spreadDirection * 8, shooterPosition);
+				pellet.Init(Player.Instance.GlobalPosition + spreadDirection * 8, Player.Instance.GlobalPosition);
 			}
 		}
 	}
