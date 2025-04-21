@@ -5,13 +5,13 @@ using System;
 public partial class Player : CharacterBody2D {
 	//Export makes it so we can interact with the variable in the Godot UI
 	[Export] public float Speed = 200.0f;
-	[Export] public PackedScene BulletScene;
 	private AnimatedSprite2D animatedSprite;
 	private int lastDir = 0;
-	
+	private Weapon currentWeapon;
+	private Node2D weaponHolder;
+	public static Player Instance { get; private set; }
 	private Area2D screenBounds;
 	
-
 	//With GetNode we get the instance of the AnimatedSprite2D that was addet in the Godot UI
 	//_Ready is called when the root node (Player) entered the scene
 	public override void _Ready() {
@@ -19,6 +19,8 @@ public partial class Player : CharacterBody2D {
 		AddToGroup("player"); //da ga lagka iz chunkov/spavnerjov najlaze najdemo GetTree().GetNodesInGroup("player")[0] as Player
 		GetNode<Spawner>("/root/Spawner").InitPlayer();
 		animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
+		weaponHolder = GetNode<Node2D>("WeaponHolder");
+		Instance = this;
 	}
 
 	//_PhysicsProcess updates the physics engine and animations in the background. MoveAndSlide() is used here, which means we don't need to care about delta time, it's handled automaticly
@@ -52,7 +54,8 @@ public partial class Player : CharacterBody2D {
 		MoveAndSlide();
 
 		if(Input.IsActionJustPressed("attack")) {
-			Shoot();
+			GD.Print("Shooting");
+			currentWeapon?.TryShoot(GetGlobalMousePosition());
 		}
 	}
 
@@ -82,16 +85,27 @@ public partial class Player : CharacterBody2D {
 
 	}
 
+	public void TryPickupWeapon(WeaponPickUp pickup) {
+		if (pickup == null) return;
+
+		GD.Print("Picked up new weapon!");
+		// Remove old weapon
+		if (currentWeapon != null)
+		{
+			currentWeapon.QueueFree();
+		}
+		// Get the new weapon from pickup
+		Weapon newWeapon = pickup.GetWeapon();
+
+		// Add it to the weapon holder
+		weaponHolder.AddChild(newWeapon);
+		newWeapon.Position = Vector2.Zero; // Reset local position
+		GD.Print("WeaponHolder children: ", weaponHolder.GetChildCount());
+		currentWeapon = newWeapon;
+		// Remove pickup from scene
+		pickup.QueueFree();
+	}
+
 	//If a scene is bound to the external BulletScene variable we create a new instance of Bullet,
 	//position it at the player characters position and send it in the direction of the mouse cursor
-	private void Shoot() {
-		if (BulletScene == null) {
-			return;
-		}
-
-		Bullet bullet = (Bullet)BulletScene.Instantiate();
-		GetTree().CurrentScene.AddChild(bullet);
-
-		bullet.Init(GetGlobalMousePosition(), GlobalPosition);
-	}
 }

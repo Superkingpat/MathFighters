@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://ciw3r5c1tp1j5"]
+
+[ext_resource type="Texture2D" uid="uid://dlohmcq3husa3" path="res://assets/weapons/GeoTriangle/geo.png" id="1_k5rgd"]
+[ext_resource type="Script" uid="uid://h7s44edgnv5" path="res://scripts/weapons/geo triangle/GeoTriangleAttack.cs" id="1_yyk3j"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_yyk3j"]
+
+[node name="GeoTriangleAttack" type="CharacterBody2D"]
+collision_layer = 4
+collision_mask = 2
+script = ExtResource("1_yyk3j")
+Speed = 250.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_yyk3j")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.01, 0.01)
+texture = ExtResource("1_k5rgd")
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
