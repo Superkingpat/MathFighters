@@ -34,4 +34,12 @@ public partial class Attack : CharacterBody2D {
 		//Deletes the Bullet instance at the end of the current frame
 		QueueFree();
 	}
+
+	   protected virtual void PlayAttackSound()
+    {
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayShootSound("default");
+        }
+    }
 }

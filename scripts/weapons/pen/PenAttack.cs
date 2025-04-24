@@ -53,4 +53,11 @@ public partial class PenAttack : Attack {
 			base._PhysicsProcess(delta);
 		}
 	}
+  protected override void PlayAttackSound()
+    {
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayShootSound("pen");
+        }
+    }
 }
