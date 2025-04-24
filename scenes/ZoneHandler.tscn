@@ -3,8 +3,8 @@
 [ext_resource type="Script" uid="uid://y0haqw6tbwon" path="res://scripts/zones/Zone.cs" id="1_5mw05"]
 [ext_resource type="Texture2D" uid="uid://dgrcbmx7p2b8y" path="res://assets/zones/zone_temp.png" id="1_nxyy4"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_5mw05"]
-size = Vector2(105, 115)
+[sub_resource type="CircleShape2D" id="CircleShape2D_5mw05"]
+radius = 41.6473
 
 [node name="ZoneHandler" type="Area2D"]
 collision_layer = 2
@@ -20,4 +20,4 @@ texture = ExtResource("1_nxyy4")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(33.5, -34.5)
-shape = SubResource("RectangleShape2D_5mw05")
+shape = SubResource("CircleShape2D_5mw05")

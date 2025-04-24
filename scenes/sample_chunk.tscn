@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://dylxhfwuj42cb"]
 
 [ext_resource type="Script" uid="uid://p3d6s5or5h2w" path="res://scripts/world/Chunk.cs" id="1_6sgkl"]
-[ext_resource type="Texture2D" uid="uid://dvihormai0v46" path="res://assets/world/chunk_sample.png" id="1_xwpna"]
+[ext_resource type="Texture2D" uid="uid://bftfw88m3wqt6" path="res://assets/world/background_dark.png" id="2_6sgkl"]
 
 [node name="SampleChunk" type="Node2D"]
 script = ExtResource("1_6sgkl")
@@ -12,6 +12,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("1_xwpna")
+texture = ExtResource("2_6sgkl")
 stretch_mode = 6
 metadata/_edit_use_anchors_ = true
