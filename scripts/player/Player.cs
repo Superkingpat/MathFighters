@@ -4,6 +4,27 @@ using System;
 //This is the player class.
 public partial class Player : CharacterBody2D {
 	//Export makes it so we can interact with the variable in the Godot UI
+
+	public class Stats {
+        public float BaseHealth { get; set; } = 100f;
+        public float CurrentHealth { get; set; }
+        public int S_Health { get; set; } = 2;
+
+        public Stats() {
+            CurrentHealth = BaseHealth + 2*S_Health;
+        }
+
+        public void TakeDamage(float amount) {
+            CurrentHealth = Mathf.Max(CurrentHealth - amount, 0);
+        }
+
+        public void Heal(float amount) {
+            CurrentHealth = Mathf.Min(CurrentHealth + amount, BaseHealth + 2*S_Health);
+        }
+    }
+
+	public Stats PlayerStats { get; private set; } = new Stats();
+
 	[Export] public float Speed = 200.0f;
 	private AnimatedSprite2D animatedSprite;
 	private int lastDir = 0;
@@ -104,6 +125,20 @@ public partial class Player : CharacterBody2D {
 		currentWeapon = newWeapon;
 		// Remove pickup from scene
 		pickup.QueueFree();
+	}
+
+	public void TakeDamage(float dmg) {
+		PlayerStats.TakeDamage(dmg);
+
+		if(PlayerStats.CurrentHealth <= 0) {
+			GD.Print("Player is dead!");
+		}
+	}
+
+	public void Heal(float heal) {
+		PlayerStats.Heal(heal);
+
+		GD.Print("Player has been healed! Current health: " + PlayerStats.CurrentHealth);
 	}
 
 	//If a scene is bound to the external BulletScene variable we create a new instance of Bullet,
