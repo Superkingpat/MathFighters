@@ -11,4 +11,10 @@ public partial class Weapon : Node2D {
 	public virtual Sprite2D GetPickupSprite() { return null; }
 
 	public virtual void TryShoot(Vector2 targetPosition) { }
+
+	public void LevelUpWeapon() {
+		if(WeaponLevel < 3) {
+			WeaponLevel++;
+		}
+	}
 }

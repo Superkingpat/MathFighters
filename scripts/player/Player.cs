@@ -110,20 +110,18 @@ public partial class Player : CharacterBody2D {
 		if (pickup == null) return;
 
 		GD.Print("Picked up new weapon!");
-		// Remove old weapon
-		if (currentWeapon != null)
-		{
+
+		if (currentWeapon != null) {
 			currentWeapon.QueueFree();
 		}
-		// Get the new weapon from pickup
+
 		Weapon newWeapon = pickup.GetWeapon();
 
-		// Add it to the weapon holder
 		weaponHolder.AddChild(newWeapon);
-		newWeapon.Position = Vector2.Zero; // Reset local position
+		newWeapon.Position = Vector2.Zero;
 		GD.Print("WeaponHolder children: ", weaponHolder.GetChildCount());
 		currentWeapon = newWeapon;
-		// Remove pickup from scene
+		
 		pickup.QueueFree();
 	}
 

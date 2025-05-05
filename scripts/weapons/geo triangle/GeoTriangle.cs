@@ -20,12 +20,11 @@ public partial class GeoTriangle : Weapon {
 		if ((timeSinceLastShot < AttackCooldown) || (currTriangleCount >= maxTriangleCount)) return;
 		timeSinceLastShot = 0f;
 		currTriangleCount++;
-		//Vector2 baseDirection = (targetPosition - Player.Instance.GlobalPosition).Normalized();
 
 		if (AttackScene != null) {
 			GeoTriangleAttack triangle = (GeoTriangleAttack)AttackScene.Instantiate();
 			GetTree().CurrentScene.AddChild(triangle);
-			triangle.Init(this, GetGlobalMousePosition(), Player.Instance.GlobalPosition);
+			triangle.Init(this, GetGlobalMousePosition(), Player.Instance.GlobalPosition, WeaponLevel);
 		}
 	}
 
