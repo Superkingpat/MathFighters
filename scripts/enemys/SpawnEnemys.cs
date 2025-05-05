@@ -1,6 +1,7 @@
 using Godot;
 using System;
 
+/*
 public class SpawnEnemys : Node
 {
 	// Drag and drop your enemy scene into this field in the editor
@@ -30,3 +31,4 @@ public class SpawnEnemys : Node
 		AddChild(enemyInstance);
 	}
 }
+*/
