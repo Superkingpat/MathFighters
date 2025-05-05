@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 
 //This is the player class.
 public partial class Player : CharacterBody2D {
@@ -32,6 +33,9 @@ public partial class Player : CharacterBody2D {
 	private Node2D weaponHolder;
 	public static Player Instance { get; private set; }
 	private Area2D screenBounds;
+	private List<Weapon> weaponInventory = new List<Weapon>();
+	private int currentWeaponIndex = 0;
+
 	
 	//With GetNode we get the instance of the AnimatedSprite2D that was addet in the Godot UI
 	//_Ready is called when the root node (Player) entered the scene
@@ -78,6 +82,14 @@ public partial class Player : CharacterBody2D {
 			GD.Print("Shooting");
 			currentWeapon?.TryShoot(GetGlobalMousePosition());
 		}
+
+		if (Input.IsActionJustPressed("next_weapon")) {
+        	currentWeaponIndex = (currentWeaponIndex + 1) % weaponInventory.Count;
+        	EquipWeapon(currentWeaponIndex);
+    	} else if (Input.IsActionJustPressed("previous_weapon")) {
+        	currentWeaponIndex = (currentWeaponIndex - 1 + weaponInventory.Count) % weaponInventory.Count;
+        	EquipWeapon(currentWeaponIndex);
+    	}
 	}
 
 	//UpdateAnimation and PlayIdleAnimation handle the animations. Since AnimatedSprite2D::Play() is used here the animation speed is taken care of automaticly by Godot
@@ -106,23 +118,32 @@ public partial class Player : CharacterBody2D {
 
 	}
 
+	private void EquipWeapon(int index) {
+    	if (weaponInventory.Count == 0) return;
+
+    	foreach (var weapon in weaponInventory) {
+        	weapon.Visible = false;
+    	}
+
+    	currentWeaponIndex = index % weaponInventory.Count;
+    	weaponInventory[currentWeaponIndex].Visible = true;
+    	currentWeapon = weaponInventory[currentWeaponIndex];
+	}
+
 	public void TryPickupWeapon(WeaponPickUp pickup) {
 		if (pickup == null) return;
 
-		GD.Print("Picked up new weapon!");
+    	GD.Print("Picked up new weapon!");
 
-		if (currentWeapon != null) {
-			currentWeapon.QueueFree();
-		}
+    	Weapon newWeapon = pickup.GetWeapon();
+    	weaponHolder.AddChild(newWeapon);
+    	newWeapon.Position = Vector2.Zero;
 
-		Weapon newWeapon = pickup.GetWeapon();
+    	weaponInventory.Add(newWeapon);
+    	currentWeaponIndex = weaponInventory.Count - 1;
+    	EquipWeapon(currentWeaponIndex);
 
-		weaponHolder.AddChild(newWeapon);
-		newWeapon.Position = Vector2.Zero;
-		GD.Print("WeaponHolder children: ", weaponHolder.GetChildCount());
-		currentWeapon = newWeapon;
-		
-		pickup.QueueFree();
+    	pickup.QueueFree();
 	}
 
 	public void TakeDamage(float dmg) {
