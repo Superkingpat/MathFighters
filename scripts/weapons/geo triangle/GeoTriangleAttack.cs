@@ -47,4 +47,13 @@ public partial class GeoTriangleAttack : Attack {
 
 		sprite.Rotate(TriangleRotation);
 	}
+
+	    protected override void PlayAttackSound()
+    {
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayShootSound("geotriangle");
+        }
+
+	}
 }
