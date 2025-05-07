@@ -7,10 +7,14 @@ public partial class Player : CharacterBody2D {
 	[Export] public float Speed = 200.0f;
 	private AnimatedSprite2D animatedSprite;
 	private int lastDir = 0;
+
+	public float AttackSpeedAmp=1;
 	private Weapon currentWeapon;
 	private Node2D weaponHolder;
 	public static Player Instance { get; private set; }
 	private Area2D screenBounds;
+
+	public int Damage=1;
 	
 	//With GetNode we get the instance of the AnimatedSprite2D that was addet in the Godot UI
 	//_Ready is called when the root node (Player) entered the scene
@@ -55,7 +59,7 @@ public partial class Player : CharacterBody2D {
 
 		if(Input.IsActionJustPressed("attack")) {
 			GD.Print("Shooting");
-			currentWeapon?.TryShoot(GetGlobalMousePosition());
+			currentWeapon?.TryShoot(GetGlobalMousePosition(),AttackSpeedAmp);
 		}
 	}
 
