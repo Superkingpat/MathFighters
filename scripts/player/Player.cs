@@ -11,6 +11,24 @@ public partial class Player : CharacterBody2D {
 	private Node2D weaponHolder;
 	public static Player Instance { get; private set; }
 	private Area2D screenBounds;
+
+	// Leveling system variables
+	private int level = 1;
+	private int experience = 0;
+	private int experienceToLevelUp = 100;
+	private float levelUpExperienceMultiplier = 1.5f;
+
+	 // Signals for level up and experience change
+	[Signal]
+	public delegate void LevelUpEventHandler(int newLevel);
+
+	[Signal]
+	public delegate void ExperienceChangedEventHandler(int currentExperience, int experienceNeeded);
+
+	public int Level { get { return level; } private set { level = value; } }
+	public int Experience { get { return experience; } private set { experience = value; EmitSignal(SignalName.ExperienceChanged, experience, experienceToLevelUp); } }
+	public int ExperienceToLevelUp { get { return experienceToLevelUp; } private set { experienceToLevelUp = value; EmitSignal(SignalName.ExperienceChanged, experience, experienceToLevelUp); } }
+
 	
 	//With GetNode we get the instance of the AnimatedSprite2D that was addet in the Godot UI
 	//_Ready is called when the root node (Player) entered the scene
@@ -21,6 +39,8 @@ public partial class Player : CharacterBody2D {
 		animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
 		weaponHolder = GetNode<Node2D>("WeaponHolder");
 		Instance = this;
+
+		// Init UI elements for XP and Level
 	}
 
 	//_PhysicsProcess updates the physics engine and animations in the background. MoveAndSlide() is used here, which means we don't need to care about delta time, it's handled automaticly
@@ -108,4 +128,38 @@ public partial class Player : CharacterBody2D {
 
 	//If a scene is bound to the external BulletScene variable we create a new instance of Bullet,
 	//position it at the player characters position and send it in the direction of the mouse cursor
+
+	public void GainExperience(int amount) {
+		if (amount <= 0) return;
+
+		Experience += amount;
+		CheckLevelUp();
+	}
+
+	private void CheckLevelUp() {
+		while (Experience >= ExperienceToLevelUp) {
+			Experience -= ExperienceToLevelUp;
+			Level++;
+			ExperienceToLevelUp = (int)(ExperienceToLevelUp * levelUpExperienceMultiplier); // Lets make this non-linear in the future
+			GD.Print($"Player leveled up! New level: {Level}");
+			EmitSignal(SignalName.LevelUp, Level);
+
+			// Show level up screen to choose a perk
+		}
+	}
+
+	// Function to get current level (can be accessed from other scripts)
+	public int GetLevel() {
+		return Level;
+	}
+
+	// Function to get the current experience (can be accessed from other scripts)
+	public int GetExperience() {
+		return Experience;
+	}
+
+	// Function to get the experience needed to level up
+	public int GetExperienceToLevelUp() {
+		return ExperienceToLevelUp;
+	}
 }
