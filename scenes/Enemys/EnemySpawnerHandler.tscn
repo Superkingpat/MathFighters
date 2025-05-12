@@ -1,0 +1,17 @@
+[gd_scene load_steps=4 format=3 uid="uid://cerghvo0f5tyo"]
+
+[ext_resource type="Script" uid="uid://ccnxo1f1fr380" path="res://scripts/enemys/SpawnEnemys.cs" id="1_txwkh"]
+[ext_resource type="PackedScene" uid="uid://c4psokfkfw7gi" path="res://scenes/Enemys/enemy.tscn" id="2_d3g07"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_dh8un"]
+radius = 232.355
+
+[node name="EnemySpawner" type="Area2D"]
+script = ExtResource("1_txwkh")
+EnemyScene = ExtResource("2_d3g07")
+SpawnPathNodePath = NodePath("CollisionShape2D")
+ActivationDelay = 0.5
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(559, 313)
+shape = SubResource("CircleShape2D_dh8un")

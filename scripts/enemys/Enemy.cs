@@ -4,29 +4,31 @@ using System.Collections.Generic;
 
 public abstract partial class Enemy : Node2D
 {
-	[Export] public string EnemyName { get; private set; } = "Enemy";
-	[Export] public int Damage { get; private set; } = 10;
-	[Export] public float AttackRange { get; private set; } = 50.0f;
-	[Export] public float AttackCooldown { get; private set; } = 1.0f;
-	[Export] public float DetectionRange { get; private set; } = 200.0f;
-	[Export] public float AggroRange { get; private set; } = 300.0f;
-	[Export] public float FleeRange { get; private set; } = 100.0f;
-	[Export] public float Speed { get; private set; } = 200.0f;
-	[Export] public float MaxHealth { get; private set; } = 100.0f;
-	[Export] public float Armor { get; private set; } = 50.0f;
+	[Export] public string EnemyName { get; protected set; } = "Enemy";
+	
+	[Export] public float Damage { get; protected set; } = 10.0f;
+	[Export] public float AttackRange { get; protected set; } = 10.0f;
+	[Export] public float AggroRange { get; protected set; } = 25.0f;
+	[Export] public float AttackCooldown { get; protected set; } = 1.0f;
+	
+	[Export] public float Speed { get; protected set; } = 40.0f;
+	[Export] public float MaxHealth { get; protected set; } = 100.0f;
+	[Export] public float Armor { get; protected set; } = 50.0f;
 	
 	// New properties for drops
-	[Export] public PackedScene[] PossibleDrops { get; private set; }
-	[Export] public float[] DropChances { get; private set; }
-	[Export] public int MaxDrops { get; private set; } = 3;
+	[Export] public PackedScene[] PossibleDrops { get; protected set; }
+	[Export] public float[] DropChances { get; protected set; }
+	[Export] public int MaxDrops { get; protected set; } = 3;
 	
 	public float CurrentHealth { get; protected set; }
 	protected Player player;
+	
 	protected AnimatedSprite2D animatedSprite;
+	
 	protected bool isAttacking = false;
-	protected bool isFleeing = false;
 	protected bool isAggroed = false;
 	protected bool isDead = false;
+	protected bool isMoving = false;
 	
 	// List to store configured drops
 	protected List<Drop> dropTable = new List<Drop>();
@@ -39,10 +41,6 @@ public abstract partial class Enemy : Node2D
 		rng.Randomize();
 		
 		player = GetTree().GetFirstNodeInGroup("player") as Player;
-		if (player == null)
-		{
-			player = GetTree().Root.GetNode<Player>("World_1/Player");
-		}
 		
 		CurrentHealth = MaxHealth;
 		
@@ -72,12 +70,19 @@ public abstract partial class Enemy : Node2D
 	{
 		if (player != null && IsInstanceValid(player))
 		{
-			MoveEnemy((float)delta);
+			if(isAttacking) isMoving = false;
+			else isMoving = true;
+
+			if(isMoving)
+				MoveEnemy((float)delta);
 		}
 	}
 	
 	protected virtual void MoveEnemy(float delta)
 	{
+		if (isDead || player == null)
+			return;
+
 		Vector2 direction = (player.GlobalPosition - GlobalPosition).Normalized();
 
 		// Cast a ray in the direction of movement to check for obstacles
@@ -89,47 +94,75 @@ public abstract partial class Enemy : Node2D
 		var k = PhysicsRayQueryParameters2D.Create(rayOrigin, rayEnd);
 		var result = GetWorld2D().DirectSpaceState.IntersectRay(k);
 
-		if (result.Count > 0)
-		{
-			// Obstacle detected - try to go around it by changing direction
-			// Simple avoidance: try rotating the direction slightly
-			float avoidAngle = Mathf.Pi / 4; // 45 degrees
+		// if (result.Count > 0)
+		// {
+		// 	// Obstacle detected - try to go around it by changing direction
+		// 	// Simple avoidance: try rotating the direction slightly
+		// 	float avoidAngle = Mathf.Pi / 4; // 45 degrees
 
-			// Try to go around to the right first
-			Vector2 altDirection = direction.Rotated(avoidAngle);
-			rayEnd = rayOrigin + altDirection * 20f;
-			k = PhysicsRayQueryParameters2D.Create(rayOrigin, rayEnd);
-			result = GetWorld2D().DirectSpaceState.IntersectRay(k);
+		// 	// Try to go around to the right first
+		// 	Vector2 altDirection = direction.Rotated(avoidAngle);
+		// 	rayEnd = rayOrigin + altDirection * 20f;
+		// 	k = PhysicsRayQueryParameters2D.Create(rayOrigin, rayEnd);
+		// 	result = GetWorld2D().DirectSpaceState.IntersectRay(k);
 
-			if (result.Count == 0)
-			{
-				direction = altDirection;
-			}
-			else
-			{
-				// Try to go around to the left
-				altDirection = direction.Rotated(-avoidAngle);
-				rayEnd = rayOrigin + altDirection * 20f;
-				k = PhysicsRayQueryParameters2D.Create(rayOrigin, rayEnd);
-				result = GetWorld2D().DirectSpaceState.IntersectRay(k);
+		// 	if (result.Count == 0)
+		// 	{
+		// 		direction = altDirection;
+		// 	}
+		// 	else
+		// 	{
+		// 		// Try to go around to the left
+		// 		altDirection = direction.Rotated(-avoidAngle);
+		// 		rayEnd = rayOrigin + altDirection * 20f;
+		// 		k = PhysicsRayQueryParameters2D.Create(rayOrigin, rayEnd);
+		// 		result = GetWorld2D().DirectSpaceState.IntersectRay(k);
 
-				if (result.Count == 0)
-				{
-					direction = altDirection;
-				}
-				else
-				{
-					// If both directions are blocked, stop movement
-					return;
-				}
-			}
-		}
+		// 		if (result.Count == 0)
+		// 		{
+		// 			direction = altDirection;
+		// 		}
+		// 		else
+		// 		{
+		// 			// If both directions are blocked, stop movement
+		// 			return;
+		// 		}
+		// 	}
+		// }
 
 		// Move in the (possibly adjusted) direction
 		Position += direction * Speed * delta;
+		// Position += (player.Position - Position)/Speed;
+	}	
+
+	protected virtual void Attack()
+	{
+		float distanceToPlayer = GlobalPosition.DistanceTo(player.GlobalPosition);
+		
+		if (distanceToPlayer <= AggroRange)
+		{
+			isAggroed = true;
+			
+			if (distanceToPlayer <= AttackRange && !isAttacking)
+			{
+				isAttacking = true;
+				GD.Print("Enemy attacking player");
+
+				GetTree().CreateTimer(AttackCooldown).Timeout += () =>
+				{
+					isAttacking = false;
+				};
+			}
+		}
+		else
+		{
+			isAggroed = false;
+		}
+
+		// You'll need to add a TakeDamage method to your Player class
+		// player.TakeDamage(Damage);
 	}
 
-	
 	public virtual void TakeDamage(int amount)
 	{
 		CurrentHealth -= amount;
