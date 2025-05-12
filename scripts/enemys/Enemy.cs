@@ -2,7 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-public abstract partial class Enemy : Node2D
+public abstract partial class Enemy : CharacterBody2D
 {
 	[Export] public string EnemyName { get; protected set; } = "Enemy";
 	
@@ -35,7 +35,7 @@ public abstract partial class Enemy : Node2D
 	
 	// Random number generator
 	protected RandomNumberGenerator rng = new RandomNumberGenerator();
-	
+
 	public override void _Ready()
 	{
 		rng.Randomize();

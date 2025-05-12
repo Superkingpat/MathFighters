@@ -1,17 +1,17 @@
-[gd_scene load_steps=4 format=3 uid="uid://cerghvo0f5tyo"]
+[gd_scene load_steps=3 format=3 uid="uid://cerghvo0f5tyo"]
 
 [ext_resource type="Script" uid="uid://ccnxo1f1fr380" path="res://scripts/enemys/SpawnEnemys.cs" id="1_txwkh"]
-[ext_resource type="PackedScene" uid="uid://c4psokfkfw7gi" path="res://scenes/Enemys/enemy.tscn" id="2_d3g07"]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_dh8un"]
-radius = 232.355
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_o2qhq"]
+size = Vector2(1589, 1075)
 
-[node name="EnemySpawner" type="Area2D"]
+[node name="Node2D" type="Node2D"]
 script = ExtResource("1_txwkh")
-EnemyScene = ExtResource("2_d3g07")
-SpawnPathNodePath = NodePath("CollisionShape2D")
-ActivationDelay = 0.5
+SpawnAreaPath = NodePath("Area2D")
+SpawnInterval = 0.5
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(559, 313)
-shape = SubResource("CircleShape2D_dh8un")
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(-0.5, 1.5)
+shape = SubResource("RectangleShape2D_o2qhq")

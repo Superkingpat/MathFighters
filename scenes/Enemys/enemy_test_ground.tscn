@@ -11,3 +11,6 @@
 [node name="Enemy" parent="." instance=ExtResource("2_nnhog")]
 position = Vector2(-316, -67)
 script = ExtResource("3_nnhog")
+baseSpeed = 10.0
+baseDamage = 5.0
+baseCooldown = 2.0
