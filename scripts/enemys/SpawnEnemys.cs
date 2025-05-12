@@ -25,12 +25,10 @@ public class SpawnEnemys : Node
 			GD.PrintErr("EnemyScene is not assigned!");
 			return;
 		}
-
-		/*
 		Enemy enemyInstance = (Enemy)EnemyScene.Instance();
 		enemyInstance.Position = SpawnPosition;
 		AddChild(enemyInstance);
-		*/
+		
 	}
 }
 */
