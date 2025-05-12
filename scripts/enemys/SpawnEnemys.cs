@@ -1,7 +1,8 @@
 using Godot;
 using System;
 
-public partial class SpawnEnemys : Node
+/*
+public class SpawnEnemys : Node
 {
 	// Drag and drop your enemy scene into this field in the editor
 	[Export]
@@ -32,3 +33,4 @@ public partial class SpawnEnemys : Node
 		*/
 	}
 }
+*/

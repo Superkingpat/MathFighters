@@ -6,7 +6,7 @@ public partial class Attack : CharacterBody2D {
 	//Speed is an external function that we can change in the Godot UI
 	[Export] public float Speed = 500.0f;
 	protected Vector2 direction;
-
+	protected int weaponLevel;
 	//_Ready is called when the root node (Bullet) entered the scene
 	//VisibleOnScreenNotifier2D has multiple functionalities that tell us if an object is on the screen
 	//All actions(functions) in notifier.ScreenExited are executed when the object has exited the screen
@@ -16,7 +16,8 @@ public partial class Attack : CharacterBody2D {
 	}
 
 	//Its an initialization function. I think it's obvious what it does
-	public virtual void Init(Vector2 targetPosition, Vector2 startPosition) {
+	public virtual void Init(Vector2 targetPosition, Vector2 startPosition, int WeaponLevel) {
+		weaponLevel = WeaponLevel;
 		Position = startPosition;
 		direction = (targetPosition - startPosition).Normalized();
 		Rotation = direction.Angle();

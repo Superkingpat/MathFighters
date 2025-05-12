@@ -1,6 +1,6 @@
 using Godot;
 using System;
-
+/*
 public partial class BasicEnemy : Enemy
 {
 	public override void _Ready()
@@ -62,3 +62,4 @@ public partial class BasicEnemy : Enemy
 
    
 }
+*/

@@ -1,9 +1,31 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 
 //This is the player class.
 public partial class Player : CharacterBody2D {
 	//Export makes it so we can interact with the variable in the Godot UI
+
+	public class Stats {
+        public float BaseHealth { get; set; } = 100f;
+        public float CurrentHealth { get; set; }
+        public int S_Health { get; set; } = 2;
+
+        public Stats() {
+            CurrentHealth = BaseHealth + 2*S_Health;
+        }
+
+        public void TakeDamage(float amount) {
+            CurrentHealth = Mathf.Max(CurrentHealth - amount, 0);
+        }
+
+        public void Heal(float amount) {
+            CurrentHealth = Mathf.Min(CurrentHealth + amount, BaseHealth + 2*S_Health);
+        }
+    }
+
+	public Stats PlayerStats { get; private set; } = new Stats();
+
 	[Export] public float Speed = 200.0f;
 	private AnimatedSprite2D animatedSprite;
 	private int lastDir = 0;
@@ -15,7 +37,10 @@ public partial class Player : CharacterBody2D {
 	private Area2D screenBounds;
 
 	public int Damage=1;
-	
+
+	private List<Weapon> weaponInventory = new List<Weapon>();
+	private int currentWeaponIndex = 0;
+
 	//With GetNode we get the instance of the AnimatedSprite2D that was addet in the Godot UI
 	//_Ready is called when the root node (Player) entered the scene
 	public override void _Ready() {
@@ -61,6 +86,14 @@ public partial class Player : CharacterBody2D {
 			GD.Print("Shooting");
 			currentWeapon?.TryShoot(GetGlobalMousePosition(),AttackSpeedAmp);
 		}
+
+		if (Input.IsActionJustPressed("next_weapon")) {
+        	currentWeaponIndex = (currentWeaponIndex + 1) % weaponInventory.Count;
+        	EquipWeapon(currentWeaponIndex);
+    	} else if (Input.IsActionJustPressed("previous_weapon")) {
+        	currentWeaponIndex = (currentWeaponIndex - 1 + weaponInventory.Count) % weaponInventory.Count;
+        	EquipWeapon(currentWeaponIndex);
+    	}
 	}
 
 	//UpdateAnimation and PlayIdleAnimation handle the animations. Since AnimatedSprite2D::Play() is used here the animation speed is taken care of automaticly by Godot
@@ -89,25 +122,46 @@ public partial class Player : CharacterBody2D {
 
 	}
 
+	private void EquipWeapon(int index) {
+    	if (weaponInventory.Count == 0) return;
+
+    	foreach (var weapon in weaponInventory) {
+        	weapon.Visible = false;
+    	}
+
+    	currentWeaponIndex = index % weaponInventory.Count;
+    	weaponInventory[currentWeaponIndex].Visible = true;
+    	currentWeapon = weaponInventory[currentWeaponIndex];
+	}
+
 	public void TryPickupWeapon(WeaponPickUp pickup) {
 		if (pickup == null) return;
 
-		GD.Print("Picked up new weapon!");
-		// Remove old weapon
-		if (currentWeapon != null)
-		{
-			currentWeapon.QueueFree();
-		}
-		// Get the new weapon from pickup
-		Weapon newWeapon = pickup.GetWeapon();
+    	GD.Print("Picked up new weapon!");
 
-		// Add it to the weapon holder
-		weaponHolder.AddChild(newWeapon);
-		newWeapon.Position = Vector2.Zero; // Reset local position
-		GD.Print("WeaponHolder children: ", weaponHolder.GetChildCount());
-		currentWeapon = newWeapon;
-		// Remove pickup from scene
-		pickup.QueueFree();
+    	Weapon newWeapon = pickup.GetWeapon();
+    	weaponHolder.AddChild(newWeapon);
+    	newWeapon.Position = Vector2.Zero;
+
+    	weaponInventory.Add(newWeapon);
+    	currentWeaponIndex = weaponInventory.Count - 1;
+    	EquipWeapon(currentWeaponIndex);
+
+    	pickup.QueueFree();
+	}
+
+	public void TakeDamage(float dmg) {
+		PlayerStats.TakeDamage(dmg);
+
+		if(PlayerStats.CurrentHealth <= 0) {
+			GD.Print("Player is dead!");
+		}
+	}
+
+	public void Heal(float heal) {
+		PlayerStats.Heal(heal);
+
+		GD.Print("Player has been healed! Current health: " + PlayerStats.CurrentHealth);
 	}
 
 	//If a scene is bound to the external BulletScene variable we create a new instance of Bullet,
