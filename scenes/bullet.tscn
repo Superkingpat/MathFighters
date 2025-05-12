@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://kmx5mmhd41x1"]
+
+[ext_resource type="Texture2D" uid="uid://5pb2vaxfohvm" path="res://assets/weapons/basic weapon/bullet.png" id="1_mkf8s"]
+[ext_resource type="Script" path="res://scripts/weapons/basic weapon/Bullet.cs" id="1_y25gk"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_y25gk"]
+radius = 9.0
+
+[node name="Bullet" type="CharacterBody2D"]
+collision_layer = 4
+collision_mask = 2
+script = ExtResource("1_y25gk")
+Speed = null
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.0220833, 0.0226042)
+texture = ExtResource("1_mkf8s")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_y25gk")
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
