@@ -11,6 +11,7 @@ public partial class Player : CharacterBody2D {
 	private Node2D weaponHolder;
 	public static Player Instance { get; private set; }
 	private Area2D screenBounds;
+	private AudioStreamPlayer2D shootingSound;
 	
 	//With GetNode we get the instance of the AnimatedSprite2D that was addet in the Godot UI
 	//_Ready is called when the root node (Player) entered the scene
@@ -20,6 +21,7 @@ public partial class Player : CharacterBody2D {
 		GetNode<Spawner>("/root/Spawner").InitPlayer();
 		animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
 		weaponHolder = GetNode<Node2D>("WeaponHolder");
+		shootingSound = GetNode<AudioStreamPlayer2D>("ShootingSound");
 		Instance = this;
 	}
 
