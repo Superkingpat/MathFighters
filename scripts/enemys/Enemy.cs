@@ -7,9 +7,9 @@ public abstract partial class Enemy : CharacterBody2D
 	[Export] public string EnemyName { get; protected set; } = "Enemy";
 	
 	[Export] public float Damage { get; protected set; } = 10.0f;
-	[Export] public float AttackRange { get; protected set; } = 10.0f;
-	[Export] public float AggroRange { get; protected set; } = 25.0f;
-	[Export] public float AttackCooldown { get; protected set; } = 1.0f;
+	// [Export] public float AttackRange { get; protected set; } = 10.0f;
+	// [Export] public float AggroRange { get; protected set; } = 25.0f;
+	[Export] public float AttackCooldown { get; protected set; } = 1.5f;
 	
 	[Export] public float Speed { get; protected set; } = 40.0f;
 	[Export] public float MaxHealth { get; protected set; } = 100.0f;
@@ -19,16 +19,20 @@ public abstract partial class Enemy : CharacterBody2D
 	[Export] public PackedScene[] PossibleDrops { get; protected set; }
 	[Export] public float[] DropChances { get; protected set; }
 	[Export] public int MaxDrops { get; protected set; } = 3;
+	[Export] public float CurrentHealth { get; protected set; }
 	
-	public float CurrentHealth { get; protected set; }
-	protected Player player;
-	
-	protected AnimatedSprite2D animatedSprite;
-	
+
 	protected bool isAttacking = false;
 	protected bool isAggroed = false;
 	protected bool isDead = false;
 	protected bool isMoving = false;
+
+
+	protected Player player;
+	protected AnimatedSprite2D animatedSprite;
+	protected Area2D detectionArea;
+	protected CollisionShape2D detectionCollision;
+	protected CollisionShape2D bodyCollision;
 	
 	// List to store configured drops
 	protected List<Drop> dropTable = new List<Drop>();
@@ -36,15 +40,63 @@ public abstract partial class Enemy : CharacterBody2D
 	// Random number generator
 	protected RandomNumberGenerator rng = new RandomNumberGenerator();
 
+	private Timer attackTimer;
+
 	public override void _Ready()
 	{
 		rng.Randomize();
-		
+
+		// Access player
 		player = GetTree().GetFirstNodeInGroup("player") as Player;
+		if (player == null)
+			GD.PrintErr("Player not found in group 'Player'");
+
+		// Access sprite
+		animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
 		
+		// Access detection area and its collision
+		detectionArea = GetNode<Area2D>("detection_area");
+		detectionCollision = detectionArea.GetNode<CollisionShape2D>("CollisionShape2D");
+
+		// Access main body collision shape
+		bodyCollision = GetNode<CollisionShape2D>("CollisionShape2D");
+
 		CurrentHealth = MaxHealth;
 		
 		InitializeDropTable();
+
+		detectionArea.BodyEntered += OnBodyEntered;
+		detectionArea.BodyExited += OnBodyExited;
+
+		// Setup attack timer
+		attackTimer = new Timer();
+		attackTimer.WaitTime = AttackCooldown;
+		attackTimer.OneShot = false;
+		attackTimer.Autostart = false;
+		attackTimer.Timeout += Attack;
+
+		AddChild(attackTimer);
+	}
+
+	private void OnBodyEntered(Node body)
+	{
+		if (player == body) // use groups to avoid hardcoding types
+		{
+			GD.Print("Player entered detection area!");
+			isAggroed = true;
+			attackTimer.Start(); // start attacking
+		}
+	}
+
+	private void OnBodyExited(Node body)
+	{
+		if (player == body)
+		{
+			GD.Print("Player left detection area.");
+			isAggroed = false;
+			attackTimer.Stop();
+			isAttacking = false;
+		}
 	}
 	
 	protected virtual void InitializeDropTable()
@@ -81,6 +133,9 @@ public abstract partial class Enemy : CharacterBody2D
 	protected virtual void MoveEnemy(float delta)
 	{
 		if (isDead || player == null)
+			return;
+
+		if(isAggroed || (isAggroed && isAttacking))
 			return;
 
 		Vector2 direction = (player.GlobalPosition - GlobalPosition).Normalized();
@@ -137,30 +192,12 @@ public abstract partial class Enemy : CharacterBody2D
 
 	protected virtual void Attack()
 	{
-		float distanceToPlayer = GlobalPosition.DistanceTo(player.GlobalPosition);
-		
-		if (distanceToPlayer <= AggroRange)
+		if (isAggroed && player != null)
 		{
-			isAggroed = true;
-			
-			if (distanceToPlayer <= AttackRange && !isAttacking)
-			{
-				isAttacking = true;
-				GD.Print("Enemy attacking player");
-
-				GetTree().CreateTimer(AttackCooldown).Timeout += () =>
-				{
-					isAttacking = false;
-				};
-			}
+			isAttacking = true;
+			GD.Print("Attacking player...");
+			// TODO: Do damage logic or animation
 		}
-		else
-		{
-			isAggroed = false;
-		}
-
-		// You'll need to add a TakeDamage method to your Player class
-		// player.TakeDamage(Damage);
 	}
 
 	public virtual void TakeDamage(int amount)

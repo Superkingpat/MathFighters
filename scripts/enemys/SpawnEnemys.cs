@@ -3,6 +3,8 @@ using System;
 
 public partial class SpawnEnemys : Node
 {
+
+	[Export] public bool ShouldSpawnEnemys = true;
 	[Export] public NodePath SpawnAreaPath; // Path to the Path2D or PathFollow2D node
 	private Area2D spawnArea;
 	private CollisionShape2D spawnCollision;
@@ -16,44 +18,45 @@ public partial class SpawnEnemys : Node
 
 	public override void _Ready()
 	{
-		GD.Print("START");
-
-		// Get spawn area
-		spawnArea = GetNodeOrNull<Area2D>(SpawnAreaPath);
-		if (spawnArea == null)
+		if(ShouldSpawnEnemys)
 		{
-			GD.PrintErr("ERROR: spawnArea is null! Is the path assigned?");
-			return;
-		}
+			// Get spawn area
+			spawnArea = GetNodeOrNull<Area2D>(SpawnAreaPath);
+			if (spawnArea == null)
+			{
+				GD.PrintErr("ERROR: spawnArea is null! Is the path assigned?");
+				return;
+			}
 
-		// Get collision shape
-		spawnCollision = spawnArea.GetNodeOrNull<CollisionShape2D>("CollisionShape2D");
-		if (spawnCollision == null)
-		{
-			GD.PrintErr("ERROR: spawnCollision is null! Is there a CollisionShape2D child?");
-			return;
-		}
+			// Get collision shape
+			spawnCollision = spawnArea.GetNodeOrNull<CollisionShape2D>("CollisionShape2D");
+			if (spawnCollision == null)
+			{
+				GD.PrintErr("ERROR: spawnCollision is null! Is there a CollisionShape2D child?");
+				return;
+			}
 
-		// Check shape type
-		if (spawnCollision.Shape is not RectangleShape2D)
-		{
-			GD.PrintErr("ERROR: spawnCollision.Shape is not a RectangleShape2D!");
-			return;
-		}
+			// Check shape type
+			if (spawnCollision.Shape is not RectangleShape2D)
+			{
+				GD.PrintErr("ERROR: spawnCollision.Shape is not a RectangleShape2D!");
+				return;
+			}
 
-		if (enemy == null)
-		{
-			GD.PrintErr("ERROR: Enemy scene not loaded! Check the path: res://scenes/Enemys/enemy.tscn");
-			return;
-		}
+			if (enemy == null)
+			{
+				GD.PrintErr("ERROR: Enemy scene not loaded! Check the path: res://scenes/Enemys/enemy.tscn");
+				return;
+			}
 
-		// Set up timer
-		spawnTimer = new Timer();
-		spawnTimer.WaitTime = SpawnInterval;
-		spawnTimer.OneShot = false;
-		spawnTimer.Autostart = true;
-		spawnTimer.Timeout += SpawnEnemy;
-		AddChild(spawnTimer);
+			// Set up timer
+			spawnTimer = new Timer();
+			spawnTimer.WaitTime = SpawnInterval;
+			spawnTimer.OneShot = false;
+			spawnTimer.Autostart = true;
+			spawnTimer.Timeout += SpawnEnemy;
+			AddChild(spawnTimer);
+		}
 	}
 
 	private void SpawnEnemy()

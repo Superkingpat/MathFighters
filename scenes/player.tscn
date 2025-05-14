@@ -328,3 +328,4 @@ drag_bottom_margin = 0.3
 [node name="WeaponHolder" type="Node2D" parent="."]
 
 [node name="EnemySpawner" parent="." instance=ExtResource("3_qhqgy")]
+ShouldSpawnEnemys = false

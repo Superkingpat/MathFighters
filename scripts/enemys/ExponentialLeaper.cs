@@ -60,32 +60,16 @@ public partial class ExponentialLeaper : Enemy
         AttackCooldown = Math.Max(minCooldown, baseCooldown / (1 + (float)Math.Sqrt(count)));
         GD.Print($"Attack #{count} — Attack Cooldown is now: {AttackCooldown}");
     }
-
-    protected override void Attack(){
-        float distanceToPlayer = GlobalPosition.DistanceTo(player.GlobalPosition);
-		
-		if (distanceToPlayer <= AggroRange)
+    protected override void Attack()
+	{
+		if (isAggroed && player != null)
 		{
-			isAggroed = true;
-			
-			if (distanceToPlayer <= AttackRange && !isAttacking)
-			{
-				isAttacking = true;
-				GD.Print("Enemy attacking player");
-				
-				GetTree().CreateTimer(AttackCooldown).Timeout += () =>
-				{
-					isAttacking = false;
-				};
-
-                AttackIncreaseCount++;
-                IncreaseDamage(AttackIncreaseCount);
-                IncreaseAttackSpeed(AttackIncreaseCount);
-			}
+			isAttacking = true;
+			GD.Print("Attacking player...");
+			// Do damage logic or animation
+            AttackIncreaseCount++;
+            IncreaseDamage(AttackIncreaseCount);
+            IncreaseAttackSpeed(AttackIncreaseCount);
 		}
-		else
-		{
-			isAggroed = false;
-		}
-    }
+	}
 }
