@@ -1,0 +1,36 @@
+[gd_scene load_steps=6 format=3 uid="uid://mb3ijl33kch"]
+
+[ext_resource type="Script" uid="uid://7ia4do0jhi5a" path="res://scripts/enemys/AbsoluteJuggernaut.cs" id="1_h8cwg"]
+[ext_resource type="Texture2D" uid="uid://b0h1grf3b1dn3" path="res://assets/enemy/absJug.png" id="2_61b8b"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_qc14x"]
+radius = 52.2398
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_h8cwg"]
+bg_color = Color(0.121851, 0.724862, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_61b8b"]
+bg_color = Color(1, 0, 0, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[node name="AbsoluteJuggernaut" type="Node2D"]
+script = ExtResource("1_h8cwg")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.201172, 0.201172)
+texture = ExtResource("2_61b8b")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_qc14x")
+
+[node name="HealthBar" type="ProgressBar" parent="."]
+offset_left = -30.0
+offset_top = -63.0
+offset_right = 30.0
+offset_bottom = -56.0
+theme_override_styles/background = SubResource("StyleBoxFlat_h8cwg")
+theme_override_styles/fill = SubResource("StyleBoxFlat_61b8b")
+show_percentage = false

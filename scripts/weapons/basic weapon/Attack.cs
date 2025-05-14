@@ -37,10 +37,10 @@ public partial class Attack : CharacterBody2D {
 	}
 
 	   protected virtual void PlayAttackSound()
-    {
-        if (AudioManager.Instance != null)
-        {
-            AudioManager.Instance.PlayShootSound("default");
-        }
-    }
+	{
+		if (AudioManager.Instance != null)
+		{
+			AudioManager.Instance.PlayShootSound("default");
+		}
+	}
 }

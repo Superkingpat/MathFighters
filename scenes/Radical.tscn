@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://x12u41qu0djr"]
+
+[ext_resource type="Script" uid="uid://bprw2vloqcnue" path="res://scripts/enemys/Radical.cs" id="1_fnmkq"]
+[ext_resource type="Texture2D" uid="uid://c6adpvonf1krh" path="res://assets/enemy/radical.png" id="1_w0wne"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_fnmkq"]
+radius = 43.4166
+
+[node name="Radical" type="Node2D"]
+script = ExtResource("1_fnmkq")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.1475, 0.1475)
+texture = ExtResource("1_w0wne")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_fnmkq")
+
+[node name="ChargeCooldown" type="Timer" parent="."]
