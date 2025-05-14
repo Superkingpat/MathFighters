@@ -35,6 +35,8 @@ public partial class Player : CharacterBody2D {
 	private Node2D weaponHolder;
 	public static Player Instance { get; private set; }
 	private Area2D screenBounds;
+	private AudioStreamPlayer2D shootingSound;
+	private AudioStreamPlayer2D weaponPickupSound;
 
 	public int Damage=1;
 
@@ -49,6 +51,8 @@ public partial class Player : CharacterBody2D {
 		GetNode<Spawner>("/root/Spawner").InitPlayer();
 		animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
 		weaponHolder = GetNode<Node2D>("WeaponHolder");
+		shootingSound = GetNode<AudioStreamPlayer2D>("ShootingSound");
+		weaponPickupSound = GetNode<AudioStreamPlayer2D>("WeaponPickUpSound");
 		Instance = this;
 	}
 
@@ -135,20 +139,33 @@ public partial class Player : CharacterBody2D {
 	}
 
 	public void TryPickupWeapon(WeaponPickUp pickup) {
-		if (pickup == null) return;
+	if (pickup == null) return;
 
-    	GD.Print("Picked up new weapon!");
+	GD.Print("Picked up new weapon!");
 
-    	Weapon newWeapon = pickup.GetWeapon();
-    	weaponHolder.AddChild(newWeapon);
-    	newWeapon.Position = Vector2.Zero;
+	Weapon newWeapon = pickup.GetWeapon();
+	weaponHolder.AddChild(newWeapon);
+	newWeapon.Position = Vector2.Zero;
 
-    	weaponInventory.Add(newWeapon);
-    	currentWeaponIndex = weaponInventory.Count - 1;
-    	EquipWeapon(currentWeaponIndex);
+	weaponInventory.Add(newWeapon);
+	currentWeaponIndex = weaponInventory.Count - 1;
+	EquipWeapon(currentWeaponIndex);
 
-    	pickup.QueueFree();
+	string weaponName = newWeapon.Name.ToString().ToLower();
+	string soundPath = "res://assets/audio/weapon_default.wav"; // fallback
+
+	if (weaponName.Contains("geotriangle")) {
+		soundPath = "res://assets/audio/weapon_geotriangle.wav";
+	} else if (weaponName.Contains("pen")) {
+		soundPath = "res://assets/audio/weapon_pen.wav";
 	}
+
+	var stream = GD.Load<AudioStream>(soundPath);
+	weaponPickupSound.Stream = stream;
+	weaponPickupSound.Play();
+
+	pickup.QueueFree();
+}
 
 	public void TakeDamage(float dmg) {
 		PlayerStats.TakeDamage(dmg);
