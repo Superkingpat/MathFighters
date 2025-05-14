@@ -37,6 +37,7 @@ public partial class Player : CharacterBody2D {
 	private Area2D screenBounds;
 	private AudioStreamPlayer2D shootingSound;
 	private AudioStreamPlayer2D weaponPickupSound;
+	private AudioStreamPlayer2D walkingSound;
 
 	public int Damage=1;
 
@@ -53,6 +54,7 @@ public partial class Player : CharacterBody2D {
 		weaponHolder = GetNode<Node2D>("WeaponHolder");
 		shootingSound = GetNode<AudioStreamPlayer2D>("ShootingSound");
 		weaponPickupSound = GetNode<AudioStreamPlayer2D>("WeaponPickUpSound");
+		walkingSound = GetNode<AudioStreamPlayer2D>("WalkingSound");
 		Instance = this;
 	}
 
@@ -98,6 +100,15 @@ public partial class Player : CharacterBody2D {
         	currentWeaponIndex = (currentWeaponIndex - 1 + weaponInventory.Count) % weaponInventory.Count;
         	EquipWeapon(currentWeaponIndex);
     	}
+	}
+	private void PlayFootstepSound() {
+		if (walkingSound != null && walkingSound.Stream != null) {
+			if (!walkingSound.Playing) {
+				walkingSound.Play();
+			}
+		} else {
+			GD.PrintErr("WalkingSound node not properly configured");
+		}
 	}
 
 	//UpdateAnimation and PlayIdleAnimation handle the animations. Since AnimatedSprite2D::Play() is used here the animation speed is taken care of automaticly by Godot
