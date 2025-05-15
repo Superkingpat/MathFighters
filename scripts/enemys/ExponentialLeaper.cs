@@ -24,6 +24,8 @@ public partial class ExponentialLeaper : Enemy
 	{
 		base._Ready();
 
+		animatedSprite.Play("idle");
+
 		var speedTimer = new Timer();
 		speedTimer.WaitTime = 5.0f;
 		speedTimer.OneShot = false;
