@@ -50,14 +50,22 @@ public partial class PenAttack : Attack {
 		}
 
 		if (!hasStopped) {
-			base._PhysicsProcess(delta);
+			Velocity = direction * Speed;
+			var collision = MoveAndCollide(Velocity * (float)delta);
+
+			if (collision != null && collision.GetCollider() is Enemy enemy)
+			{
+				enemy.TakeDamage(10); // ali karkoli želiš
+				QueueFree();
+			}
 		}
+
 	}
   protected override void PlayAttackSound()
-    {
-        if (AudioManager.Instance != null)
-        {
-            AudioManager.Instance.PlayShootSound("pen");
-        }
-    }
+	{
+		if (AudioManager.Instance != null)
+		{
+			AudioManager.Instance.PlayShootSound("pen");
+		}
+	}
 }

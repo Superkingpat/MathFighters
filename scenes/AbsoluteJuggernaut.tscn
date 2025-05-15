@@ -7,17 +7,23 @@
 radius = 52.2398
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_h8cwg"]
-bg_color = Color(0.121851, 0.724862, 0, 1)
+bg_color = Color(1, 0, 0, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_61b8b"]
-bg_color = Color(1, 0, 0, 1)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
+bg_color = Color(0.121569, 0.72549, 0, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
 
-[node name="AbsoluteJuggernaut" type="Node2D"]
+[node name="AbsoluteJuggernaut" type="CharacterBody2D"]
+collision_layer = 4
 script = ExtResource("1_h8cwg")
+MaxHealth = 500.0
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 scale = Vector2(0.201172, 0.201172)

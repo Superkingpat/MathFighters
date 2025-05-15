@@ -3,6 +3,8 @@ using System;
 
 public partial class Radical : Enemy
 {
+	private ProgressBar healthBar;
+	
 	[Export] public float BaseSpeed = 100f;
 	[Export] public float MaxChargeSpeed = 400f;
 	[Export] public float ChargeCooldownTime = 8f;
@@ -24,6 +26,7 @@ public partial class Radical : Enemy
 		CurrentHealth = MaxHealth;
 		chargeCooldown = GetNode<Timer>("ChargeCooldown");
 		chargeCooldown.WaitTime = ChargeCooldownTime;
+		healthBar = GetNode<ProgressBar>("HealthBar");
 		chargeCooldown.Start();
 
 		UpdateSpeed();
@@ -64,7 +67,7 @@ public partial class Radical : Enemy
 		else if (hpRatio > 0.25f)
 			currSpeed = BaseSpeed;
 		else
-			currSpeed = BaseSpeed * 1.75f;
+			currSpeed = BaseSpeed * 1.50f;
 	}
 
 	private float CalculateDamage()
@@ -88,11 +91,13 @@ public partial class Radical : Enemy
 	{
 		base.TakeDamage(val);
 		TryToCharge();
+		if (healthBar != null)
+		{
+			healthBar.Value = CurrentHealth;
+		}
 	}
 
-	// PREKRIJEMO osnovni premik, da ne uporablja dedovane logike
 	protected override void MoveEnemy(float delta)
 	{
-		// Prazno: ignoriramo default premik iz Enemy.cs
 	}
 }

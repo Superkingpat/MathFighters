@@ -2,7 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-public abstract partial class Enemy : Node2D
+public abstract partial class Enemy : CharacterBody2D
 {
 	[Export] public string EnemyName { get; private set; } = "Enemy";
 	[Export] public int Damage { get; private set; } = 10;
@@ -12,7 +12,7 @@ public abstract partial class Enemy : Node2D
 	[Export] public float AggroRange { get; private set; } = 300.0f;
 	[Export] public float FleeRange { get; private set; } = 100.0f;
 	[Export] public float Speed { get; set; } = 200.0f;
-	[Export] public float MaxHealth { get; private set; } = 100.0f;
+	[Export] public float MaxHealth { get; set; } = 100.0f;
 	[Export] public float Armor { get; private set; } = 50.0f;
 	
 	// New properties for drops
