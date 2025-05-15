@@ -11,6 +11,8 @@ public partial class Player : CharacterBody2D {
 	private Node2D weaponHolder;
 	public static Player Instance { get; private set; }
 	private Area2D screenBounds;
+	[Export] public float MaxHealth = 100f;
+	public float CurrentHealth { get; private set; }
 	
 	//With GetNode we get the instance of the AnimatedSprite2D that was addet in the Godot UI
 	//_Ready is called when the root node (Player) entered the scene
@@ -21,6 +23,7 @@ public partial class Player : CharacterBody2D {
 		animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
 		weaponHolder = GetNode<Node2D>("WeaponHolder");
 		Instance = this;
+		CurrentHealth = MaxHealth;
 	}
 
 	//_PhysicsProcess updates the physics engine and animations in the background. MoveAndSlide() is used here, which means we don't need to care about delta time, it's handled automaticly
@@ -104,6 +107,24 @@ public partial class Player : CharacterBody2D {
 		currentWeapon = newWeapon;
 		// Remove pickup from scene
 		pickup.QueueFree();
+	}
+	
+	public void TakeDamage(float amount)
+	{
+		CurrentHealth -= amount;
+		GD.Print("Player took " + amount + " damage. HP left: " + CurrentHealth);
+
+		if (CurrentHealth <= 0)
+		{
+			Die();
+		}
+	}
+
+	private void Die()
+	{
+		GD.Print("Player died!");
+		// Disable movement, play animation, trigger game over, etc.
+		QueueFree();
 	}
 
 	//If a scene is bound to the external BulletScene variable we create a new instance of Bullet,

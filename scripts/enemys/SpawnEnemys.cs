@@ -15,6 +15,8 @@ public partial class SpawnEnemys : Node
 
 	private Path2D spawnPath;
 	private Timer spawnTimer;
+	
+	enemyInstance.AddToGroup("enemies");
 
 	public override void _Ready()
 	{

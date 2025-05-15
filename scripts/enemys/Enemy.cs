@@ -196,7 +196,7 @@ public abstract partial class Enemy : CharacterBody2D
 		{
 			isAttacking = true;
 			GD.Print("Attacking player...");
-			// TODO: Do damage logic or animation
+			player.TakeDamage(Damage);
 		}
 	}
 

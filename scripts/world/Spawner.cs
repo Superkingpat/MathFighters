@@ -1,14 +1,15 @@
 using Godot;
 using System;
 
-
-
 public partial class Spawner : Node
 {
 	private Vector2 range= new Vector2(1920/3,1080/3);
 	Random rnd = new Random();
 	public static PackedScene ItemScene;
 	private Player Player;
+	
+	private PackedScene EnemyScene = ResourceLoader.Load<PackedScene>("res://scenes/enemys/enemy.tscn");
+
 	
 	public override void _Ready(){
 		ItemScene = ResourceLoader.Load<PackedScene>("res://scenes/item.tscn");
@@ -29,7 +30,14 @@ public partial class Spawner : Node
 		return  position +  new Vector2(rnd.Next((int)-range[0],(int)range[0]),rnd.Next((int)-range[1],(int)range[1]));
 	}
 	
-	
+	private void SpawnEnemy(Vector2 position)
+	{
+		var enemyInstance = EnemyScene.Instantiate<CharacterBody2D>();
+		enemyInstance.GlobalPosition = getRandPosition(position); 
+		GetTree().CurrentScene.AddChild(enemyInstance);
+		GD.Print("Spawned enemy at: " + enemyInstance.GlobalPosition);
+	}
+
 	
 
 	private void spawnItem(Vector2 position,String path,Action function){
@@ -66,6 +74,11 @@ public partial class Spawner : Node
 				case 6:
 				case 7:
 				case 8:
+					for (int i = 0; i < 30; i++)
+					{
+						SpawnEnemy(getRandPosition(position));
+					}
+					break;
 				case 9:
 					spawnItem(
 						getRandPosition(position),
