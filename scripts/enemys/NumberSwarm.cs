@@ -10,27 +10,26 @@ public partial class NumberSwarm : Enemy
 	{
 		base._Ready();
 
-		// Nastavi lastnosti glede na vrednost
 		ConfigureStats();
 	}
 
 	private void ConfigureStats()
 	{
-		if (EnemyValue <= 5) // nizke številke
+		if (EnemyValue <= 5)
 		{
 			Speed = 120f;
 			Damage = 5f;
 			AttackCooldown = 0.5f;
 			MaxHealth = 20f;
 		}
-		else if (EnemyValue <= 9) // srednje številke
+		else if (EnemyValue <= 9) 
 		{
 			Speed = 70f;
 			Damage = 15f;
 			AttackCooldown = 1.2f;
 			MaxHealth = 50f;
 		}
-		else // visoke številke (10+)
+		else
 		{
 			Speed = 30f;
 			Damage = 30f;
@@ -48,7 +47,6 @@ public partial class NumberSwarm : Enemy
 
 		if (EnemyValue >= 10)
 		{
-			// Visoke številke ignorirajo ovire in samo napredujejo proti igralcu
 			Vector2 direction = (player.GlobalPosition - GlobalPosition).Normalized();
 			Position += direction * Speed * delta;
 			return;
@@ -59,8 +57,6 @@ public partial class NumberSwarm : Enemy
 
 		Vector2 directionLow = (player.GlobalPosition - GlobalPosition).Normalized();
 
-		// Nizke in srednje številke imajo lahko izogibanje (odkomentiraj, če želiš)
-		// ali samo direktno gibanje:
 		Position += directionLow * Speed * delta;
 	}
 
@@ -73,19 +69,16 @@ public partial class NumberSwarm : Enemy
 
 		if (EnemyValue <= 5)
 		{
-			// Hitri, šibki napadi
 			GD.Print($"[Number {EnemyValue}] Quick attack!");
 			player.TakeDamage(Damage);
 		}
 		else if (EnemyValue <= 9)
 		{
-			// Srednje močni napadi
 			GD.Print($"[Number {EnemyValue}] Strong melee attack!");
 			player.TakeDamage(Damage * 1.5f);
 		}
 		else
 		{
-			// Težki, počasni napadi z AoE
 			GD.Print($"[Number {EnemyValue}] CHARGED AOE attack!");
 			AreaAttack();
 		}
