@@ -1,7 +1,7 @@
 [gd_scene load_steps=28 format=3 uid="uid://c4psokfkfw7gi"]
 
 [ext_resource type="Texture2D" uid="uid://d32dbosw3i4mw" path="res://assets/enemys/slime.png" id="1_168um"]
-[ext_resource type="Script" uid="uid://c1u7h4qxbqdl6" path="res://scripts/enemys/BasicEnemy.cs" id="1_kjdq4"]
+[ext_resource type="Script" uid="uid://hak3dc2fdca2" path="res://scripts/enemys/NumberSwarm.cs" id="1_kjdq4"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_0lrm7"]
 atlas = ExtResource("1_168um")
@@ -187,6 +187,8 @@ radius = 13.0
 radius = 9.05539
 
 [node name="Enemy" type="CharacterBody2D"]
+collision_layer = 2
+collision_mask = 7
 script = ExtResource("1_kjdq4")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
@@ -195,8 +197,6 @@ animation = &"idle"
 offset = Vector2(0, -3)
 
 [node name="detection_area" type="Area2D" parent="."]
-collision_layer = 2
-collision_mask = 3
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="detection_area"]
 light_mask = 3

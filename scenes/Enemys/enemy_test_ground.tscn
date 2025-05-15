@@ -1,19 +1,31 @@
-[gd_scene load_steps=4 format=3 uid="uid://c0xcv6wduke3j"]
+[gd_scene load_steps=7 format=3 uid="uid://c0xcv6wduke3j"]
 
 [ext_resource type="PackedScene" uid="uid://cwsiati3qwbjm" path="res://scenes/player.tscn" id="1_4irva"]
 [ext_resource type="PackedScene" uid="uid://c4psokfkfw7gi" path="res://scenes/Enemys/enemy.tscn" id="2_nnhog"]
-[ext_resource type="Script" uid="uid://v0uje8qyolsx" path="res://scripts/enemys/ExponentialLeaper.cs" id="3_nnhog"]
+[ext_resource type="Script" uid="uid://bgtabq5ovl7ec" path="res://scripts/enemys/ZeroGuardion.cs" id="3_t3f3t"]
+[ext_resource type="Script" uid="uid://b20oufb6tyyif" path="res://scripts/enemys/NumberSwarmSpawner.cs" id="4_t3f3t"]
+[ext_resource type="PackedScene" uid="uid://bm071a2ffn1c1" path="res://scenes/weapon_pick_up.tscn" id="4_xq43n"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_crnxx"]
+size = Vector2(174, 163)
 
 [node name="Enemy test ground" type="Node2D"]
 
 [node name="Player" parent="." instance=ExtResource("1_4irva")]
-collision_layer = 3
 
 [node name="Enemy" parent="." instance=ExtResource("2_nnhog")]
 position = Vector2(-316, -67)
-collision_layer = 3
-collision_mask = 3
-script = ExtResource("3_nnhog")
-baseSpeed = 10.0
-baseDamage = 5.0
-baseCooldown = 2.0
+script = ExtResource("3_t3f3t")
+
+[node name="WeaponPickUp2" parent="." instance=ExtResource("4_xq43n")]
+
+[node name="TestSwarmSpawn" type="Node2D" parent="."]
+position = Vector2(-360, 61)
+script = ExtResource("4_t3f3t")
+SpawnAreaPath = NodePath("Area2D")
+
+[node name="Area2D" type="Area2D" parent="TestSwarmSpawn"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TestSwarmSpawn/Area2D"]
+position = Vector2(0, -0.5)
+shape = SubResource("RectangleShape2D_crnxx")
