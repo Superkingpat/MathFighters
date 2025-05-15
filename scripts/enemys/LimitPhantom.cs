@@ -32,13 +32,6 @@ public partial class LimitPhantom : Enemy
 		var collision = new CollisionShape2D { Shape = shape };
 		aoeArea.AddChild(collision);
 		AddChild(aoeArea);
-
-		attackTimer = new Timer();
-		attackTimer.WaitTime = AttackCooldown;
-		attackTimer.OneShot = false;
-		attackTimer.Timeout += Attack;
-		AddChild(attackTimer);
-		attackTimer.Start();
 	}
 
 	public override void _PhysicsProcess(double delta)
@@ -57,7 +50,7 @@ public partial class LimitPhantom : Enemy
 		}
 	}
 
-	public override void TakeDamage(int amount)
+	public override void TakeDamage(float amount)
 	{
 		timeSinceLastHit = 0f;
 
