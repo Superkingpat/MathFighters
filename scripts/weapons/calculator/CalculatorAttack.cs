@@ -2,20 +2,20 @@ using Godot;
 using System;
 
 public partial class CalculatorAttack : Attack {
-	[Export] public float ExpandScale = 5.0f;
-	[Export] public float TravelTime = 1.0f;
+	[Export] public float MaxExpandScale = 5.0f;
 	[Export] public float ExpandedTime = 1.0f;
 
 	private float timer = 0f;
 	private Vector2 originalScale;
-	private bool hasExpanded = false;
-	private bool hasStopped = false;
 	private CollisionShape2D collisionShape;
 	private Shape2D originalCollisionShape;
+	private float expandScale = 1.0f;
+
 	public override void _Ready() {
 		base._Ready();
 		originalScale = Scale;
 		collisionShape = GetNode<CollisionShape2D>("CollisionShape2D");
+
 		if (collisionShape != null) {
 			originalCollisionShape = collisionShape.Shape;
 		} else {
@@ -23,53 +23,31 @@ public partial class CalculatorAttack : Attack {
 		}
 	}
 
-    public void Init(Vector2 targetPosition, Vector2 startPosition, int WeaponLevel, double currChargeTime) {
-        base.Init(targetPosition, startPosition, WeaponLevel);
-    }
+	public void Init(Vector2 targetPosition, Vector2 startPosition, int weaponLevel, double currChargeTime) {
+		GD.Print("CALC ATTACK IS INIT");
+		base.Init(targetPosition, startPosition, weaponLevel);
 
-	public override void _PhysicsProcess(double delta)
-	{
+		expandScale = Mathf.Lerp(1.0f, MaxExpandScale, (float)(currChargeTime / 0.5f));
+		Scale = originalScale * expandScale;
+
+		if (collisionShape != null && originalCollisionShape is CircleShape2D circleShape) {
+			CircleShape2D newShape = new CircleShape2D();
+			newShape.Radius = circleShape.Radius * expandScale;
+			collisionShape.Shape = newShape;
+		}
+
+		PlayAttackSound();
+	}
+
+	public override void _PhysicsProcess(double delta) {
 		timer += (float)delta;
 
-		if (!hasStopped && timer >= TravelTime)
-		{
-			hasStopped = true;
-			Speed = 0f;
-			timer = 0f;
-		}
-
-		if (hasStopped && !hasExpanded)
-		{
-			Scale = originalScale * ExpandScale;
-
-			if (collisionShape != null && originalCollisionShape != null)
-			{
-				if (originalCollisionShape is CircleShape2D circleShape)
-				{
-					var newShape = new CircleShape2D();
-					newShape.Radius = circleShape.Radius * ExpandScale;
-					collisionShape.Shape = newShape;
-				}
-			}
-
-			hasExpanded = true;
-		}
-		else if (hasExpanded && timer >= ExpandedTime)
-		{
+		if (timer >= ExpandedTime) {
 			QueueFree();
-			GD.Print("Pen bullet was deleted!");
-		}
-
-		if (!hasStopped)
-		{
-			base._PhysicsProcess(delta);
 		}
 	}
-  protected override void PlayAttackSound()
-    {
-        if (AudioManager.Instance != null)
-        {
-            AudioManager.Instance.PlayShootSound("pen");
-        }
-    }
+
+	protected override void PlayAttackSound() {
+		AudioManager.Instance?.PlayShootSound("pen");
+	}
 }
