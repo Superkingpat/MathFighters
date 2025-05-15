@@ -2,15 +2,12 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-public abstract partial class Enemy : CharacterBody2D
+public partial class Enemy : CharacterBody2D
 {
 	[Export] public string EnemyName { get; protected set; } = "Enemy";
 	
-	[Export] public float Damage { get; protected set; } = 10.0f;
-	// [Export] public float AttackRange { get; protected set; } = 10.0f;
-	// [Export] public float AggroRange { get; protected set; } = 25.0f;
-	[Export] public float AttackCooldown { get; protected set; } = 1.5f;
-	
+	[Export] public float Damage { get; protected set; } = 3.0f;
+	[Export] public float AttackCooldown { get; protected set; } = 1.0f;
 	[Export] public float Speed { get; protected set; } = 40.0f;
 	[Export] public float MaxHealth { get; protected set; } = 100.0f;
 	[Export] public float Armor { get; protected set; } = 50.0f;
@@ -26,7 +23,6 @@ public abstract partial class Enemy : CharacterBody2D
 	protected bool isAggroed = false;
 	protected bool isDead = false;
 	protected bool isMoving = false;
-
 
 	protected Player player;
 	protected AnimatedSprite2D animatedSprite;
@@ -200,9 +196,10 @@ public abstract partial class Enemy : CharacterBody2D
 		}
 	}
 
-	public virtual void TakeDamage(int amount)
+	public virtual void TakeDamage(float amount)
 	{
 		CurrentHealth -= amount;
+		GD.Print($"[Enemy {EnemyName}] Hit for {amount} damage");
 		if (CurrentHealth <= 0)
 		{
 			Die();
