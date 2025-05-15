@@ -4,12 +4,13 @@ using System.Collections.Generic;
 
 public partial class NumberSwarm : Enemy
 {
-	[Export] public int EnemyValue { get; private set; } = 1;
+	[Export] public int EnemyValue { get; set; } = 0;
 
 	public override void _Ready()
 	{
 		base._Ready();
-
+		EnemyName = $"NumberSwarm[{EnemyValue}]";
+		animatedSprite.Play(EnemyValue.ToString());
 		ConfigureStats();
 	}
 
@@ -38,26 +39,7 @@ public partial class NumberSwarm : Enemy
 		}
 
 		CurrentHealth = MaxHealth;
-	}
-
-	protected override void MoveEnemy(float delta)
-	{
-		if (isDead || player == null)
-			return;
-
-		if (EnemyValue >= 10)
-		{
-			Vector2 direction = (player.GlobalPosition - GlobalPosition).Normalized();
-			Position += direction * Speed * delta;
-			return;
-		}
-
-		if (isAggroed || (isAggroed && isAttacking))
-			return;
-
-		Vector2 directionLow = (player.GlobalPosition - GlobalPosition).Normalized();
-
-		Position += directionLow * Speed * delta;
+		GD.Print($"[Number {EnemyValue}] Spawned!");
 	}
 
 	protected override void Attack()
@@ -96,7 +78,7 @@ public partial class NumberSwarm : Enemy
 		}
 	}
 
-	public override void TakeDamage(int amount)
+	public override void TakeDamage(float amount)
 	{
 		base.TakeDamage(amount);
 		GD.Print($"[Number {EnemyValue}] took {amount} damage. Remaining: {CurrentHealth}");
