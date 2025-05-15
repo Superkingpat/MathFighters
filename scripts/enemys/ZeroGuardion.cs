@@ -129,7 +129,7 @@ public partial class ZeroGuardian : Enemy
 		GD.Print($"Zero Guardian absorbed {amount} damage meant for {targetEnemy.EnemyName}");
 	}
 
-	public override void TakeDamage(int amount)
+	public override void TakeDamage(float amount)
 	{
 		GD.Print("Zero Guardian absorbed damage");
 	}
