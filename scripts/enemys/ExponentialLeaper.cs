@@ -12,7 +12,7 @@ public partial class ExponentialLeaper : Enemy
 	private int AttackIncreaseCount = 0;
 	private float scale = 4;
 
-	float minCooldown = 0.5f;
+	float minCooldown = 0.3f;
 
 	public void Initialize(){
 		EnemyName = "Exponential Leaper";
@@ -24,12 +24,12 @@ public partial class ExponentialLeaper : Enemy
 	{
 		base._Ready();
 
-		var spawnTimer = new Timer();
-		spawnTimer.WaitTime = 5.0f;
-		spawnTimer.OneShot = false;
-		spawnTimer.Autostart = true;
-		spawnTimer.Timeout += OnTimerTimeout;
-		AddChild(spawnTimer);
+		var speedTimer = new Timer();
+		speedTimer.WaitTime = 5.0f;
+		speedTimer.OneShot = false;
+		speedTimer.Autostart = true;
+		speedTimer.Timeout += IncreaseSpeed;
+		AddChild(speedTimer);
 	}
 
 	public override void _PhysicsProcess(double delta)
@@ -37,16 +37,11 @@ public partial class ExponentialLeaper : Enemy
 		base._PhysicsProcess(delta);  
 	}
 
-	 private void OnTimerTimeout()
+	private void IncreaseSpeed()
 	{
 		speedIncreaseCount++;
-		IncreaseSpeed(speedIncreaseCount);
-	}
-
-	private void IncreaseSpeed(int count)
-	{
-		Speed = baseSpeed * (float)Math.Pow(2, count);;
-		GD.Print($"Run #{count} — Speed is now: {Speed}");
+		Speed = baseSpeed * (float)Math.Pow(2, speedIncreaseCount);;
+		GD.Print($"Run #{speedIncreaseCount} — Speed is now: {Speed}");
 	}
 
 	private void IncreaseDamage(int count)
@@ -65,7 +60,8 @@ public partial class ExponentialLeaper : Enemy
 		if (isAggroed && player != null)
 		{
 			isAttacking = true;
-			GD.Print("Attacking player...");
+			GD.Print($"[Enemy {EnemyName}] Attacking player");
+			player.TakeDamage(Damage);
 			// Do damage logic or animation
 			AttackIncreaseCount++;
 			IncreaseDamage(AttackIncreaseCount);
