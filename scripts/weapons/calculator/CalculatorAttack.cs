@@ -23,20 +23,29 @@ public partial class CalculatorAttack : Attack {
 		}
 	}
 
-	public override void _PhysicsProcess(double delta) {
+    public void Init(Vector2 targetPosition, Vector2 startPosition, int WeaponLevel, double currChargeTime) {
+        base.Init(targetPosition, startPosition, WeaponLevel);
+    }
+
+	public override void _PhysicsProcess(double delta)
+	{
 		timer += (float)delta;
 
-		if (!hasStopped && timer >= TravelTime) {
+		if (!hasStopped && timer >= TravelTime)
+		{
 			hasStopped = true;
 			Speed = 0f;
 			timer = 0f;
 		}
 
-		if (hasStopped && !hasExpanded) {
+		if (hasStopped && !hasExpanded)
+		{
 			Scale = originalScale * ExpandScale;
 
-			if (collisionShape != null && originalCollisionShape != null) {
-				if (originalCollisionShape is CircleShape2D circleShape) {
+			if (collisionShape != null && originalCollisionShape != null)
+			{
+				if (originalCollisionShape is CircleShape2D circleShape)
+				{
 					var newShape = new CircleShape2D();
 					newShape.Radius = circleShape.Radius * ExpandScale;
 					collisionShape.Shape = newShape;
@@ -44,12 +53,15 @@ public partial class CalculatorAttack : Attack {
 			}
 
 			hasExpanded = true;
-		} else if (hasExpanded && timer >= ExpandedTime) {
+		}
+		else if (hasExpanded && timer >= ExpandedTime)
+		{
 			QueueFree();
 			GD.Print("Pen bullet was deleted!");
 		}
 
-		if (!hasStopped) {
+		if (!hasStopped)
+		{
 			base._PhysicsProcess(delta);
 		}
 	}
