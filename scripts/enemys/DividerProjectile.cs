@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public partial class DividerProjectile : Node2D
+public partial class DividerProjectile : CharacterBody2D
 {
 	[Export] public float Speed = 150f;
 	[Export] public float Lifetime = 2.5f;
@@ -26,24 +26,45 @@ public partial class DividerProjectile : Node2D
 
 	public override void _PhysicsProcess(double delta)
 	{
-		Position += Direction * Speed * (float)delta;
+		Vector2 motion = Direction * Speed * (float)delta;
+ 		var collision = MoveAndCollide(motion);
+		// var spaceState = GetWorld2D().DirectSpaceState;
+		// var query = new PhysicsPointQueryParameters2D
+		// {
+		// 	Position = GlobalPosition,
+		// 	CollideWithAreas = false,
+		// 	CollideWithBodies = true
+		// };
+		// var result = spaceState.IntersectPoint(query);
 
-		var spaceState = GetWorld2D().DirectSpaceState;
-		var result = spaceState.IntersectPoint(GlobalPosition);
+		// foreach (var hit in result)
+		// {
+		// 	var collider = hit["collider"].AsGodotObject() as Node2D;
+		// 	if (collider is Player p)
+		// 	{
+		// 		p.TakeDamage(Damage);
+		// 		OnImpact();
+		// 		break;
+		// 	}
+		// 	else if (collider is TileMapLayer || collider is StaticBody2D)
+		// 	{
+		// 		OnImpact();
+		// 		break;
+		// 	}
+		// }
 
-		foreach (var hit in result)
+		if (collision != null)
 		{
-			if (hit["collider"] is Player p)
+			var collider = collision.GetCollider();
+			if (collider is Player p)
 			{
 				p.TakeDamage(Damage);
 				OnImpact();
-				break;
 			}
-			else if (hit["collider"] is TileMap || hit["collider"] is StaticBody2D)
-			{
-				OnImpact();
-				break;
-			}
+		}
+		else
+		{
+			Position += motion; // Move if nothing is hit
 		}
 	}
 

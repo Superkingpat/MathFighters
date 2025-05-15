@@ -4,10 +4,10 @@ using System;
 public partial class Divider : Enemy
 {
 	[Export] public PackedScene DividerProjectileScene { get; set; }
-	[Export] public float PreferredDistance = 150f;
-	[Export] public float RetreatThreshold = 100f;
+	[Export] public float PreferredDistance = 500f;
+	[Export] public float RetreatThreshold = 200f;
 	[Export] public float HoverSpeed = 40f;
-	[Export] public float FireInterval = 2.5f;
+	[Export] public float FireInterval = 1.5f;
 
 	private Timer fireTimer;
 
@@ -26,7 +26,7 @@ public partial class Divider : Enemy
 		fireTimer.WaitTime = FireInterval;
 		fireTimer.OneShot = false;
 		fireTimer.Autostart = true;
-		fireTimer.Timeout += () => FireProjectile();
+		fireTimer.Timeout += FireProjectile;
 
 		AddChild(fireTimer);
 	}
