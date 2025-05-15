@@ -137,18 +137,32 @@ public partial class Player : CharacterBody2D {
 	public void TryPickupWeapon(WeaponPickUp pickup) {
 		if (pickup == null) return;
 
-    	GD.Print("Picked up new weapon!");
+		GD.Print("Trying to pick up weapon...");
 
-    	Weapon newWeapon = pickup.GetWeapon();
-    	weaponHolder.AddChild(newWeapon);
-    	newWeapon.Position = Vector2.Zero;
+		Weapon newWeapon = pickup.GetWeapon();
+		Type newWeaponType = newWeapon.GetType();
 
-    	weaponInventory.Add(newWeapon);
-    	currentWeaponIndex = weaponInventory.Count - 1;
-    	EquipWeapon(currentWeaponIndex);
+		foreach (Weapon existingWeapon in weaponInventory) {
+			if (existingWeapon.GetType() == newWeaponType) {
+				GD.Print("Already have weapon of type " + newWeaponType.Name + ", leveling up.");
+				existingWeapon.LevelUpWeapon();
+				newWeapon.QueueFree();
+				pickup.QueueFree();
+				return;
+			}
+		}
 
-    	pickup.QueueFree();
+		GD.Print("Picked up new weapon of type " + newWeaponType.Name);
+		weaponHolder.AddChild(newWeapon);
+		newWeapon.Position = Vector2.Zero;
+
+		weaponInventory.Add(newWeapon);
+		currentWeaponIndex = weaponInventory.Count - 1;
+		EquipWeapon(currentWeaponIndex);
+
+		pickup.QueueFree();
 	}
+
 
 	public void TakeDamage(float dmg) {
 		PlayerStats.TakeDamage(dmg);
