@@ -26,6 +26,14 @@ WeaponScene = ExtResource("3_4eyuj")
 position = Vector2(388, 163)
 WeaponScene = ExtResource("4_cmxnd")
 
+[node name="WeaponPickUp6" parent="." instance=ExtResource("2_gawm5")]
+position = Vector2(386, -22)
+WeaponScene = ExtResource("4_cmxnd")
+
+[node name="WeaponPickUp7" parent="." instance=ExtResource("2_gawm5")]
+position = Vector2(186, 28)
+WeaponScene = ExtResource("4_cmxnd")
+
 [node name="WeaponPickUp4" parent="." instance=ExtResource("2_gawm5")]
 position = Vector2(-273, 150)
 WeaponScene = ExtResource("5_kwwa1")
