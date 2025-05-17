@@ -78,19 +78,19 @@ public partial class Spawner : Node
 	}
 	//Definirani efekti razlicnih itemov
 	private async void _speedUp(int duration, int multiplier){
-		Player.Speed *= multiplier;
+		Player.PlayerStats.Speed *= multiplier;
 		Player.AttackSpeedAmp *=2;
 		await ToSignal(GetTree().CreateTimer(duration), "timeout");
-		Player.Speed /= multiplier;
+		Player.PlayerStats.Speed /= multiplier;
 		Player.AttackSpeedAmp /=2;
 	}
 	
 	private async void _damageUp(int duration, int multiplier){
 		//GD.Print("Damage up not implemented yet!");
 		//ko bo player dobil dmg
-		Player.Speed += multiplier;
+		Player.PlayerStats.Speed += multiplier;
 		await ToSignal(GetTree().CreateTimer(duration), "timeout");
-		Player.Speed += multiplier;
+		Player.PlayerStats.Speed += multiplier;
 	}
 	private async void _heal(int amount){
 		GD.Print("Heal not implemented yet!");

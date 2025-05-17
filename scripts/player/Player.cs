@@ -10,10 +10,14 @@ public partial class Player : CharacterBody2D {
         public float BaseHealth { get; set; } = 100f;
         public float CurrentHealth { get; set; }
         public int S_Health { get; set; } = 2;
+		public float DamageMod = 1f;
+		public float Speed = 200.0f;
+		public float RangeMod = 1f;
 
-        public Stats() {
-            CurrentHealth = BaseHealth + 2*S_Health;
-        }
+        public Stats()
+		{
+			CurrentHealth = BaseHealth + 2 * S_Health;
+		}
 
         public void TakeDamage(float amount) {
             CurrentHealth = Mathf.Max(CurrentHealth - amount, 0);
@@ -25,8 +29,6 @@ public partial class Player : CharacterBody2D {
     }
 
 	public Stats PlayerStats { get; private set; } = new Stats();
-
-	[Export] public float Speed = 200.0f;
 	private AnimatedSprite2D animatedSprite;
 	private int lastDir = 0;
 
@@ -35,8 +37,6 @@ public partial class Player : CharacterBody2D {
 	private Node2D weaponHolder;
 	public static Player Instance { get; private set; }
 	private Area2D screenBounds;
-
-	public int Damage=1;
 
 	private List<Weapon> weaponInventory = new List<Weapon>();
 	private int currentWeaponIndex = 0;
@@ -72,7 +72,7 @@ public partial class Player : CharacterBody2D {
 		}
 
 		if (velocity.Length() > 0) {
-			velocity = velocity.Normalized() * Speed;
+			velocity = velocity.Normalized() * PlayerStats.Speed;
 			UpdateAnimation(velocity);
 		} else {
 			PlayIdleAnimation();
