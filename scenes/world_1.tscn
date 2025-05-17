@@ -14,6 +14,9 @@ script = ExtResource("3_4eyuj")
 [node name="WeaponPickUp2" parent="." instance=ExtResource("2_gawm5")]
 position = Vector2(-149, -210)
 
+[node name="WeaponPickUp5" parent="." instance=ExtResource("2_gawm5")]
+position = Vector2(-329, -95)
+
 [node name="WeaponPickUp3" parent="." instance=ExtResource("2_gawm5")]
 z_index = 1
 position = Vector2(0, -4)

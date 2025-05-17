@@ -6,7 +6,6 @@
 
 [node name="Pen" type="Node2D"]
 script = ExtResource("1_spjee")
-PelletCount = 1
 SpreadAngleDegrees = 5.0
 AttackScene = ExtResource("2_j676a")
 
