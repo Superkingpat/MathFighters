@@ -241,6 +241,10 @@ public partial class Enemy : CharacterBody2D
 			}
 		}
 	}
+
+	protected static void Logger(string enemyName, string msg){
+		GD.Print($"[Enemy {enemyName}]: {msg}");
+	}
 }
 
 public class Drop
