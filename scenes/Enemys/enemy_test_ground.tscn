@@ -1,31 +1,20 @@
-[gd_scene load_steps=7 format=3 uid="uid://c0xcv6wduke3j"]
+[gd_scene load_steps=6 format=3 uid="uid://c0xcv6wduke3j"]
 
 [ext_resource type="PackedScene" uid="uid://cwsiati3qwbjm" path="res://scenes/player.tscn" id="1_4irva"]
 [ext_resource type="PackedScene" uid="uid://c4psokfkfw7gi" path="res://scenes/Enemys/enemy.tscn" id="2_nnhog"]
 [ext_resource type="Script" uid="uid://bgtabq5ovl7ec" path="res://scripts/enemys/ZeroGuardion.cs" id="3_t3f3t"]
-[ext_resource type="Script" uid="uid://b20oufb6tyyif" path="res://scripts/enemys/NumberSwarmSpawner.cs" id="4_t3f3t"]
 [ext_resource type="PackedScene" uid="uid://bm071a2ffn1c1" path="res://scenes/weapon_pick_up.tscn" id="4_xq43n"]
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_crnxx"]
-size = Vector2(174, 163)
+[ext_resource type="PackedScene" uid="uid://cyk267rdht0w" path="res://scenes/Enemys/Divider.tscn" id="5_t3f3t"]
 
 [node name="Enemy test ground" type="Node2D"]
 
 [node name="Player" parent="." instance=ExtResource("1_4irva")]
 
 [node name="Enemy" parent="." instance=ExtResource("2_nnhog")]
-position = Vector2(-316, -67)
+position = Vector2(-318, -61)
 script = ExtResource("3_t3f3t")
 
 [node name="WeaponPickUp2" parent="." instance=ExtResource("4_xq43n")]
 
-[node name="TestSwarmSpawn" type="Node2D" parent="."]
-position = Vector2(-360, 61)
-script = ExtResource("4_t3f3t")
-SpawnAreaPath = NodePath("Area2D")
-
-[node name="Area2D" type="Area2D" parent="TestSwarmSpawn"]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="TestSwarmSpawn/Area2D"]
-position = Vector2(0, -0.5)
-shape = SubResource("RectangleShape2D_crnxx")
+[node name="Divider" parent="." instance=ExtResource("5_t3f3t")]
+position = Vector2(-423, 124)
