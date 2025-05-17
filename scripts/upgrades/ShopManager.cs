@@ -95,10 +95,11 @@ public partial class ShopManager : CanvasLayer
 		{
 			Id = "speed",
 			Name = "Speed Boost",
-			Description = "Increases movement speed by 10%",
+			Description = "Increases movement speed by 15%",
 			BaseCost = 20,
-			MaxLevel = 5,
-			CurrentLevel = 0
+			MaxLevel = 10,
+			CurrentLevel = 0,
+			Action=(lvl)=>{Player.PlayerStats.Speed*=1.15f;}
 		});
 
 		_availableUpgrades.Add("damage", new PlayerUpgrade
@@ -107,8 +108,9 @@ public partial class ShopManager : CanvasLayer
 			Name = "Damage Upgrade",
 			Description = "Increases attack damage by 15%",
 			BaseCost = 30,
-			MaxLevel = 3,
-			CurrentLevel = 0
+			MaxLevel = 10,
+			CurrentLevel = 0,
+			Action=(lvl)=>{Player.PlayerStats.Damage*=1.15f;}
 		});
 
 		_availableUpgrades.Add("health", new PlayerUpgrade
@@ -117,7 +119,7 @@ public partial class ShopManager : CanvasLayer
 			Name = "Health Boost",
 			Description = "Increases max health by 25 points",
 			BaseCost = 40,
-			MaxLevel = 3,
+			MaxLevel = 10,
 			CurrentLevel = 0,
 			Action=(lvl)=>{Player.PlayerStats.BaseHealth+=lvl*25;}
 		});
