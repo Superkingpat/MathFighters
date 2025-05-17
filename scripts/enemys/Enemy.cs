@@ -48,14 +48,25 @@ public partial class Enemy : CharacterBody2D
 			GD.PrintErr("Player not found in group 'Player'");
 
 		// Access sprite
-		animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
-		
+		animatedSprite = GetNodeOrNull<AnimatedSprite2D>("AnimatedSprite2D");
+		if (animatedSprite == null)
+			GD.PrintErr("AnimatedSprite2D not found!");
+
 		// Access detection area and its collision
-		detectionArea = GetNode<Area2D>("detection_area");
-		detectionCollision = detectionArea.GetNode<CollisionShape2D>("CollisionShape2D");
+		detectionArea = GetNodeOrNull<Area2D>("detection_area");
+		if (detectionArea == null)
+			GD.PrintErr("detection_area not found!");
+		else
+		{
+			detectionCollision = detectionArea.GetNodeOrNull<CollisionShape2D>("CollisionShape2D");
+			if (detectionCollision == null)
+				GD.PrintErr("Detection CollisionShape2D not found!");
+		}
 
 		// Access main body collision shape
-		bodyCollision = GetNode<CollisionShape2D>("CollisionShape2D");
+		bodyCollision = GetNodeOrNull<CollisionShape2D>("CollisionShape2D");
+		if (bodyCollision == null)
+			GD.PrintErr("Body CollisionShape2D not found!");
 
 		CurrentHealth = MaxHealth;
 		
@@ -240,10 +251,6 @@ public partial class Enemy : CharacterBody2D
 				}
 			}
 		}
-	}
-
-	protected static void Logger(string enemyName, string msg){
-		GD.Print($"[Enemy {enemyName}]: {msg}");
 	}
 }
 
