@@ -13,7 +13,6 @@ public partial class ShopManager : CanvasLayer
 	
 	private bool _isShopOpen = false;
 	private Player Player;
-	private int _playerCurrency = 1000; // Starting currency
 	private Dictionary<string, PlayerUpgrade> _availableUpgrades = new();
 	private Dictionary<string, PlayerUpgrade> _purchasedUpgrades = new();
 	
@@ -22,8 +21,15 @@ public partial class ShopManager : CanvasLayer
 	
 	public override void _Ready()
 	{
-
+		//init player
 		Player = GetTree().GetNodesInGroup("player")[0] as Player;
+		//gold update
+		if (Player != null && Player.PlayerStats != null)
+		{
+			Player.PlayerStats.GoldChanged += OnGoldChanged;
+		}
+
+
 
 		// Hide shop on start
 		if (ShopPanel != null)
@@ -39,6 +45,13 @@ public partial class ShopManager : CanvasLayer
 		UpdateCurrencyDisplay();
 		PopulateShop();
 	}
+
+	private void OnGoldChanged()
+	{
+		UpdateCurrencyDisplay();
+	}
+
+	
 	public override void _PhysicsProcess(double delta)
 	{
 		GD.Print($"HP: {Player.PlayerStats.BaseHealth}");
@@ -110,7 +123,7 @@ public partial class ShopManager : CanvasLayer
 			BaseCost = 30,
 			MaxLevel = 10,
 			CurrentLevel = 0,
-			Action=(lvl)=>{Player.PlayerStats.Damage*=1.15f;}
+			Action=(lvl)=>{Player.PlayerStats.DamageMod*=1.15f;}
 		});
 
 		_availableUpgrades.Add("health", new PlayerUpgrade
@@ -183,14 +196,14 @@ public partial class ShopManager : CanvasLayer
 		int cost = upgrade.BaseCost * (currentLevel + 1);
 		
 		// Check if we have enough currency
-		if (_playerCurrency < cost)
+		if (Player.PlayerStats.Gold < cost)
 		{
 			GD.Print("Not enough currency!");
 			return;
 		}
 		
 		// Purchase the upgrade
-		_playerCurrency -= cost;
+		Player.PlayerStats.Gold -= cost;
 		
 		// Add or update in purchased upgrades
 		if (!_purchasedUpgrades.ContainsKey(upgradeId))
@@ -222,7 +235,7 @@ public partial class ShopManager : CanvasLayer
 	private void UpdateCurrencyDisplay()
 	{
 		if (CurrencyLabel != null)
-			CurrencyLabel.Text = $"Currency: {_playerCurrency}";
+			CurrencyLabel.Text = $"Currency: {Player.PlayerStats.Gold}";
 		
 	}
 	
@@ -248,7 +261,7 @@ public partial class ShopManager : CanvasLayer
 	{
 		ShopData data = new ShopData
 		{
-			PlayerCurrency = _playerCurrency,
+			PlayerCurrency = Player.PlayerStats.Gold,
 			PurchasedUpgrades = _purchasedUpgrades
 		};
 		
@@ -293,7 +306,7 @@ public partial class ShopManager : CanvasLayer
 
 			if (data != null)
 			{
-				_playerCurrency = data.PlayerCurrency;
+				Player.PlayerStats.Gold = data.PlayerCurrency;
 				_purchasedUpgrades = data.PurchasedUpgrades;
 
 				foreach (var kvp in _purchasedUpgrades)
@@ -313,13 +326,6 @@ public partial class ShopManager : CanvasLayer
 		}
 	}
 	
-	// Add currency (for testing)
-	public void AddCurrency(int amount)
-	{
-		_playerCurrency += amount;
-		UpdateCurrencyDisplay();
-		SaveShopData();
-	}
 }
 
 // Player Upgrade class to store upgrade info

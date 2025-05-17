@@ -13,6 +13,22 @@ public partial class Player : CharacterBody2D {
 		public float DamageMod = 1f;
 		public float Speed = 200.0f;
 		public float RangeMod = 1f;
+		private int _gold;
+		public int Gold
+		{
+			get => _gold;
+			set
+			{
+				if (_gold != value)
+				{
+					_gold = value;
+					GoldChanged?.Invoke();
+				}
+			}
+		}
+
+		public event Action GoldChanged;
+
 
 		public Stats()
 		{
