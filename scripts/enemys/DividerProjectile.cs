@@ -1,21 +1,22 @@
 using Godot;
 using System;
 
-public partial class DividerProjectile : CharacterBody2D
+public partial class DividerProjectile : Attack
 {
-	[Export] public float Speed = 150f;
-	[Export] public float Lifetime = 2.5f;
+	[Export] public float Lifetime = 0.8f;
 	[Export] public int MaxGenerations = 2;
 	[Export] public float SplitAngle = 20f;
 
-	public Vector2 Direction = Vector2.Right;
-	public float Damage = 10f;
+	public float Damage = 10.0f;
 	public int Generation = 0;
 
 	private Timer lifeTimer;
 
 	public override void _Ready()
 	{
+		base._Ready();
+		Speed = 150.0f;
+
 		lifeTimer = new Timer();
 		lifeTimer.WaitTime = Lifetime;
 		lifeTimer.OneShot = true;
@@ -26,32 +27,8 @@ public partial class DividerProjectile : CharacterBody2D
 
 	public override void _PhysicsProcess(double delta)
 	{
-		Vector2 motion = Direction * Speed * (float)delta;
+		Vector2 motion = direction * Speed * (float)delta;
  		var collision = MoveAndCollide(motion);
-		// var spaceState = GetWorld2D().DirectSpaceState;
-		// var query = new PhysicsPointQueryParameters2D
-		// {
-		// 	Position = GlobalPosition,
-		// 	CollideWithAreas = false,
-		// 	CollideWithBodies = true
-		// };
-		// var result = spaceState.IntersectPoint(query);
-
-		// foreach (var hit in result)
-		// {
-		// 	var collider = hit["collider"].AsGodotObject() as Node2D;
-		// 	if (collider is Player p)
-		// 	{
-		// 		p.TakeDamage(Damage);
-		// 		OnImpact();
-		// 		break;
-		// 	}
-		// 	else if (collider is TileMapLayer || collider is StaticBody2D)
-		// 	{
-		// 		OnImpact();
-		// 		break;
-		// 	}
-		// }
 
 		if (collision != null)
 		{
@@ -59,7 +36,8 @@ public partial class DividerProjectile : CharacterBody2D
 			if (collider is Player p)
 			{
 				p.TakeDamage(Damage);
-				OnImpact();
+				// OnImpact();
+				QueueFree();
 			}
 		}
 		else
@@ -79,15 +57,16 @@ public partial class DividerProjectile : CharacterBody2D
 				var newProjectile = (DividerProjectile)Duplicate();
 				float angleOffset = Mathf.DegToRad(SplitAngle) * (i - (splitCount - 1) / 2f);
 
-				newProjectile.Direction = Direction.Rotated(angleOffset);
+				newProjectile.direction = direction.Rotated(angleOffset);
 				newProjectile.Damage *= 0.7f;
 				newProjectile.Speed *= 1.2f;
 				newProjectile.Generation = Generation + 1;
 
+				GD.Print($"gfjoigjjiogjdFGDSFS: {newProjectile.Damage}");
+
 				GetTree().CurrentScene.AddChild(newProjectile);
 			}
 		}
-
 		QueueFree();
 	}
 }

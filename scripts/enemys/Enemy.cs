@@ -129,7 +129,7 @@ public partial class Enemy : CharacterBody2D
 	{
 		if (player != null && IsInstanceValid(player))
 		{
-			if(isAttacking) isMoving = false;
+			if(isAggroed) isMoving = false;
 			else isMoving = true;
 
 			if(isMoving)
