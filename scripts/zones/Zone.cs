@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 
 public partial class Zone : Area2D
 {
@@ -30,6 +31,7 @@ public partial class Zone : Area2D
 		Type = (ZoneType)(randomIndex + 1);
 		
 		sprite = GetNode<Sprite2D>("Sprite2D");
+		SetIconForZoneType();
 		triggerShape = GetNode<CollisionShape2D>("triggerShape");
 		effectShape = GetNode<CollisionShape2D>("effectShape");
 		effectShape.Disabled = true;
@@ -51,6 +53,29 @@ public partial class Zone : Area2D
 		triggerShape.Disabled = false;
 		ActivateEffect();
 		QueueFree();
+	}
+	
+	private void SetIconForZoneType()
+	{
+		var iconPaths = new Dictionary<ZoneType, string>
+		{
+			{ ZoneType.heal, "res://assets/zones/zone_heal.tres" },
+			{ ZoneType.damageBoost, "res://assets/zones/zone_dmgUp.tres" },
+			{ ZoneType.damageEnemy, "res://assets/zones/zone_dmgEnemy.tres" },
+			{ ZoneType.slowEnemy, "res://assets/zones/zone_slow.tres" },
+			{ ZoneType.stunEnemy, "res://assets/zones/zone_stun.tres" },
+			{ ZoneType.blackHole, "res://assets/zones/zone_blackhole.tres" }
+		};
+		
+		if (iconPaths.TryGetValue(Type, out string path))
+		{
+			var texture = GD.Load<Texture2D>(path);
+			sprite.Texture = texture;
+		}
+		else
+		{
+			GD.PrintErr("Ni ikone za tip: " + Type);
+		}
 	}
 	
 	private void ActivateEffect()
