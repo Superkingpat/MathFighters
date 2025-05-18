@@ -14,6 +14,9 @@ script = ExtResource("3_4eyuj")
 [node name="WeaponPickUp2" parent="." instance=ExtResource("2_gawm5")]
 position = Vector2(-149, -210)
 
+[node name="WeaponPickUp5" parent="." instance=ExtResource("2_gawm5")]
+position = Vector2(-329, -95)
+
 [node name="WeaponPickUp3" parent="." instance=ExtResource("2_gawm5")]
 z_index = 1
 position = Vector2(0, -4)
@@ -23,6 +26,22 @@ WeaponScene = ExtResource("3_4eyuj")
 position = Vector2(388, 163)
 WeaponScene = ExtResource("4_cmxnd")
 
+[node name="WeaponPickUp6" parent="." instance=ExtResource("2_gawm5")]
+position = Vector2(386, -22)
+WeaponScene = ExtResource("4_cmxnd")
+
+[node name="WeaponPickUp7" parent="." instance=ExtResource("2_gawm5")]
+position = Vector2(186, 28)
+WeaponScene = ExtResource("4_cmxnd")
+
 [node name="WeaponPickUp4" parent="." instance=ExtResource("2_gawm5")]
 position = Vector2(-273, 150)
+WeaponScene = ExtResource("5_kwwa1")
+
+[node name="WeaponPickUp8" parent="." instance=ExtResource("2_gawm5")]
+position = Vector2(-232, 228)
+WeaponScene = ExtResource("5_kwwa1")
+
+[node name="WeaponPickUp9" parent="." instance=ExtResource("2_gawm5")]
+position = Vector2(-104, 256)
 WeaponScene = ExtResource("5_kwwa1")

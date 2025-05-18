@@ -5,16 +5,18 @@ public partial class Calculator : Weapon {
 	private float timeSinceLastAttacked = 0f;
 	[Export] public float AttackCooldown = 0.5f;
 	private double currChargeTime = 0f;
-	[Export] public double MaxChargeTime = 5f;
+	[Export] public double MaxChargeTime = 1f;
 	private double chargeSpeedAmp = 0f;
-	public override void _Ready() {
+	private double chargeSpeed = 1f;
+	public override void _Ready()
+	{
 		base._Ready();
 		AttackAnimation = "attack_calc";
 	}
 	public override void _Process(double delta) {
 
 		if (Input.IsActionPressed("attack") && (timeSinceLastAttacked >= AttackCooldown)) {
-			currChargeTime += delta * chargeSpeedAmp;
+			currChargeTime += delta * chargeSpeedAmp * chargeSpeed;
 			GD.Print("Charging!!!");
 		} else {
 			timeSinceLastAttacked += (float)delta;
@@ -32,6 +34,25 @@ public partial class Calculator : Weapon {
 		return GetNode<Sprite2D>("Sprite2D");
 	}
 	public override void TryShoot(Vector2 targetPosition, float attackSpeedAmp) {
+
+			switch (WeaponLevel) {
+			case 1:
+				chargeSpeed = 1f;
+				AttackCooldown = 1f;
+				MaxChargeTime = 1f;
+				break;
+			case 2:
+				chargeSpeed = 1.4f;
+				AttackCooldown = 0.7f;
+				MaxChargeTime = 2.5f;
+				break;
+			case 3:
+				chargeSpeed = 2f;
+				AttackCooldown = 0.4f;
+				MaxChargeTime = 5f;
+				break;
+		}
+
 		if (timeSinceLastAttacked < AttackCooldown / attackSpeedAmp) return;
 		timeSinceLastAttacked = 0f;
 		chargeSpeedAmp = attackSpeedAmp;
