@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3 uid="uid://dpwlewwpv8qme"]
+
+[ext_resource type="Script" uid="uid://basq57i8r6om5" path="res://scripts/enemys/Radical/WaveProjectile.cs" id="1_5nqat"]
+[ext_resource type="Texture2D" uid="uid://btwsrj4hvtqbq" path="res://assets/enemy/Radical/radical_attack.png" id="1_wgq6r"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_5nqat"]
+radius = 24.0
+
+[node name="RadicalWaveProjectile" type="Area2D"]
+script = ExtResource("1_5nqat")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_5nqat")
+disabled = true
+
+[node name="LifeTimer" type="Timer" parent="."]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.0839844, 0.0839844)
+texture = ExtResource("1_wgq6r")

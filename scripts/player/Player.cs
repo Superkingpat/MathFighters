@@ -154,7 +154,7 @@ public partial class Player : CharacterBody2D {
 		PlayerStats.TakeDamage(dmg);
 
 		if(PlayerStats.CurrentHealth <= 0) {
-			GD.Print("Player is dead!");
+			//GD.Print("Player is dead!");
 		}
 	}
 

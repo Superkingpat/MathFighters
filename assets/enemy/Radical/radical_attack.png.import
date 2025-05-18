@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c6adpvonf1krh"
-path="res://.godot/imported/radical.png-47eba5a339b9e2dff62d229add78cc40.ctex"
+uid="uid://btwsrj4hvtqbq"
+path="res://.godot/imported/radical_attack.png-5299ce7b74cdfd5a2833c53f91bb7650.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/enemy/radical.png"
-dest_files=["res://.godot/imported/radical.png-47eba5a339b9e2dff62d229add78cc40.ctex"]
+source_file="res://assets/enemy/Radical/radical_attack.png"
+dest_files=["res://.godot/imported/radical_attack.png-5299ce7b74cdfd5a2833c53f91bb7650.ctex"]
 
 [params]
 

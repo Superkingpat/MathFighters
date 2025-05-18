@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://y0haqw6tbwon" path="res://scripts/zones/Zone.cs" id="1_5mw05"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_5mw05"]
-radius = 41.6473
+radius = 35.0143
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_0qo8h"]
 

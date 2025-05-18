@@ -53,6 +53,7 @@ public partial class AbsoluteJuggernaut : Enemy
 		{
 			chargeSpeed = Mathf.Min(chargeSpeed + acceleration * delta, maxChargeSpeed);
 			GlobalPosition += chargeDirection * chargeSpeed * delta;
+			GlobalPosition += externalForce;
 			
 			if(GlobalPosition.DistanceTo(targetPosition) < 10f)
 			{
@@ -64,6 +65,7 @@ public partial class AbsoluteJuggernaut : Enemy
 		{
 			chargeSpeed = Mathf.Max(chargeSpeed - deceleration * delta, 0f);
 			GlobalPosition += chargeDirection * chargeSpeed * delta;
+			GlobalPosition += externalForce;
 			
 			if(chargeSpeed <= 5f)
 			{

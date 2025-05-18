@@ -27,6 +27,10 @@ public abstract partial class Enemy : CharacterBody2D
 	protected bool isFleeing = false;
 	protected bool isAggroed = false;
 	protected bool isDead = false;
+	protected bool isStunned = false;
+	protected bool isSlowed = false;
+	
+	protected Vector2 externalForce = Vector2.Zero;
 	
 	// List to store configured drops
 	protected List<Drop> dropTable = new List<Drop>();
@@ -46,6 +50,7 @@ public abstract partial class Enemy : CharacterBody2D
 		
 		CurrentHealth = MaxHealth;
 		
+		AddToGroup("enemies");
 		InitializeDropTable();
 	}
 	
@@ -78,6 +83,7 @@ public abstract partial class Enemy : CharacterBody2D
 	
 	protected virtual void MoveEnemy(float delta)
 	{
+		if(isStunned) return;
 		Vector2 direction = (player.GlobalPosition - GlobalPosition).Normalized();
 
 		// Cast a ray in the direction of movement to check for obstacles
@@ -126,7 +132,12 @@ public abstract partial class Enemy : CharacterBody2D
 		}
 
 		// Move in the (possibly adjusted) direction
-		Position += direction * Speed * delta;
+		float moveSpeed = isSlowed ? Speed * 0.7f : Speed;
+		Vector2 moveVector = direction * moveSpeed + externalForce;
+		Velocity = moveVector;
+		MoveAndSlide();
+
+		externalForce = externalForce.MoveToward(Vector2.Zero, 100f * delta);
 	}
 
 	
@@ -173,6 +184,29 @@ public abstract partial class Enemy : CharacterBody2D
 				}
 			}
 		}
+	}
+	
+	public async void Stun(float dur)
+	{
+		if(isStunned) return;
+		isStunned = true;
+		await ToSignal(GetTree().CreateTimer(dur), "timeout");
+		isStunned = false;
+	}
+	
+	public async void Slow(float dur, float slowFactor = 0.7f)
+	{
+		if (isSlowed) return;
+		isSlowed = true;
+		GD.Print($"{EnemyName} is slowed by factor {slowFactor} for {dur} seconds");
+		await ToSignal(GetTree().CreateTimer(dur), "timeout");
+		isSlowed = false;
+		GD.Print($"{EnemyName} is no longer slowed");
+	}
+	
+	public void ApplyForce(Vector2 force)
+	{
+		externalForce += force;
 	}
 }
 
