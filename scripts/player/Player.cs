@@ -84,7 +84,7 @@ public partial class Player : CharacterBody2D {
 
 		if(Input.IsActionJustPressed("attack")) {
 			GD.Print("Shooting");
-			currentWeapon?.TryShoot(GetGlobalMousePosition(),AttackSpeedAmp);
+			currentWeapon?.TryShoot(GetGlobalMousePosition(), AttackSpeedAmp);
 		}
 
 		if (Input.IsActionJustPressed("next_weapon")) {
