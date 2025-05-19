@@ -41,7 +41,7 @@ public partial class Spawner : Node
 	
 	private static Vector2 GetRandPosition(Vector2 position)
 	{
-		return position; //+ new Vector2(rnd.Next((int)-range[0], (int)range[0]), rnd.Next((int)-range[1], (int)range[1]));
+		return position+ new Vector2(rnd.Next((int)-range[0], (int)range[0]), rnd.Next((int)-range[1], (int)range[1]));
 	}
 	
 	public static void Reset()

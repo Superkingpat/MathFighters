@@ -2,23 +2,25 @@ using Godot;
 using System;
 
 //This is the player class.
-public partial class Player : CharacterBody2D {
+public partial class Player : CharacterBody2D
+{
 	//Export makes it so we can interact with the variable in the Godot UI
 	[Export] public float Speed = 200.0f;
 	private AnimatedSprite2D animatedSprite;
 	private int lastDir = 0;
 
-	public float AttackSpeedAmp=1;
+	public float AttackSpeedAmp = 1;
 	private Weapon currentWeapon;
 	private Node2D weaponHolder;
 	public static Player Instance { get; private set; }
 	private Area2D screenBounds;
 
-	public int Damage=1;
-	
+	public int Damage = 1;
+
 	//With GetNode we get the instance of the AnimatedSprite2D that was addet in the Godot UI
 	//_Ready is called when the root node (Player) entered the scene
-	public override void _Ready() {
+	public override void _Ready()
+	{
 		//The AnimatedSprite2D handles animations
 		AddToGroup("player"); //da ga lagka iz chunkov/spavnerjov najlaze najdemo GetTree().GetNodesInGroup("player")[0] as Player
 		ChunkManager.Instance.Player = this;
@@ -28,7 +30,8 @@ public partial class Player : CharacterBody2D {
 	}
 
 	//_PhysicsProcess updates the physics engine and animations in the background. MoveAndSlide() is used here, which means we don't need to care about delta time, it's handled automaticly
-	public override void _PhysicsProcess(double delta) {
+	public override void _PhysicsProcess(double delta)
+	{
 		Vector2 velocity = Vector2.Zero;
 
 		//All Input.IsActionPressed are bound in the Godot UI under Project > Project Settings > Input Map
@@ -53,10 +56,13 @@ public partial class Player : CharacterBody2D {
 			lastDir = 3;
 		}
 
-		if (velocity.Length() > 0) {
+		if (velocity.Length() > 0)
+		{
 			velocity = velocity.Normalized() * Speed;
 			UpdateAnimation(velocity);
-		} else {
+		}
+		else
+		{
 			PlayIdleAnimation();
 
 		}
@@ -64,39 +70,57 @@ public partial class Player : CharacterBody2D {
 		Velocity = velocity;
 		MoveAndSlide();
 
-		if(Input.IsActionJustPressed("attack")) {
+		if (Input.IsActionJustPressed("attack"))
+		{
 			GD.Print("Shooting");
-			currentWeapon?.TryShoot(GetGlobalMousePosition(),AttackSpeedAmp);
+			currentWeapon?.TryShoot(GetGlobalMousePosition(), AttackSpeedAmp);
 		}
 	}
 
 	//UpdateAnimation and PlayIdleAnimation handle the animations. Since AnimatedSprite2D::Play() is used here the animation speed is taken care of automaticly by Godot
-	private void UpdateAnimation(Vector2 velocity) {
-		if (velocity.Y < 0) {
+	private void UpdateAnimation(Vector2 velocity)
+	{
+		if (velocity.Y < 0)
+		{
 			animatedSprite.Play("walk_up");
-		} else if (velocity.Y > 0) {
+		}
+		else if (velocity.Y > 0)
+		{
 			animatedSprite.Play("walk_down");
-		} else if (velocity.X < 0) {
+		}
+		else if (velocity.X < 0)
+		{
 			animatedSprite.Play("walk_left");
-		} else if (velocity.X > 0) {
+		}
+		else if (velocity.X > 0)
+		{
 			animatedSprite.Play("walk_right");
 		}
 	}
 
-	private void PlayIdleAnimation() {
-		if(lastDir == 0) {
+	private void PlayIdleAnimation()
+	{
+		if (lastDir == 0)
+		{
 			animatedSprite.Play("still_up");
-		} else if(lastDir == 1) {
+		}
+		else if (lastDir == 1)
+		{
 			animatedSprite.Play("still_down");
-		} else if(lastDir == 2) {
+		}
+		else if (lastDir == 2)
+		{
 			animatedSprite.Play("still_left");
-		} else if(lastDir == 3) {
+		}
+		else if (lastDir == 3)
+		{
 			animatedSprite.Play("still_right");
-		} 
+		}
 
 	}
 
-	public void TryPickupWeapon(WeaponPickUp pickup) {
+	public void TryPickupWeapon(WeaponPickUp pickup)
+	{
 		if (pickup == null) return;
 
 		GD.Print("Picked up new weapon!");
@@ -115,6 +139,12 @@ public partial class Player : CharacterBody2D {
 		currentWeapon = newWeapon;
 		// Remove pickup from scene
 		pickup.QueueFree();
+	}
+
+	public void ResetMap()
+
+		ChunkManager.Instance.Reset();
+		Spawner.Reset();
 	}
 
 	//If a scene is bound to the external BulletScene variable we create a new instance of Bullet,
