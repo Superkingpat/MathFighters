@@ -2,115 +2,110 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-
 public partial class Chunk : Node2D
 {
 	[Export] public PackedScene ZoneScene;
-	[Export] public Vector2 ChunkSize  ; 
-	public Player Player;  // Reference to player
+	[Export] public Vector2 ChunkSize;
 	private Rect2 rect2;
-	private bool []playerIsIn=[false,false];
+	private bool[] playerIsIn = [false, false];
 	
+	private static readonly Vector2[] _pos_list = new Vector2[] {
+		new Vector2(-1, -1), new Vector2(0, -1), new Vector2(1, -1),
+		new Vector2(-1, 0),                      new Vector2(1, 0),
+		new Vector2(-1, 1),  new Vector2(0, 1),  new Vector2(1, 1)
+	};
 	
-	private static List<Chunk> _list =new List<Chunk>();
-	private static Vector2[] _pos_list = new Vector2[] {
-		new Vector2(-1,-1),new Vector2(0,-1),new Vector2(1,-1),
-		new Vector2(-1,0),                   new Vector2(1,0),
-		new Vector2(-1,1), new Vector2(0,1), new Vector2(1,1)};
-		
-		
-	public void Initialize(Vector2 chunkPosition,Vector2 chunkSize)
+	public void Initialize(Vector2 chunkPosition, Vector2 chunkSize, Player player)
 	{
-		//GD.Print($"making chunk at {chunkPosition}");
-		Position  = chunkPosition;
-		ZIndex=-100;
-		ChunkSize=chunkSize;
-		rect2=new Rect2(chunkPosition-chunkSize/2 , chunkSize);
-		//GD.Print($"chunk created");
+		GD.Print(chunkPosition);
+		this.Position = chunkPosition;
+		ZIndex = -100;
+		ChunkSize = chunkSize;
+		rect2 = new Rect2(chunkPosition - chunkSize / 2, chunkSize);
 	}
 	
 	public override void _Ready()
 	{
-		Player = GetTree().GetNodesInGroup("player")[0] as Player;
-		_list.Add(this);
-		GetNode<Spawner>("/root/Spawner").Spawn(Position); //calla spawner spawn zmeri ko se nardi chunk
+		// Add to ChunkManager's list
+		ChunkManager.Instance.Chunks.Add(this);
 		
-		
-
+		// Spawn items in this chunk
+		Spawner.Spawn(Position);
+		GD.Print(Position);
+		// Create zone
 		SpawnZone();
 	}
 	
 	public override void _Process(double delta)
 	{
-		if(Player==null)
-			throw new NullReferenceException("Player is null");
+		// Check if player is null
+		if (ChunkManager.Instance.Player == null)
+			return;
 		
-		//preverja ko pridemo v chunk
-		playerIsIn[0]=IsPlayerInChunk();
-		if(playerIsIn[0]!=playerIsIn[1]&&playerIsIn[0]){
-			//GD.Print("Player entered");
-			LoadChunks(); //spawna druge
+		// Check if player entered the chunk
+		playerIsIn[0] = IsPlayerInChunk();
+		if (playerIsIn[0] != playerIsIn[1] && playerIsIn[0])
+		{
+			LoadChunks(); // Generate surrounding chunks
 		}
-		playerIsIn[1]=playerIsIn[0];
-			
-
+		playerIsIn[1] = playerIsIn[0];
+		
+		// Check if chunk should be destroyed
 		if (!IsChunkNearPlayer())
 		{
-			_list.Remove(this);
-			QueueFree(); //odstrani chunk iz scene
+			ChunkManager.Instance.Chunks.Remove(this);
+			QueueFree();
 			GD.Print("Deleted chunk...");
 		}
-			
-		
 	}
 	
 	private bool IsPlayerInChunk()
 	{
-		return rect2.HasPoint(Player.GlobalPosition);
+		return rect2.HasPoint(ChunkManager.Instance.Player.GlobalPosition);
 	}
 	
-	
-		
 	private void LoadChunks()
 	{
 		foreach (var offset in _pos_list)
 		{
 			Vector2 newPos = Position + offset * ChunkSize;
-			bool exists = _list.Exists(c => c.Position == newPos);
+			bool exists = ChunkManager.Instance.Chunks.Exists(c => c.Position == newPos);
+			
 			if (!exists)
 			{
-				var newChunk = ChunkManager.ChunkScene.Instantiate<Chunk>();
-				newChunk.ZoneScene = this.ZoneScene;
-				newChunk.Initialize(newPos, ChunkSize);
-				GetParent().AddChild(newChunk);  // Important: Add to scene tree
+				ChunkManager.Instance.CreateChunk(newPos);
 			}
 		}
-		
-		//GD.Print(_list.Count);
 	}
 	
 	private bool IsChunkNearPlayer()
 	{
-		return Position.DistanceTo(Player.GlobalPosition) <= 4000;
+		return Position.DistanceTo(ChunkManager.Instance.Player.GlobalPosition) <= 4000;
 	}
 	
 	private void SpawnZone()
 	{
-		//return;	
-		if(ZoneScene == null){
-			GD.Print("=>Error: Zone Scene is null");
-			return;
+		if (ZoneScene == null)
+		{
+			// Try to get the zone scene from ChunkManager
+			ZoneScene = ChunkManager.Instance.ZoneScene;
+			
+			if (ZoneScene == null)
+			{
+				GD.Print("=>Error: Zone Scene is null");
+				return;
+			}
 		}
+		
 		var zone = ZoneScene.Instantiate<Area2D>();
-
+		
 		Vector2 localOffset = new Vector2(GD.Randf() * ChunkSize.X, GD.Randf() * ChunkSize.Y);
 		Vector2 globalPos = GlobalPosition - ChunkSize / 2 + localOffset;
-
-		// Dodaj v glavno sceno (Root), da ni omejen znotraj Chunk node-a
+		
+		// Add to root scene to avoid limitations of being a child of the chunk
 		GetTree().Root.AddChild(zone);
 		zone.GlobalPosition = globalPos;
-
-		GD.Print("Spawned zone at global position: ", globalPos);
+		
+		//GD.Print("Spawned zone at global position: ", globalPos);
 	}
-	
 }

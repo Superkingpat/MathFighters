@@ -21,7 +21,7 @@ public partial class Player : CharacterBody2D {
 	public override void _Ready() {
 		//The AnimatedSprite2D handles animations
 		AddToGroup("player"); //da ga lagka iz chunkov/spavnerjov najlaze najdemo GetTree().GetNodesInGroup("player")[0] as Player
-		GetNode<Spawner>("/root/Spawner").InitPlayer();
+		ChunkManager.Instance.Player = this;
 		animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
 		weaponHolder = GetNode<Node2D>("WeaponHolder");
 		Instance = this;
@@ -32,16 +32,23 @@ public partial class Player : CharacterBody2D {
 		Vector2 velocity = Vector2.Zero;
 
 		//All Input.IsActionPressed are bound in the Godot UI under Project > Project Settings > Input Map
-		if (Input.IsActionPressed("move_up")) {
+		if (Input.IsActionPressed("move_up"))
+		{
 			velocity.Y -= 1;
 			lastDir = 0;
-		} else if (Input.IsActionPressed("move_down")) {
+		}
+		else if (Input.IsActionPressed("move_down"))
+		{
 			velocity.Y += 1;
 			lastDir = 1;
-		} else if (Input.IsActionPressed("move_left")) {
+		}
+		else if (Input.IsActionPressed("move_left"))
+		{
 			velocity.X -= 1;
 			lastDir = 2;
-		} else if (Input.IsActionPressed("move_right")) {
+		}
+		else if (Input.IsActionPressed("move_right"))
+		{
 			velocity.X += 1;
 			lastDir = 3;
 		}

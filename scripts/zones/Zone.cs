@@ -91,7 +91,7 @@ public partial class Zone : Area2D
 			return;
 		}
 		currRadius = 0f;
-		GD.Print("==>Body entered");
+		//GD.Print("==>Body entered");
 		if(!isActivated && body is Player){
 			isActivated = true;
 			sprite.Visible = false;
@@ -99,7 +99,7 @@ public partial class Zone : Area2D
 			effectShape.CallDeferred("set_disabled", false);
 			QueueRedraw();
 			timer.Start();
-			GD.Print("Timer started");
+			//GD.Print("Timer started");
 			
 			switch (Type)
 			{
