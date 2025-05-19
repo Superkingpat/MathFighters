@@ -110,7 +110,7 @@ public partial class Chunk : Node2D
 		GetTree().Root.AddChild(zone);
 		zone.GlobalPosition = globalPos;
 
-		GD.Print("Spawned zone at global position: ", globalPos);
+		//GD.Print("Spawned zone at global position: ", globalPos);
 	}
 	
 }

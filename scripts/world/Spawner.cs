@@ -5,62 +5,77 @@ using System;
 
 public partial class Spawner : Node
 {
-	private Vector2 range= new Vector2(1920/3,1080/3);
+	private Vector2 range = new Vector2(1920 / 3, 1080 / 3);
 	Random rnd = new Random();
 	public static PackedScene ItemScene;
 	private Player Player;
-	
-	public override void _Ready(){
+
+	public override void _Ready()
+	{
 		ItemScene = ResourceLoader.Load<PackedScene>("res://scenes/item.tscn");
-		
+
 		GD.Print("spawner ready");
 	}
 
-	public void Test(){
+	public void Test()
+	{
 		GD.Print("Accesable");
 	}
-	
-	public void InitPlayer(){
+
+	public void InitPlayer()
+	{
 		Player = GetTree().GetNodesInGroup("player")[0] as Player;
 		GD.Print(Player.GlobalPosition);
 	}
 
-	private Vector2 getRandPosition(Vector2 position){
-		return  position +  new Vector2(rnd.Next((int)-range[0],(int)range[0]),rnd.Next((int)-range[1],(int)range[1]));
+	private Vector2 getRandPosition(Vector2 position)
+	{
+		return position + new Vector2(rnd.Next((int)-range[0], (int)range[0]), rnd.Next((int)-range[1], (int)range[1]));
 	}
-	
-	
-	
 
-	private void spawnItem(Vector2 position,String path,Action function){
-		var newItem=ItemScene.Instantiate<Item>();
-			AddChild(newItem);
-			newItem.Initialize(0,position,GD.Load<Texture2D>(path),function);
+
+
+
+	private void spawnItem(Vector2 position, String path, Action function)
+	{
+		var newItem = ItemScene.Instantiate<Item>();
+		AddChild(newItem);
+		newItem.Initialize(0, position, GD.Load<Texture2D>(path), function);
 	}
-	
 
-	public void Spawn(Vector2 position){ //ta funkcija bo skrbela za vse spawne pa chance
-		float p_ItemSpawn=20f;
-		p_ItemSpawn=100; //item spawn chance na 100 za testing
-		if(rnd.Next(100)<p_ItemSpawn){
-			int r=rnd.Next(10);
-			switch (r){
+
+	public void Spawn(Vector2 position)
+	{ //ta funkcija bo skrbela za vse spawne pa chance
+		float p_ItemSpawn = 20f;
+		p_ItemSpawn = 100; //item spawn chance na 100 za testing
+
+		spawnItem(
+			getRandPosition(position),
+			"res://assets/items/Icon_Coin.png",
+			() => { _getGold(100); }
+		);
+		
+		if (rnd.Next(100) < p_ItemSpawn)
+		{
+			int r = rnd.Next(10);
+			switch (r)
+			{
 				case 0:
 				case 1:
 				case 2:
 					spawnItem(
 						getRandPosition(position),
 						"res://assets/items/Icon_DamageUp.png",
-						()=>{_damageUp(20,2);}
+						() => { _damageUp(20, 2); }
 					);
 					break;
-				case 3: 
+				case 3:
 				case 4:
 				case 5:
 					spawnItem(
 						getRandPosition(position),
 						"res://assets/items/Icon_Heal.png",
-						()=>{_heal(50);}
+						() => { _heal(50); }
 					);
 					break;
 				case 6:
@@ -70,31 +85,39 @@ public partial class Spawner : Node
 					spawnItem(
 						getRandPosition(position),
 						"res://assets/items/Icon_EnergyDrink.png",
-						()=>{_speedUp(10,2);}
+						() => { _speedUp(10, 2); }
 					);
 					break;
-				}
 			}
+		}
 	}
 	//Definirani efekti razlicnih itemov
-	private async void _speedUp(int duration, int multiplier){
-		Player.Speed *= multiplier;
-		Player.AttackSpeedAmp *=2;
+	private async void _speedUp(int duration, int multiplier)
+	{
+		Player.PlayerStats.Speed *= multiplier;
+		Player.AttackSpeedAmp *= 2;
 		await ToSignal(GetTree().CreateTimer(duration), "timeout");
-		Player.Speed /= multiplier;
-		Player.AttackSpeedAmp /=2;
+		Player.PlayerStats.Speed /= multiplier;
+		Player.AttackSpeedAmp /= 2;
 	}
-	
-	private async void _damageUp(int duration, int multiplier){
+
+	private async void _damageUp(int duration, int multiplier)
+	{
 		//GD.Print("Damage up not implemented yet!");
 		//ko bo player dobil dmg
-		Player.Speed += multiplier;
+		Player.PlayerStats.Speed += multiplier;
 		await ToSignal(GetTree().CreateTimer(duration), "timeout");
-		Player.Speed += multiplier;
+		Player.PlayerStats.Speed += multiplier;
 	}
-	private async void _heal(int amount){
+	private async void _heal(int amount)
+	{
 		GD.Print("Heal not implemented yet!");
 		//dodaj ko player dobi health 
+	}
+
+	private async void _getGold(int amount)
+	{
+		Player.PlayerStats.Gold += amount;
 	}
 
 

@@ -24,6 +24,18 @@ public partial class GeoTriangleAttack : Attack {
 		base.direction = (targetPosition - startPosition).Normalized();
 		Rotation = base.direction.Angle();
 		GeoTriangleInstance = weapon;
+		
+		switch (WeaponLevel) {
+			case 1:
+				Speed = 250f;
+				break;
+			case 2:
+				Speed = 350f;
+				break;
+			case 3:
+				Speed = 400f;
+				break;
+		}
 	}
 
 	public override void _PhysicsProcess(double delta) {
@@ -49,12 +61,12 @@ public partial class GeoTriangleAttack : Attack {
 		sprite.Rotate(TriangleRotation);
 	}
 
-	    protected override void PlayAttackSound()
-    {
-        if (AudioManager.Instance != null)
-        {
-            AudioManager.Instance.PlayShootSound("geotriangle");
-        }
+		protected override void PlayAttackSound()
+	{
+		if (AudioManager.Instance != null)
+		{
+			AudioManager.Instance.PlayShootSound("geotriangle");
+		}
 
 	}
 }

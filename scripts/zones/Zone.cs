@@ -36,7 +36,7 @@ public partial class Zone : Area2D
 		effectCircle = (CircleShape2D)effectShape.Shape;
 		effectCircle.Radius = maxRadius;
 
-		GD.Print("Naključen zone tip: " + Type);
+		//GD.Print("Naključen zone tip: " + Type);
 
 		timer = GetNode<Timer>("Timer");
 		timer.WaitTime = ActivationDelay;

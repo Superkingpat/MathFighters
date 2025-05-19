@@ -189,4 +189,3 @@ public class Drop
 		DropChance = Mathf.Clamp(dropChance, 0.0f, 1.0f);
 	}
 }
-
