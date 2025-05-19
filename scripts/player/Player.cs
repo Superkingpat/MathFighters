@@ -191,7 +191,7 @@ public partial class Player : CharacterBody2D {
 		weaponInventory.Add(newWeapon);
 		currentWeaponIndex = weaponInventory.Count - 1;
 		EquipWeapon(currentWeaponIndex);
-
+		pickup.QueueFree();
 		string weaponName = newWeapon.Name.ToString().ToLower();
 		string soundPath = "res://assets/audio/weapon_default.wav"; // fallback
 
@@ -204,8 +204,6 @@ public partial class Player : CharacterBody2D {
 		var stream = GD.Load<AudioStream>(soundPath);
 		weaponPickupSound.Stream = stream;
 		weaponPickupSound.Play();
-
-		pickup.QueueFree();
 	}
 
 

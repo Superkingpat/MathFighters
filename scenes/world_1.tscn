@@ -46,4 +46,5 @@ WeaponScene = ExtResource("5_kwwa1")
 [node name="WeaponPickUp9" parent="." instance=ExtResource("2_gawm5")]
 position = Vector2(-104, 256)
 WeaponScene = ExtResource("5_kwwa1")
+
 [node name="ShopUi" parent="." instance=ExtResource("6_77kw0")]
