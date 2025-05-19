@@ -49,7 +49,7 @@ public partial class Spawner : Node
 
 	public void Spawn(Vector2 position){ //ta funkcija bo skrbela za vse spawne pa chance
 		float p_ItemSpawn=20f;
-		p_ItemSpawn=100;
+		p_ItemSpawn=100; //item spawn chance na 100 za testing
 		if(rnd.Next(100)<p_ItemSpawn){
 			int r=rnd.Next(10);
 			switch (r){
@@ -59,7 +59,7 @@ public partial class Spawner : Node
 					spawnItem(
 						getRandPosition(position),
 						"res://assets/items/Icon_DamageUp.png",
-						()=>{_damageUp(2,2);}
+						()=>{_damageUp(20,2);}
 					);
 					break;
 				case 3: 
@@ -83,7 +83,7 @@ public partial class Spawner : Node
 					spawnItem(
 						getRandPosition(position),
 						"res://assets/items/Icon_EnergyDrink.png",
-						()=>{_speedUp(2,2);}
+						()=>{_speedUp(10,2);}
 					);
 					break;
 				}
@@ -92,16 +92,18 @@ public partial class Spawner : Node
 	//Definirani efekti razlicnih itemov
 	private async void _speedUp(int duration, int multiplier){
 		Player.Speed *= multiplier;
+		Player.AttackSpeedAmp *=2;
 		await ToSignal(GetTree().CreateTimer(duration), "timeout");
 		Player.Speed /= multiplier;
+		Player.AttackSpeedAmp /=2;
 	}
 	
 	private async void _damageUp(int duration, int multiplier){
-		GD.Print("Damage up not implemented yet!");
+		//GD.Print("Damage up not implemented yet!");
 		//ko bo player dobil dmg
-		//Player.Speed *= multiplier;
-		//await ToSignal(GetTree().CreateTimer(duration), "timeout");
-		//Player.Speed /= multiplier;
+		Player.Speed += multiplier;
+		await ToSignal(GetTree().CreateTimer(duration), "timeout");
+		Player.Speed += multiplier;
 	}
 	private async void _heal(int amount){
 		GD.Print("Heal not implemented yet!");

@@ -20,8 +20,8 @@ public partial class Pen : Weapon {
 		return GetNode<Sprite2D>("Sprite2D");
 	}
 
-	public override void TryShoot(Vector2 targetPosition) {
-		if (timeSinceLastShot < FireCooldown) return;
+	public override void TryShoot(Vector2 targetPosition, float attackSpeedAmp) {
+		if (timeSinceLastShot < FireCooldown/attackSpeedAmp) return;
 		timeSinceLastShot = 0f;
 
 		Vector2 baseDirection = (targetPosition - Player.Instance.GlobalPosition).Normalized();
@@ -36,7 +36,7 @@ public partial class Pen : Weapon {
 			if (AttackScene != null) {
 				PenAttack pellet = (PenAttack)AttackScene.Instantiate();
 				GetTree().CurrentScene.AddChild(pellet);
-				pellet.Init(Player.Instance.GlobalPosition + spreadDirection * 8, Player.Instance.GlobalPosition);
+				pellet.Init(Player.Instance.GlobalPosition + spreadDirection * 8, Player.Instance.GlobalPosition, WeaponLevel);
 			}
 		}
 	}

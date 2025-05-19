@@ -16,16 +16,15 @@ public partial class GeoTriangle : Weapon {
 	public override Sprite2D GetPickupSprite() {
 		return GetNode<Sprite2D>("Sprite2D");
 	}
-	public override void TryShoot(Vector2 targetPosition) {
-		if ((timeSinceLastShot < AttackCooldown) || (currTriangleCount >= maxTriangleCount)) return;
+	public override void TryShoot(Vector2 targetPosition, float attackSpeedAmp) {
+		if ((timeSinceLastShot < AttackCooldown /attackSpeedAmp) || (currTriangleCount >= maxTriangleCount)) return;
 		timeSinceLastShot = 0f;
 		currTriangleCount++;
-		//Vector2 baseDirection = (targetPosition - Player.Instance.GlobalPosition).Normalized();
 
 		if (AttackScene != null) {
 			GeoTriangleAttack triangle = (GeoTriangleAttack)AttackScene.Instantiate();
 			GetTree().CurrentScene.AddChild(triangle);
-			triangle.Init(this, GetGlobalMousePosition(), Player.Instance.GlobalPosition);
+			triangle.Init(this, GetGlobalMousePosition(), Player.Instance.GlobalPosition, WeaponLevel);
 		}
 	}
 

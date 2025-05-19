@@ -1,10 +1,11 @@
 [gd_scene load_steps=4 format=3 uid="uid://ddsugg5n2kq25"]
 
 [ext_resource type="Script" uid="uid://y0haqw6tbwon" path="res://scripts/zones/Zone.cs" id="1_5mw05"]
-[ext_resource type="Texture2D" uid="uid://dgrcbmx7p2b8y" path="res://assets/zones/zone_temp.png" id="1_nxyy4"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_5mw05"]
-size = Vector2(105, 115)
+[sub_resource type="CircleShape2D" id="CircleShape2D_5mw05"]
+radius = 35.0143
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_0qo8h"]
 
 [node name="ZoneHandler" type="Area2D"]
 collision_layer = 2
@@ -13,11 +14,10 @@ script = ExtResource("1_5mw05")
 [node name="Timer" type="Timer" parent="."]
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-modulate = Color(0, 0, 0, 1)
-position = Vector2(33.75, -33.75)
-scale = Vector2(0.190833, 0.190833)
-texture = ExtResource("1_nxyy4")
+scale = Vector2(2, 2)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(33.5, -34.5)
-shape = SubResource("RectangleShape2D_5mw05")
+[node name="triggerShape" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_5mw05")
+
+[node name="effectShape" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_0qo8h")

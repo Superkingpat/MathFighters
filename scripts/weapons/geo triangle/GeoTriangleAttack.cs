@@ -18,7 +18,8 @@ public partial class GeoTriangleAttack : Attack {
 		GeoTriangleInstance.NotifyTriangleDestroyed();
 		QueueFree();
 	}
-	public void Init(GeoTriangle weapon, Vector2 targetPosition, Vector2 startPosition) {
+	public void Init(GeoTriangle weapon, Vector2 targetPosition, Vector2 startPosition, int WeaponLevel) {
+		weaponLevel = WeaponLevel;
 		Position = startPosition;
 		base.direction = (targetPosition - startPosition).Normalized();
 		Rotation = base.direction.Angle();
@@ -46,5 +47,14 @@ public partial class GeoTriangleAttack : Attack {
 		}
 
 		sprite.Rotate(TriangleRotation);
+	}
+
+		protected override void PlayAttackSound()
+	{
+		if (AudioManager.Instance != null)
+		{
+			AudioManager.Instance.PlayShootSound("geotriangle");
+		}
+
 	}
 }
