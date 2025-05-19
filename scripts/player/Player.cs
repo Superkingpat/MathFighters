@@ -154,16 +154,16 @@ public partial class Player : CharacterBody2D {
 		pickup.QueueFree();
 	}
 	
-	public void TakeDamage(float amount)
-	{
-		CurrentHealth -= amount;
-		GD.Print("Player took " + amount + " damage. HP left: " + CurrentHealth);
+	// public void TakeDamage(float amount)
+	// {
+	// 	CurrentHealth -= amount;
+	// 	GD.Print("Player took " + amount + " damage. HP left: " + CurrentHealth);
 
-		if (CurrentHealth <= 0)
-		{
-			Die();
-		}
-	}
+	// 	if (CurrentHealth <= 0)
+	// 	{
+	// 		Die();
+	// 	}
+	// }
 
 	private void Die()
 	{
@@ -174,9 +174,10 @@ public partial class Player : CharacterBody2D {
 
 	public void TakeDamage(float dmg) {
 		PlayerStats.TakeDamage(dmg);
-
+		GD.Print("Player took " + dmg + " damage. HP left: " + PlayerStats.CurrentHealth);
 		if(PlayerStats.CurrentHealth <= 0) {
-			//GD.Print("Player is dead!");
+			GD.Print("Player is dead!");
+			Die();
 		}
 	}
 

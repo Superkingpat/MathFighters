@@ -62,8 +62,6 @@ public partial class DividerProjectile : Attack
 				newProjectile.Speed *= 1.2f;
 				newProjectile.Generation = Generation + 1;
 
-				GD.Print($"gfjoigjjiogjdFGDSFS: {newProjectile.Damage}");
-
 				GetTree().CurrentScene.AddChild(newProjectile);
 			}
 		}

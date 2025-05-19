@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://bprw2vloqcnue" path="res://scripts/enemys/Radical/Radical.cs" id="1_fnmkq"]
 [ext_resource type="Texture2D" uid="uid://c6adpvonf1krh" path="res://assets/enemy/Radical/radical.png" id="1_w0wne"]
-[ext_resource type="PackedScene" uid="uid://dpwlewwpv8qme" path="res://scenes/RadicalWaveProjectile.tscn" id="2_8hsj3"]
+[ext_resource type="PackedScene" uid="uid://dpwlewwpv8qme" path="res://scenes/Enemys/RadicalWaveProjectile.tscn" id="2_8hsj3"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_fnmkq"]
 radius = 43.4166

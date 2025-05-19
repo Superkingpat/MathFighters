@@ -91,7 +91,7 @@ public partial class AbsoluteJuggernaut : Enemy
 		}
 	}
 	
-	public override void TakeDamage(int val)
+	public override void TakeDamage(float val)
 	{
 		base.TakeDamage(val);
 		GD.Print("ABS tejkno dmg");

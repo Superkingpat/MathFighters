@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://mb3ijl33kch"]
 
-[ext_resource type="Script" uid="uid://7ia4do0jhi5a" path="res://scripts/enemys/AbsoluteJuggernaut.cs" id="1_h8cwg"]
-[ext_resource type="Texture2D" uid="uid://b0h1grf3b1dn3" path="res://assets/enemy/Absolute/absJug.png" id="2_61b8b"]
+[ext_resource type="Script" uid="uid://7ia4do0jhi5a" path="res://scripts/enemys/AbsoluteJuggernaut.cs" id="1_y133c"]
+[ext_resource type="Texture2D" uid="uid://b0h1grf3b1dn3" path="res://assets/enemy/Absolute/absJug.png" id="2_csywx"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_qc14x"]
 radius = 52.2398
@@ -22,12 +22,12 @@ corner_radius_bottom_left = 8
 
 [node name="AbsoluteJuggernaut" type="CharacterBody2D"]
 collision_layer = 5
-script = ExtResource("1_h8cwg")
+script = ExtResource("1_y133c")
 MaxHealth = 500.0
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 scale = Vector2(0.201172, 0.201172)
-texture = ExtResource("2_61b8b")
+texture = ExtResource("2_csywx")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_qc14x")

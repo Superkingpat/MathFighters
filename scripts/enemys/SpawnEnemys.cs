@@ -1,8 +1,7 @@
 using Godot;
 using System;
 
-/*
-public class SpawnEnemys : Node
+public partial class SpawnEnemys : Node
 {
 
 	[Export] public bool ShouldSpawnEnemys = true;
@@ -107,4 +106,3 @@ public class SpawnEnemys : Node
 		GetTree().CurrentScene.AddChild(enemyInstance);
 	}
 }
-*/

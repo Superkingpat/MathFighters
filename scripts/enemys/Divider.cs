@@ -98,7 +98,7 @@ public partial class Divider : Enemy
 		Vector2 spreadDirection = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
 
 		GetTree().CurrentScene.AddChild(projectile);
-		projectile.Init(Player.Instance.GlobalPosition + spreadDirection * 8, GlobalPosition);
+		projectile.Init(Player.Instance.GlobalPosition + spreadDirection * 8, GlobalPosition, 0);
 
 		GD.Print($"[Enemy {EnemyName}]: Shot projectile at player");
 	}

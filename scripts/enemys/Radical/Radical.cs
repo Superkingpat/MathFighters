@@ -129,7 +129,7 @@ public partial class Radical : Enemy
 		}
 	}
 
-	public override void TakeDamage(int val)
+	public override void TakeDamage(float val)
 	{
 		base.TakeDamage(val);
 		TryToCharge();
