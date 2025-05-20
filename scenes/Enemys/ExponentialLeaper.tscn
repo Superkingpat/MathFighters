@@ -1,4 +1,4 @@
-[gd_scene load_steps=51 format=3 uid="uid://dtkkgawogwgdt"]
+[gd_scene load_steps=53 format=3 uid="uid://dtkkgawogwgdt"]
 
 [ext_resource type="Script" uid="uid://bgtabq5ovl7ec" path="res://scripts/enemys/ZeroGuardion.cs" id="1_l2iit"]
 [ext_resource type="Texture2D" uid="uid://fcqd7et3xhj2" path="res://assets/enemys/ExponentialLeaper/e-Sheet.png" id="2_l2iit"]
@@ -361,6 +361,20 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_4ra3w"]
 radius = 7.0
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l2iit"]
+bg_color = Color(1, 0, 0, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sdhcj"]
+bg_color = Color(0.121569, 0.72549, 0, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
 [node name="ExponentialLeaper" type="CharacterBody2D"]
 script = ExtResource("1_l2iit")
 
@@ -383,3 +397,13 @@ shape = SubResource("CircleShape2D_md0e3")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -2)
 shape = SubResource("CircleShape2D_4ra3w")
+
+[node name="HealthBar" type="ProgressBar" parent="."]
+offset_left = -13.0
+offset_top = -15.0
+offset_right = 13.0
+offset_bottom = -12.0
+theme_override_styles/background = SubResource("StyleBoxFlat_l2iit")
+theme_override_styles/fill = SubResource("StyleBoxFlat_sdhcj")
+value = 100.0
+show_percentage = false

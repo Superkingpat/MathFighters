@@ -3,6 +3,8 @@ using System;
 
 public partial class LimitPhantom : Enemy
 {
+	private ProgressBar healthBar;
+	
 	[Export] public float KnockbackDistance = 50f;
 	[Export] public float AoeRadius = 50f;
 	[Export] public float ResistancePerStack = 0.03f;
@@ -32,6 +34,8 @@ public partial class LimitPhantom : Enemy
 		var collision = new CollisionShape2D { Shape = shape };
 		aoeArea.AddChild(collision);
 		AddChild(aoeArea);
+		
+		healthBar = GetNode<ProgressBar>("HealthBar");
 	}
 
 	public override void _PhysicsProcess(double delta)
@@ -59,6 +63,11 @@ public partial class LimitPhantom : Enemy
 
 		CurrentHealth -= effectiveDamage;
 		limitStacks = Mathf.Min(limitStacks + 1, MaxStacks);
+		
+		if (healthBar != null)
+		{
+			healthBar.Value = CurrentHealth;
+		}
 
 		GD.Print($"Limit Phantom hit! Stacks: {limitStacks}, Resistance: {resistance * 100f:F1}%, Damage Taken: {effectiveDamage:F1}");
 
@@ -80,4 +89,5 @@ public partial class LimitPhantom : Enemy
 			player.GlobalPosition += knockbackDirection * KnockbackDistance;
 		}
 	}
+	
 }

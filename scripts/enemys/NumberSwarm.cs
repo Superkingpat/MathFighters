@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public partial class NumberSwarm : Enemy
 {
 	[Export] public int EnemyValue { get; set; } = 0;
+	private ProgressBar healthBar;
 
 	public override void _Ready()
 	{
@@ -12,6 +13,7 @@ public partial class NumberSwarm : Enemy
 		EnemyName = $"NumberSwarm[{EnemyValue}]";
 		animatedSprite.Play(EnemyValue.ToString());
 		ConfigureStats();
+		healthBar = GetNode<ProgressBar>("HealthBar");
 	}
 
 	private void ConfigureStats()
@@ -82,6 +84,10 @@ public partial class NumberSwarm : Enemy
 	{
 		base.TakeDamage(amount);
 		GD.Print($"[Number {EnemyValue}] took {amount} damage. Remaining: {CurrentHealth}");
+		if (healthBar != null)
+		{
+			healthBar.Value = CurrentHealth;
+		}
 	}
 
 	protected override void Die()

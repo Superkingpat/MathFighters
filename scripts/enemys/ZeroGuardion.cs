@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public partial class ZeroGuardian : Enemy
 {
+	private ProgressBar healthBar;
+	
 	[Export] public float protectionRadius = 100.0f;
 	[Export] public float duration = 5.0f;
 
@@ -44,6 +46,8 @@ public partial class ZeroGuardian : Enemy
 		AddChild(durationTimer);
 
 		AddInitialProtection();
+		
+		healthBar = GetNode<ProgressBar>("HealthBar");
 	}
 
 	private void CreateShieldVisual()
@@ -129,9 +133,13 @@ public partial class ZeroGuardian : Enemy
 		GD.Print($"Zero Guardian absorbed {amount} damage meant for {targetEnemy.EnemyName}");
 	}
 
-	public override void TakeDamage(float amount)
+	public override void TakeDamage(float val)
 	{
-		GD.Print("Zero Guardian absorbed damage");
+		base.TakeDamage(val);
+		if (healthBar != null)
+		{
+			healthBar.Value = CurrentHealth;
+		}
 	}
 
 	private void OnDurationTimerTimeout()

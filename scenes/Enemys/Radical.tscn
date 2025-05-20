@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://x12u41qu0djr"]
 
 [ext_resource type="Script" uid="uid://bprw2vloqcnue" path="res://scripts/enemys/Radical/Radical.cs" id="1_fnmkq"]
-[ext_resource type="Texture2D" uid="uid://c6adpvonf1krh" path="res://assets/enemy/Radical/radical.png" id="1_w0wne"]
+[ext_resource type="Texture2D" uid="uid://c6adpvonf1krh" path="res://assets/enemys/Radical/radical.png" id="1_w0wne"]
 [ext_resource type="PackedScene" uid="uid://dpwlewwpv8qme" path="res://scenes/Enemys/RadicalWaveProjectile.tscn" id="2_8hsj3"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_fnmkq"]
@@ -42,6 +42,7 @@ offset_right = 30.0
 offset_bottom = -47.115
 theme_override_styles/background = SubResource("StyleBoxFlat_fnmkq")
 theme_override_styles/fill = SubResource("StyleBoxFlat_8hsj3")
+value = 100.0
 show_percentage = false
 
 [node name="WaveCooldown" type="Timer" parent="."]

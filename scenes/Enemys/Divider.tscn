@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=3 uid="uid://cyk267rdht0w"]
+[gd_scene load_steps=31 format=3 uid="uid://cyk267rdht0w"]
 
 [ext_resource type="Script" uid="uid://dcfka5d7mvsci" path="res://scripts/enemys/Divider.cs" id="1_4780a"]
 [ext_resource type="Texture2D" uid="uid://d32dbosw3i4mw" path="res://assets/enemys/slime.png" id="2_31eyo"]
@@ -189,6 +189,22 @@ radius = 221.009
 [sub_resource type="CircleShape2D" id="CircleShape2D_4ra3w"]
 radius = 9.05539
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4780a"]
+bg_color = Color(1, 0, 0, 1)
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_31eyo"]
+bg_color = Color(0.121569, 0.72549, 0, 1)
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
 [node name="Enemy" type="CharacterBody2D"]
 collision_layer = 2
 collision_mask = 7
@@ -196,7 +212,7 @@ script = ExtResource("1_4780a")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_7p1mj")
-animation = &"idle"
+animation = &"death"
 offset = Vector2(0, -3)
 
 [node name="detection_area" type="Area2D" parent="."]
@@ -215,3 +231,13 @@ shape = SubResource("CircleShape2D_4780a")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -1)
 shape = SubResource("CircleShape2D_4ra3w")
+
+[node name="HealthBar" type="ProgressBar" parent="."]
+offset_left = -7.0
+offset_top = -15.0
+offset_right = 6.0
+offset_bottom = -11.0
+theme_override_styles/background = SubResource("StyleBoxFlat_4780a")
+theme_override_styles/fill = SubResource("StyleBoxFlat_31eyo")
+value = 100.0
+show_percentage = false

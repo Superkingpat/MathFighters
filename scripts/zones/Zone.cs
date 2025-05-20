@@ -58,7 +58,6 @@ public partial class Zone : Area2D
 	{
 		triggerShape.Disabled = false;
 		ActivateEffect();
-		// QueueFree premaknemo po zaključenem black hole efektu
 		if (Type != ZoneType.blackHole)
 			QueueFree();
 	}
@@ -199,7 +198,13 @@ public partial class Zone : Area2D
 		}
 	}
 
-	private void HealPlayer(int val) { if (player == null) return; }
+	private void HealPlayer(int val){
+		if (player == null) return;
+		else{
+			player.Heal(30f);
+		}
+	
+	}
 	private async void DamageUpPlayer(int dur, int val) { if (player == null) return; await ToSignal(GetTree().CreateTimer(dur), "timeout"); }
 	private void DamageEnemies(int val)
 	{

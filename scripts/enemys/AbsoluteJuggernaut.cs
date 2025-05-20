@@ -25,12 +25,6 @@ public partial class AbsoluteJuggernaut : Enemy
 		base._Ready();
 		targetPosition = player?.GlobalPosition ?? GlobalPosition;
 		healthBar = GetNode<ProgressBar>("HealthBar");
-		MaxHealth = 500;
-		if (healthBar != null)
-		{
-			healthBar.MaxValue = MaxHealth;
-			healthBar.Value = CurrentHealth;
-		}
 	}
 	
 	protected override void MoveEnemy(float delta)
@@ -78,12 +72,6 @@ public partial class AbsoluteJuggernaut : Enemy
 	public override void _PhysicsProcess(double delta)
 	{
 		base._PhysicsProcess(delta);
-		
-		if (healthBar != null)
-		{
-			healthBar.Value = CurrentHealth;
-		}
-		
 		//charge zadene
 		if(player != null && GlobalPosition.DistanceTo(player.GlobalPosition) < 15f)
 		{
@@ -94,10 +82,11 @@ public partial class AbsoluteJuggernaut : Enemy
 	public override void TakeDamage(float val)
 	{
 		base.TakeDamage(val);
-		GD.Print("ABS tejkno dmg");
+		GD.Print("ABS HIT! => CurrHP: " + CurrentHealth);
 		if (healthBar != null)
 		{
 			healthBar.Value = CurrentHealth;
+			GD.Print("HALOOOO");
 		}
 	}
 }

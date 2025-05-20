@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://tuy7sfrpiv46"]
+[gd_scene load_steps=27 format=3 uid="uid://tuy7sfrpiv46"]
 
 [ext_resource type="Script" uid="uid://hak3dc2fdca2" path="res://scripts/enemys/NumberSwarm.cs" id="1_8wfau"]
 [ext_resource type="Texture2D" uid="uid://u6iwf2tu2dyx" path="res://assets/enemys/NumberSwarm/1.png" id="2_m2qu4"]
@@ -141,6 +141,20 @@ size = Vector2(29, 36)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_umtdo"]
 size = Vector2(14, 26)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m2qu4"]
+bg_color = Color(1, 0, 0, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ycdy5"]
+bg_color = Color(0.121569, 0.72549, 0, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
 [node name="Enemy" type="CharacterBody2D"]
 collision_layer = 2
 collision_mask = 7
@@ -162,3 +176,13 @@ shape = SubResource("RectangleShape2D_m2qu4")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -3)
 shape = SubResource("RectangleShape2D_umtdo")
+
+[node name="HealthBar" type="ProgressBar" parent="."]
+offset_left = -16.0
+offset_top = -21.0
+offset_right = 16.0
+offset_bottom = -17.0
+theme_override_styles/background = SubResource("StyleBoxFlat_m2qu4")
+theme_override_styles/fill = SubResource("StyleBoxFlat_ycdy5")
+value = 100.0
+show_percentage = false

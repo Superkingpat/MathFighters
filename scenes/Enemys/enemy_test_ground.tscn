@@ -1,24 +1,14 @@
-[gd_scene load_steps=7 format=3 uid="uid://c0xcv6wduke3j"]
+[gd_scene load_steps=4 format=3 uid="uid://c0xcv6wduke3j"]
 
 [ext_resource type="PackedScene" uid="uid://cwsiati3qwbjm" path="res://scenes/player.tscn" id="1_4irva"]
-[ext_resource type="PackedScene" uid="uid://c4psokfkfw7gi" path="res://scenes/Enemys/enemy.tscn" id="2_nnhog"]
-[ext_resource type="Script" uid="uid://bgtabq5ovl7ec" path="res://scripts/enemys/ZeroGuardion.cs" id="3_t3f3t"]
 [ext_resource type="PackedScene" uid="uid://bm071a2ffn1c1" path="res://scenes/weapon_pick_up.tscn" id="4_xq43n"]
 [ext_resource type="PackedScene" uid="uid://mb3ijl33kch" path="res://scenes/Enemys/AbsoluteJuggernaut.tscn" id="5_t3f3t"]
-[ext_resource type="PackedScene" uid="uid://x12u41qu0djr" path="res://scenes/Enemys/Radical.tscn" id="6_crnxx"]
 
 [node name="Enemy test ground" type="Node2D"]
 
 [node name="Player" parent="." instance=ExtResource("1_4irva")]
 
-[node name="Enemy" parent="." instance=ExtResource("2_nnhog")]
-position = Vector2(-318, -61)
-script = ExtResource("3_t3f3t")
-
 [node name="WeaponPickUp2" parent="." instance=ExtResource("4_xq43n")]
 
 [node name="AbsoluteJuggernaut" parent="." instance=ExtResource("5_t3f3t")]
 position = Vector2(-302, 133)
-
-[node name="Radical" parent="." instance=ExtResource("6_crnxx")]
-position = Vector2(-105, -185)

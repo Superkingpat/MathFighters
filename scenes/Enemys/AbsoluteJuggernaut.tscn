@@ -1,19 +1,19 @@
 [gd_scene load_steps=6 format=3 uid="uid://mb3ijl33kch"]
 
 [ext_resource type="Script" uid="uid://7ia4do0jhi5a" path="res://scripts/enemys/AbsoluteJuggernaut.cs" id="1_y133c"]
-[ext_resource type="Texture2D" uid="uid://b0h1grf3b1dn3" path="res://assets/enemy/Absolute/absJug.png" id="2_csywx"]
+[ext_resource type="Texture2D" uid="uid://b0h1grf3b1dn3" path="res://assets/enemys/Absolute/absJug.png" id="2_csywx"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_qc14x"]
 radius = 52.2398
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_h8cwg"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_y133c"]
 bg_color = Color(1, 0, 0, 1)
 corner_radius_top_left = 8
 corner_radius_top_right = 8
 corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_61b8b"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_csywx"]
 bg_color = Color(0.121569, 0.72549, 0, 1)
 corner_radius_top_left = 8
 corner_radius_top_right = 8
@@ -23,7 +23,7 @@ corner_radius_bottom_left = 8
 [node name="AbsoluteJuggernaut" type="CharacterBody2D"]
 collision_layer = 5
 script = ExtResource("1_y133c")
-MaxHealth = 500.0
+MaxHealth = 400.0
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 scale = Vector2(0.201172, 0.201172)
@@ -37,8 +37,9 @@ offset_left = -30.0
 offset_top = -63.0
 offset_right = 30.0
 offset_bottom = -56.0
-theme_override_styles/background = SubResource("StyleBoxFlat_h8cwg")
-theme_override_styles/fill = SubResource("StyleBoxFlat_61b8b")
+theme_override_styles/background = SubResource("StyleBoxFlat_y133c")
+theme_override_styles/fill = SubResource("StyleBoxFlat_csywx")
+value = 100.0
 show_percentage = false
 
 [node name="WaveCooldown" type="Timer" parent="."]

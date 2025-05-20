@@ -4,6 +4,8 @@ using System.Runtime.CompilerServices;
 
 public partial class ExponentialLeaper : Enemy
 {
+	private ProgressBar healthBar;
+	
 	[Export] public float baseSpeed = 10.0f;
 	[Export] public float baseDamage = 5.0f;
 	[Export] public float baseCooldown = 2.0f;
@@ -32,6 +34,8 @@ public partial class ExponentialLeaper : Enemy
 		speedTimer.Autostart = true;
 		speedTimer.Timeout += IncreaseSpeed;
 		AddChild(speedTimer);
+		
+		healthBar = GetNode<ProgressBar>("HealthBar");
 	}
 
 	public override void _PhysicsProcess(double delta)
@@ -68,6 +72,15 @@ public partial class ExponentialLeaper : Enemy
 			AttackIncreaseCount++;
 			IncreaseDamage(AttackIncreaseCount);
 			IncreaseAttackSpeed(AttackIncreaseCount);
+		}
+	}
+	
+	public override void TakeDamage(float val)
+	{
+		base.TakeDamage(val);
+		if (healthBar != null)
+		{
+			healthBar.Value = CurrentHealth;
 		}
 	}
 }

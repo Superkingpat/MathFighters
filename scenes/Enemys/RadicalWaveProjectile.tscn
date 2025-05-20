@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://dpwlewwpv8qme"]
 
 [ext_resource type="Script" uid="uid://basq57i8r6om5" path="res://scripts/enemys/Radical/WaveProjectile.cs" id="1_5nqat"]
-[ext_resource type="Texture2D" uid="uid://btwsrj4hvtqbq" path="res://assets/enemy/Radical/radical_attack.png" id="1_wgq6r"]
+[ext_resource type="Texture2D" uid="uid://btwsrj4hvtqbq" path="res://assets/enemys/Radical/radical_attack.png" id="1_wgq6r"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_5nqat"]
 radius = 24.0

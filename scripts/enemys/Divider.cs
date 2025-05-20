@@ -6,6 +6,8 @@ public partial class Divider : Enemy
 	[Export] public float baseSpeed = 40.0f;
 	[Export] public float PreferredDistance = 500f;
 	[Export] public float RetreatThreshold = 200f;
+	
+	private ProgressBar healthBar;
 
 	private Area2D retreatArea;
 	private bool isRetreating = false;
@@ -23,6 +25,7 @@ public partial class Divider : Enemy
 		CurrentHealth = MaxHealth;
 
 		retreatArea = GetNode<Area2D>("retreat_area");
+		healthBar = GetNode<ProgressBar>("HealthBar");
 		if(retreatArea == null){
 			GD.PrintErr($"[Enemy {EnemyName}]: retreatArea was not initialized properly");
 		}
@@ -102,4 +105,14 @@ public partial class Divider : Enemy
 
 		GD.Print($"[Enemy {EnemyName}]: Shot projectile at player");
 	}
+	
+	public override void TakeDamage(float val)
+	{
+		base.TakeDamage(val);
+		if (healthBar != null)
+		{
+			healthBar.Value = CurrentHealth;
+		}
+	}
+	
 }
