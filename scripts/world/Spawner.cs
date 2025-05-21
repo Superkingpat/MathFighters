@@ -1,17 +1,17 @@
 using Godot;
 using System;
 
-
-
 public partial class Spawner : Node
 {
 	private Vector2 range = new Vector2(1920 / 3, 1080 / 3);
 	Random rnd = new Random();
 	public static PackedScene ItemScene;
 	private Player Player;
+	
+	private PackedScene EnemyScene = ResourceLoader.Load<PackedScene>("res://scenes/enemys/enemy.tscn");
 
-	public override void _Ready()
-	{
+	
+	public override void _Ready(){
 		ItemScene = ResourceLoader.Load<PackedScene>("res://scenes/item.tscn");
 
 		GD.Print("spawner ready");
@@ -81,6 +81,11 @@ public partial class Spawner : Node
 				case 6:
 				case 7:
 				case 8:
+					for (int i = 0; i < 30; i++)
+					{
+						SpawnEnemy(getRandPosition(position));
+					}
+					break;
 				case 9:
 					spawnItem(
 						getRandPosition(position),

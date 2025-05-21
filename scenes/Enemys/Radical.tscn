@@ -1,0 +1,48 @@
+[gd_scene load_steps=7 format=3 uid="uid://x12u41qu0djr"]
+
+[ext_resource type="Script" uid="uid://bprw2vloqcnue" path="res://scripts/enemys/Radical/Radical.cs" id="1_fnmkq"]
+[ext_resource type="Texture2D" uid="uid://c6adpvonf1krh" path="res://assets/enemys/Radical/radical.png" id="1_w0wne"]
+[ext_resource type="PackedScene" uid="uid://dpwlewwpv8qme" path="res://scenes/Enemys/RadicalWaveProjectile.tscn" id="2_8hsj3"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_fnmkq"]
+radius = 43.4166
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fnmkq"]
+bg_color = Color(1, 0, 0, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8hsj3"]
+bg_color = Color(0.121569, 0.72549, 0, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[node name="Radical" type="CharacterBody2D"]
+collision_layer = 5
+script = ExtResource("1_fnmkq")
+WaveProjectileScene = ExtResource("2_8hsj3")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.1475, 0.1475)
+texture = ExtResource("1_w0wne")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_fnmkq")
+
+[node name="ChargeCooldown" type="Timer" parent="."]
+
+[node name="HealthBar" type="ProgressBar" parent="."]
+offset_left = -30.0
+offset_top = -54.115
+offset_right = 30.0
+offset_bottom = -47.115
+theme_override_styles/background = SubResource("StyleBoxFlat_fnmkq")
+theme_override_styles/fill = SubResource("StyleBoxFlat_8hsj3")
+value = 100.0
+show_percentage = false
+
+[node name="WaveCooldown" type="Timer" parent="."]

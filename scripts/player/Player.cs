@@ -56,6 +56,11 @@ public partial class Player : CharacterBody2D {
 	private AudioStreamPlayer2D shootingSound;
 	private AudioStreamPlayer2D weaponPickupSound;
 	private AudioStreamPlayer2D walkingSound;
+	[Export] public float MaxHealth = 100f;
+	public float CurrentHealth { get; private set; }
+	
+
+	public int Damage=1;
 
 	private List<Weapon> weaponInventory = new List<Weapon>();
 	private int currentWeaponIndex = 0;
@@ -73,6 +78,7 @@ public partial class Player : CharacterBody2D {
 		weaponPickupSound = GetNode<AudioStreamPlayer2D>("WeaponPickUpSound");
 		walkingSound = GetNode<AudioStreamPlayer2D>("WalkingSound");
 		Instance = this;
+		CurrentHealth = MaxHealth;
 	}
 
 	//_PhysicsProcess updates the physics engine and animations in the background. MoveAndSlide() is used here, which means we don't need to care about delta time, it's handled automaticly
@@ -205,13 +211,21 @@ public partial class Player : CharacterBody2D {
 		weaponPickupSound.Stream = stream;
 		weaponPickupSound.Play();
 	}
+	
+	private void Die()
+	{
+		GD.Print("Player died!");
+		// Disable movement, play animation, trigger game over, etc.
+		QueueFree();
+	}
 
 
 	public void TakeDamage(float dmg) {
 		PlayerStats.TakeDamage(dmg);
-
+		GD.Print("Player took " + dmg + " damage. HP left: " + PlayerStats.CurrentHealth);
 		if(PlayerStats.CurrentHealth <= 0) {
 			GD.Print("Player is dead!");
+			Die();
 		}
 	}
 
