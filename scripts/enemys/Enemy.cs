@@ -2,51 +2,113 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-public abstract partial class Enemy : Node2D
+public partial class Enemy : CharacterBody2D
 {
-	[Export] public string EnemyName { get; private set; } = "Enemy";
-	[Export] public int Damage { get; private set; } = 10;
-	[Export] public float AttackRange { get; private set; } = 50.0f;
-	[Export] public float AttackCooldown { get; private set; } = 1.0f;
-	[Export] public float DetectionRange { get; private set; } = 200.0f;
-	[Export] public float AggroRange { get; private set; } = 300.0f;
-	[Export] public float FleeRange { get; private set; } = 100.0f;
-	[Export] public float Speed { get; private set; } = 200.0f;
-	[Export] public float MaxHealth { get; private set; } = 100.0f;
-	[Export] public float Armor { get; private set; } = 50.0f;
+	[Export] public string EnemyName { get; protected set; } = "Enemy";
+	
+	[Export] public float Damage { get; protected set; } = 3.0f;
+	[Export] public float AttackCooldown { get; protected set; } = 1.0f;
+	[Export] public float Speed { get; protected set; } = 40.0f;
+	[Export] public float MaxHealth { get; protected set; } = 100.0f;
+	[Export] public float Armor { get; protected set; } = 50.0f;
 	
 	// New properties for drops
-	[Export] public PackedScene[] PossibleDrops { get; private set; }
-	[Export] public float[] DropChances { get; private set; }
-	[Export] public int MaxDrops { get; private set; } = 3;
+	[Export] public PackedScene[] PossibleDrops { get; protected set; }
+	[Export] public float[] DropChances { get; protected set; }
+	[Export] public int MaxDrops { get; protected set; } = 3;
+	[Export] public float CurrentHealth { get; protected set; }
 	
-	public float CurrentHealth { get; protected set; }
-	protected Player player;
-	protected AnimatedSprite2D animatedSprite;
+
 	protected bool isAttacking = false;
-	protected bool isFleeing = false;
 	protected bool isAggroed = false;
 	protected bool isDead = false;
+	protected bool isMoving = false;
+
+	protected Player player;
+	protected AnimatedSprite2D animatedSprite;
+	protected Area2D detectionArea;
+	protected CollisionShape2D detectionCollision;
+	protected CollisionShape2D bodyCollision;
+	protected bool isStunned = false;
+	protected bool isSlowed = false;
+	
+	protected Vector2 externalForce = Vector2.Zero;
 	
 	// List to store configured drops
 	protected List<Drop> dropTable = new List<Drop>();
 	
 	// Random number generator
 	protected RandomNumberGenerator rng = new RandomNumberGenerator();
-	
+
+	private Timer attackTimer;
+
 	public override void _Ready()
 	{
 		rng.Randomize();
-		
+
+		// Access player
 		player = GetTree().GetFirstNodeInGroup("player") as Player;
 		if (player == null)
+			GD.PrintErr("Player not found in group 'Player'");
+
+		// Access sprite
+		animatedSprite = GetNodeOrNull<AnimatedSprite2D>("AnimatedSprite2D");
+		if (animatedSprite == null)
+			GD.PrintErr("AnimatedSprite2D not found!");
+
+		// Access detection area and its collision
+		detectionArea = GetNodeOrNull<Area2D>("detection_area");
+		if (detectionArea == null)
+			GD.PrintErr("detection_area not found!");
+		else
 		{
-			player = GetTree().Root.GetNode<Player>("World_1/Player");
+			detectionCollision = detectionArea.GetNodeOrNull<CollisionShape2D>("CollisionShape2D");
+			if (detectionCollision == null)
+				GD.PrintErr("Detection CollisionShape2D not found!");
 		}
-		
+
+		// Access main body collision shape
+		bodyCollision = GetNodeOrNull<CollisionShape2D>("CollisionShape2D");
+		if (bodyCollision == null)
+			GD.PrintErr("Body CollisionShape2D not found!");
+
 		CurrentHealth = MaxHealth;
 		
+		AddToGroup("enemies");
 		InitializeDropTable();
+
+		detectionArea.BodyEntered += OnBodyEntered;
+		detectionArea.BodyExited += OnBodyExited;
+
+		// Setup attack timer
+		attackTimer = new Timer();
+		attackTimer.WaitTime = AttackCooldown;
+		attackTimer.OneShot = false;
+		attackTimer.Autostart = false;
+		attackTimer.Timeout += Attack;
+
+		AddChild(attackTimer);
+	}
+
+	private void OnBodyEntered(Node body)
+	{
+		if (player == body) // use groups to avoid hardcoding types
+		{
+			GD.Print("Player entered detection area!");
+			isAggroed = true;
+			attackTimer.Start(); // start attacking
+		}
+	}
+
+	private void OnBodyExited(Node body)
+	{
+		if (player == body)
+		{
+			GD.Print("Player left detection area.");
+			isAggroed = false;
+			attackTimer.Stop();
+			isAttacking = false;
+		}
 	}
 	
 	protected virtual void InitializeDropTable()
@@ -72,12 +134,24 @@ public abstract partial class Enemy : Node2D
 	{
 		if (player != null && IsInstanceValid(player))
 		{
-			MoveEnemy((float)delta);
+			if(isAggroed) isMoving = false;
+			else isMoving = true;
+
+			if(isMoving)
+				MoveEnemy((float)delta);
 		}
 	}
 	
 	protected virtual void MoveEnemy(float delta)
 	{
+		if (isDead || player == null)
+			return;
+
+		if(isAggroed || (isAggroed && isAttacking))
+			return;
+
+		if(isStunned) return;
+
 		Vector2 direction = (player.GlobalPosition - GlobalPosition).Normalized();
 
 		// Cast a ray in the direction of movement to check for obstacles
@@ -89,50 +163,67 @@ public abstract partial class Enemy : Node2D
 		var k = PhysicsRayQueryParameters2D.Create(rayOrigin, rayEnd);
 		var result = GetWorld2D().DirectSpaceState.IntersectRay(k);
 
-		if (result.Count > 0)
-		{
-			// Obstacle detected - try to go around it by changing direction
-			// Simple avoidance: try rotating the direction slightly
-			float avoidAngle = Mathf.Pi / 4; // 45 degrees
+		// if (result.Count > 0)
+		// {
+		// 	// Obstacle detected - try to go around it by changing direction
+		// 	// Simple avoidance: try rotating the direction slightly
+		// 	float avoidAngle = Mathf.Pi / 4; // 45 degrees
 
-			// Try to go around to the right first
-			Vector2 altDirection = direction.Rotated(avoidAngle);
-			rayEnd = rayOrigin + altDirection * 20f;
-			k = PhysicsRayQueryParameters2D.Create(rayOrigin, rayEnd);
-			result = GetWorld2D().DirectSpaceState.IntersectRay(k);
+		// 	// Try to go around to the right first
+		// 	Vector2 altDirection = direction.Rotated(avoidAngle);
+		// 	rayEnd = rayOrigin + altDirection * 20f;
+		// 	k = PhysicsRayQueryParameters2D.Create(rayOrigin, rayEnd);
+		// 	result = GetWorld2D().DirectSpaceState.IntersectRay(k);
 
-			if (result.Count == 0)
-			{
-				direction = altDirection;
-			}
-			else
-			{
-				// Try to go around to the left
-				altDirection = direction.Rotated(-avoidAngle);
-				rayEnd = rayOrigin + altDirection * 20f;
-				k = PhysicsRayQueryParameters2D.Create(rayOrigin, rayEnd);
-				result = GetWorld2D().DirectSpaceState.IntersectRay(k);
+		// 	if (result.Count == 0)
+		// 	{
+		// 		direction = altDirection;
+		// 	}
+		// 	else
+		// 	{
+		// 		// Try to go around to the left
+		// 		altDirection = direction.Rotated(-avoidAngle);
+		// 		rayEnd = rayOrigin + altDirection * 20f;
+		// 		k = PhysicsRayQueryParameters2D.Create(rayOrigin, rayEnd);
+		// 		result = GetWorld2D().DirectSpaceState.IntersectRay(k);
 
-				if (result.Count == 0)
-				{
-					direction = altDirection;
-				}
-				else
-				{
-					// If both directions are blocked, stop movement
-					return;
-				}
-			}
-		}
+		// 		if (result.Count == 0)
+		// 		{
+		// 			direction = altDirection;
+		// 		}
+		// 		else
+		// 		{
+		// 			// If both directions are blocked, stop movement
+		// 			return;
+		// 		}
+		// 	}
+		// }
 
 		// Move in the (possibly adjusted) direction
-		Position += direction * Speed * delta;
+		// Position += direction * Speed * delta;
+		// Position += (player.Position - Position)/Speed;
+		float moveSpeed = isSlowed ? Speed * 0.7f : Speed;
+		Vector2 moveVector = direction * moveSpeed + externalForce;
+		Velocity = moveVector;
+		MoveAndSlide();
+
+		externalForce = externalForce.MoveToward(Vector2.Zero, 100f * delta);
+	}	
+
+	protected virtual void Attack()
+	{
+		if (isAggroed && player != null)
+		{
+			isAttacking = true;
+			GD.Print("Attacking player...");
+			player.TakeDamage(Damage);
+		}
 	}
 
-	
-	public virtual void TakeDamage(int amount)
+	public virtual void TakeDamage(float amount)
 	{
 		CurrentHealth -= amount;
+		GD.Print($"[Enemy {EnemyName}] Hit for {amount} damage");
 		if (CurrentHealth <= 0)
 		{
 			Die();
@@ -173,6 +264,29 @@ public abstract partial class Enemy : Node2D
 				}
 			}
 		}
+	}
+	
+	public async void Stun(float dur)
+	{
+		if(isStunned) return;
+		isStunned = true;
+		await ToSignal(GetTree().CreateTimer(dur), "timeout");
+		isStunned = false;
+	}
+	
+	public async void Slow(float dur, float slowFactor = 0.7f)
+	{
+		if (isSlowed) return;
+		isSlowed = true;
+		GD.Print($"{EnemyName} is slowed by factor {slowFactor} for {dur} seconds");
+		await ToSignal(GetTree().CreateTimer(dur), "timeout");
+		isSlowed = false;
+		GD.Print($"{EnemyName} is no longer slowed");
+	}
+	
+	public void ApplyForce(Vector2 force)
+	{
+		externalForce += force;
 	}
 }
 

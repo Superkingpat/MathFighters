@@ -102,9 +102,15 @@ public partial class Chunk : Node2D
 			return;
 		}
 		var zone = ZoneScene.Instantiate<Area2D>();
-		zone.Position = new Vector2(GD.Randf() * ChunkSize.X, GD.Randf() * ChunkSize.Y);
-		AddChild(zone);
-		GD.Print("Spawned zone");
+
+		Vector2 localOffset = new Vector2(GD.Randf() * ChunkSize.X, GD.Randf() * ChunkSize.Y);
+		Vector2 globalPos = GlobalPosition - ChunkSize / 2 + localOffset;
+
+		// Dodaj v glavno sceno (Root), da ni omejen znotraj Chunk node-a
+		GetTree().Root.AddChild(zone);
+		zone.GlobalPosition = globalPos;
+
+		//GD.Print("Spawned zone at global position: ", globalPos);
 	}
 	
 }

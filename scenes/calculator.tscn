@@ -1,0 +1,14 @@
+[gd_scene load_steps=4 format=3 uid="uid://capughgreucm7"]
+
+[ext_resource type="Script" uid="uid://cxh8krutfnll0" path="res://scripts/weapons/calculator/Calculator.cs" id="1_iofbv"]
+[ext_resource type="Texture2D" uid="uid://ctsk07wc21rcj" path="res://assets/weapons/calculator/Calculator.png" id="2_j8sg6"]
+[ext_resource type="PackedScene" uid="uid://k005bauhij3s" path="res://scenes/calculator_attack.tscn" id="2_q1y2q"]
+
+[node name="Calculator" type="Node2D"]
+script = ExtResource("1_iofbv")
+AttackScene = ExtResource("2_q1y2q")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, 1)
+scale = Vector2(0.0317383, 0.0297852)
+texture = ExtResource("2_j8sg6")
