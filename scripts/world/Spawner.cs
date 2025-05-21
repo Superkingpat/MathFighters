@@ -33,8 +33,13 @@ public partial class Spawner : Node
 		return position + new Vector2(rnd.Next((int)-range[0], (int)range[0]), rnd.Next((int)-range[1], (int)range[1]));
 	}
 
-
-
+	private void SpawnEnemy(Vector2 position)
+	{
+		var enemyInstance = EnemyScene.Instantiate<CharacterBody2D>();
+		enemyInstance.GlobalPosition = getRandPosition(position); 
+		GetTree().CurrentScene.AddChild(enemyInstance);
+		GD.Print("Spawned enemy at: " + enemyInstance.GlobalPosition);
+	}
 
 	private void spawnItem(Vector2 position, String path, Action function)
 	{
