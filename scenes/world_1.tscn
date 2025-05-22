@@ -1,8 +1,11 @@
-[gd_scene load_steps=4 format=3 uid="uid://bboxj5sqye13t"]
+[gd_scene load_steps=7 format=3 uid="uid://bboxj5sqye13t"]
 
 [ext_resource type="PackedScene" uid="uid://cwsiati3qwbjm" path="res://scenes/player.tscn" id="1_5lqpt"]
 [ext_resource type="PackedScene" uid="uid://bm071a2ffn1c1" path="res://scenes/weapon_pick_up.tscn" id="2_gawm5"]
 [ext_resource type="Script" uid="uid://22bsow8glsim" path="res://scripts/world/ChunkManager.cs" id="3_4eyuj"]
+[ext_resource type="PackedScene" uid="uid://ba6i5v0ijgd7s" path="res://scenes/geo_triangle.tscn" id="4_cmxnd"]
+[ext_resource type="PackedScene" path="res://scenes/calculator.tscn" id="5_kwwa1"]
+[ext_resource type="PackedScene" path="res://scenes/ShopUi.tscn" id="6_77kw0"]
 
 [node name="World_1" type="Node2D"]
 script = ExtResource("3_4eyuj")
@@ -12,7 +15,36 @@ script = ExtResource("3_4eyuj")
 [node name="WeaponPickUp2" parent="." instance=ExtResource("2_gawm5")]
 position = Vector2(-149, -210)
 
+[node name="WeaponPickUp5" parent="." instance=ExtResource("2_gawm5")]
+position = Vector2(-329, -95)
+
 [node name="WeaponPickUp3" parent="." instance=ExtResource("2_gawm5")]
 z_index = 1
 position = Vector2(0, -4)
 WeaponScene = ExtResource("3_4eyuj")
+
+[node name="WeaponPickUp" parent="." instance=ExtResource("2_gawm5")]
+position = Vector2(388, 163)
+WeaponScene = ExtResource("4_cmxnd")
+
+[node name="WeaponPickUp6" parent="." instance=ExtResource("2_gawm5")]
+position = Vector2(386, -22)
+WeaponScene = ExtResource("4_cmxnd")
+
+[node name="WeaponPickUp7" parent="." instance=ExtResource("2_gawm5")]
+position = Vector2(186, 28)
+WeaponScene = ExtResource("4_cmxnd")
+
+[node name="WeaponPickUp4" parent="." instance=ExtResource("2_gawm5")]
+position = Vector2(-273, 150)
+WeaponScene = ExtResource("5_kwwa1")
+
+[node name="WeaponPickUp8" parent="." instance=ExtResource("2_gawm5")]
+position = Vector2(-232, 228)
+WeaponScene = ExtResource("5_kwwa1")
+
+[node name="WeaponPickUp9" parent="." instance=ExtResource("2_gawm5")]
+position = Vector2(-104, 256)
+WeaponScene = ExtResource("5_kwwa1")
+
+[node name="ShopUi" parent="." instance=ExtResource("6_77kw0")]

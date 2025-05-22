@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=3 uid="uid://cbjhy3ld6ury6"]
+
+[ext_resource type="Texture2D" uid="uid://5pb2vaxfohvm" path="res://assets/weapons/basic weapon/bullet.png" id="1_2bxf2"]
+[ext_resource type="Script" uid="uid://ch0ejuapinv4l" path="res://scripts/enemys/DividerProjectile.cs" id="1_3ldnl"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_2bxf2"]
+size = Vector2(56, 12)
+
+[node name="CharacterBody2D" type="CharacterBody2D"]
+scale = Vector2(0.600001, 0.559999)
+collision_layer = 4
+script = ExtResource("1_3ldnl")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_2bxf2")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.07, 0.015)
+texture = ExtResource("1_2bxf2")
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
+position = Vector2(4.35114e-06, 0)
+scale = Vector2(3, 1)

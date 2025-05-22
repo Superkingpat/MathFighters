@@ -105,7 +105,6 @@ public partial class Chunk : Node2D
 		// Add to root scene to avoid limitations of being a child of the chunk
 		GetTree().Root.AddChild(zone);
 		zone.GlobalPosition = globalPos;
-		
 		//GD.Print("Spawned zone at global position: ", globalPos);
 	}
 }

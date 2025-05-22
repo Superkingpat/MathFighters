@@ -2,7 +2,7 @@ using Godot;
 using System;
 
 public partial class Pen : Weapon {
-	[Export] public int PelletCount = 6;
+	[Export] public int PelletCount = 1;
 	[Export] public float SpreadAngleDegrees = 15f;
 	[Export] public float FireCooldown = 1.0f;
 
@@ -21,7 +21,26 @@ public partial class Pen : Weapon {
 	}
 
 	public override void TryShoot(Vector2 targetPosition, float attackSpeedAmp) {
-		if (timeSinceLastShot < FireCooldown/attackSpeedAmp) return;
+
+		switch (WeaponLevel) {
+			case 1:
+				FireCooldown = 1f;
+				PelletCount = 1;
+				SpreadAngleDegrees = 15f;
+				break;
+			case 2:
+				FireCooldown = 0.7f;
+				PelletCount = 3;
+				SpreadAngleDegrees = 45f;
+				break;
+			case 3:
+				FireCooldown = 0.4f;
+				PelletCount = 6;
+				SpreadAngleDegrees = 90f;
+				break;
+		}
+
+		if (timeSinceLastShot < FireCooldown / attackSpeedAmp) return;
 		timeSinceLastShot = 0f;
 
 		Vector2 baseDirection = (targetPosition - Player.Instance.GlobalPosition).Normalized();
@@ -36,7 +55,7 @@ public partial class Pen : Weapon {
 			if (AttackScene != null) {
 				PenAttack pellet = (PenAttack)AttackScene.Instantiate();
 				GetTree().CurrentScene.AddChild(pellet);
-				pellet.Init(Player.Instance.GlobalPosition + spreadDirection * 8, Player.Instance.GlobalPosition);
+				pellet.Init(Player.Instance.GlobalPosition + spreadDirection * 8, Player.Instance.GlobalPosition, WeaponLevel);
 			}
 		}
 	}

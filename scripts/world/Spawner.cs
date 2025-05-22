@@ -73,6 +73,13 @@ public partial class Spawner : Node
 		
 		float p_ItemSpawn = 100; // Item spawn chance set to 100% for testing
 		
+		SpawnItem(
+						GetRandPosition(position),
+						"res://assets/items/Icon_Coin.png",
+						() => { DamageUp(20, 2); }
+					);
+
+
 		if (rnd.Next(100) < p_ItemSpawn)
 		{
 			int r = rnd.Next(10);
@@ -87,7 +94,7 @@ public partial class Spawner : Node
 						() => { DamageUp(20, 2); }
 					);
 					break;
-				case 3: 
+				case 3:
 				case 4:
 				case 5:
 					SpawnItem(
@@ -99,6 +106,11 @@ public partial class Spawner : Node
 				case 6:
 				case 7:
 				case 8:
+					for (int i = 0; i < 30; i++)
+					{
+						SpawnEnemy(getRandPosition(position));
+					}
+					break;
 				case 9:
 					SpawnItem(
 						GetRandPosition(position),
@@ -138,4 +150,12 @@ public partial class Spawner : Node
 		GD.Print("Heal not implemented yet!");
 		// Add code to heal player when health system is implemented
 	}
+
+	private async void GetGold(int amount)
+	{
+		Player.PlayerStats.Gold += amount;
+	}
+
+
+
 }

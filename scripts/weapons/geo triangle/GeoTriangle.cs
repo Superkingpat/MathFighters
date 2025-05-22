@@ -5,7 +5,7 @@ public partial class GeoTriangle : Weapon {
 	[Export] public int maxTriangleCount = 1;
 	public int currTriangleCount = 0;
 	private float timeSinceLastShot = 0f;
-	[Export] public float AttackCooldown = 0.5f;
+	[Export] public float AttackCooldown = 1f;
 	public override void _Ready() {
 		base._Ready();
 		AttackAnimation = "attack_geo";
@@ -17,15 +17,30 @@ public partial class GeoTriangle : Weapon {
 		return GetNode<Sprite2D>("Sprite2D");
 	}
 	public override void TryShoot(Vector2 targetPosition, float attackSpeedAmp) {
-		if ((timeSinceLastShot < AttackCooldown /attackSpeedAmp) || (currTriangleCount >= maxTriangleCount)) return;
+		
+		switch (WeaponLevel) {
+			case 1:
+				maxTriangleCount = 1;
+				AttackCooldown = 1f;
+				break;
+			case 2:
+				maxTriangleCount = 3;
+				AttackCooldown = 0.5f;
+				break;
+			case 3:
+				maxTriangleCount = 6;
+				AttackCooldown = 0.25f;
+				break;
+		}
+
+		if ((timeSinceLastShot < AttackCooldown / attackSpeedAmp) || (currTriangleCount >= maxTriangleCount)) return;
 		timeSinceLastShot = 0f;
 		currTriangleCount++;
-		//Vector2 baseDirection = (targetPosition - Player.Instance.GlobalPosition).Normalized();
 
 		if (AttackScene != null) {
 			GeoTriangleAttack triangle = (GeoTriangleAttack)AttackScene.Instantiate();
 			GetTree().CurrentScene.AddChild(triangle);
-			triangle.Init(this, GetGlobalMousePosition(), Player.Instance.GlobalPosition);
+			triangle.Init(this, GetGlobalMousePosition(), Player.Instance.GlobalPosition, WeaponLevel);
 		}
 	}
 
