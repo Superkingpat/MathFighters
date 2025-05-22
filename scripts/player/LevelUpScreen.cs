@@ -8,10 +8,10 @@ public partial class LevelUpScreen : Control {
 
 	public override void _Ready() {
 		Visible = false;
-
-		ConnectButtonSignals(DamageUpgradeButton, nameof(_on_DamageUpgradeButton_pressed), "DamageUpgradeButton");
-		ConnectButtonSignals(SpeedUpgradeButton, nameof(_on_SpeedUpgradeButton_pressed), "SpeedUpgradeButton");
-		ConnectButtonSignals(HealthUpgradeButton, nameof(_on_HealthUpgradeButton_pressed), "HealthUpgradeButton");
+		DamageUpgradeButton.Pressed += _on_DamageUpgradeButton_pressed; 
+		SpeedUpgradeButton.Pressed += _on_SpeedUpgradeButton_pressed;
+		HealthUpgradeButton.Pressed += _on_HealthUpgradeButton_pressed;
+		
 
 		Player player = GetNode<Player>("/root/World_1/Player");
 
@@ -28,27 +28,7 @@ public partial class LevelUpScreen : Control {
 	private void OnPlayerLevelUp(int newLevel) {
 		GD.Print($"LevelUpScreen: Received LevelUp signal! Player leveled up to level {newLevel}!");
 		Visible = true;
-		GetTree().Paused = true;
-	}
-
-	private void ConnectButtonSignals(Button button, string methodName, string buttonNameForDebug)
-	{
-		if (button != null)
-		{
-			if (!button.IsConnected("pressed", new Callable(this, methodName)))
-			{
-				button.Connect("pressed", new Callable(this, methodName));
-				GD.Print($"DEBUG: {buttonNameForDebug} signal connected via code.");
-			}
-			else
-			{
-				GD.Print($"DEBUG: {buttonNameForDebug} signal already connected.");
-			}
-		}
-		else
-		{
-			GD.PrintErr($"DEBUG ERROR: {buttonNameForDebug} is null! Make sure it's linked in the Inspector for LevelUpScreen.");
-		}
+		//GetTree().Paused = true;
 	}
 
 
@@ -99,6 +79,6 @@ public partial class LevelUpScreen : Control {
 	private void ContinueGame()
 	{
 		Visible = false;
-		GetTree().Paused = false;
+		//GetTree().Paused = false;
 	}
 }
