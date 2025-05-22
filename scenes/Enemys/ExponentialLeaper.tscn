@@ -1,6 +1,6 @@
 [gd_scene load_steps=53 format=3 uid="uid://dtkkgawogwgdt"]
 
-[ext_resource type="Script" uid="uid://bgtabq5ovl7ec" path="res://scripts/enemys/ZeroGuardion.cs" id="1_l2iit"]
+[ext_resource type="Script" uid="uid://v0uje8qyolsx" path="res://scripts/enemys/ExponentialLeaper.cs" id="1_l2iit"]
 [ext_resource type="Texture2D" uid="uid://fcqd7et3xhj2" path="res://assets/enemys/ExponentialLeaper/e-Sheet.png" id="2_l2iit"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_tmu3i"]

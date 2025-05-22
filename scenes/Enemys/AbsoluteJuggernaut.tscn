@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://mb3ijl33kch"]
+[gd_scene load_steps=16 format=3 uid="uid://mb3ijl33kch"]
 
 [ext_resource type="Script" uid="uid://7ia4do0jhi5a" path="res://scripts/enemys/AbsoluteJuggernaut.cs" id="1_y133c"]
 [ext_resource type="Texture2D" uid="uid://b0h1grf3b1dn3" path="res://assets/enemys/Absolute/absJug.png" id="2_csywx"]
+[ext_resource type="Texture2D" uid="uid://c5v1g2aa723ue" path="res://assets/enemys/Absolute/xabsolute-Sheet.png" id="3_csywx"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_qc14x"]
 radius = 52.2398
@@ -20,12 +21,77 @@ corner_radius_top_right = 8
 corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_bch6r"]
+atlas = ExtResource("3_csywx")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xe5uc"]
+atlas = ExtResource("3_csywx")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_j1wjk"]
+atlas = ExtResource("3_csywx")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tx232"]
+atlas = ExtResource("3_csywx")
+region = Rect2(96, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_viu6o"]
+atlas = ExtResource("3_csywx")
+region = Rect2(128, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_v7swa"]
+atlas = ExtResource("3_csywx")
+region = Rect2(160, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nhghf"]
+atlas = ExtResource("3_csywx")
+region = Rect2(192, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qtccm"]
+atlas = ExtResource("3_csywx")
+region = Rect2(224, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_shvix"]
+animations = [{
+"frames": [{
+"duration": 1.2,
+"texture": SubResource("AtlasTexture_bch6r")
+}, {
+"duration": 1.2,
+"texture": SubResource("AtlasTexture_xe5uc")
+}, {
+"duration": 1.2,
+"texture": SubResource("AtlasTexture_j1wjk")
+}, {
+"duration": 1.2,
+"texture": SubResource("AtlasTexture_tx232")
+}, {
+"duration": 1.2,
+"texture": SubResource("AtlasTexture_viu6o")
+}, {
+"duration": 1.2,
+"texture": SubResource("AtlasTexture_v7swa")
+}, {
+"duration": 1.2,
+"texture": SubResource("AtlasTexture_nhghf")
+}, {
+"duration": 1.2,
+"texture": SubResource("AtlasTexture_qtccm")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
 [node name="AbsoluteJuggernaut" type="CharacterBody2D"]
 collision_layer = 5
 script = ExtResource("1_y133c")
 MaxHealth = 400.0
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
+visible = false
 scale = Vector2(0.201172, 0.201172)
 texture = ExtResource("2_csywx")
 
@@ -43,3 +109,8 @@ value = 100.0
 show_percentage = false
 
 [node name="WaveCooldown" type="Timer" parent="."]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+scale = Vector2(2, 2)
+sprite_frames = SubResource("SpriteFrames_shvix")
+frame_progress = 0.377861
