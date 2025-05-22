@@ -17,8 +17,10 @@ public partial class Enemy : CharacterBody2D
 	[Export] public float[] DropChances { get; protected set; }
 	[Export] public int MaxDrops { get; protected set; } = 3;
 	[Export] public float CurrentHealth { get; protected set; }
-	
 
+	// Exp reward
+	[Export] public int ExpReward { get; protected set; } = 10;
+	
 	protected bool isAttacking = false;
 	protected bool isAggroed = false;
 	protected bool isDead = false;
@@ -233,6 +235,11 @@ public partial class Enemy : CharacterBody2D
 	protected virtual void Die()
 	{
 		isDead = true;
+
+		if (player != null && IsInstanceValid(player))
+		{
+			player.GainExperience(ExpReward);
+		}
 		
 		DropItems();
 		
