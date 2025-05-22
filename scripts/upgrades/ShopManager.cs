@@ -23,6 +23,7 @@ public partial class ShopManager : CanvasLayer
 	{
 		//init player
 		Player = GetTree().GetNodesInGroup("player")[0] as Player;
+		GD.Print("Player:" +Player);
 		//gold update
 		if (Player != null && Player.PlayerStats != null)
 		{
@@ -49,12 +50,14 @@ public partial class ShopManager : CanvasLayer
 	private void OnGoldChanged()
 	{
 		UpdateCurrencyDisplay();
+		//SaveShopData();
 	}
 
-	
+
 	public override void _PhysicsProcess(double delta)
 	{
-		GD.Print($"HP: {Player.PlayerStats.BaseHealth}");
+		//	GD.Print($"HP: {Player.PlayerStats.BaseHealth}");
+		//GD.Print("GOLD: " + Player.PlayerStats.Gold);
 	}
 
 	public override void _Input(InputEvent @event)
@@ -103,7 +106,6 @@ public partial class ShopManager : CanvasLayer
 
 	private void InitializeUpgrades()
 	{
-		// Define available upgrades
 		_availableUpgrades.Add("speed", new PlayerUpgrade
 		{
 			Id = "speed",
@@ -112,7 +114,7 @@ public partial class ShopManager : CanvasLayer
 			BaseCost = 20,
 			MaxLevel = 10,
 			CurrentLevel = 0,
-			Action=(lvl)=>{Player.PlayerStats.Speed*=1.15f;}
+			Action=(lvl)=>{Player.PlayerStats.Speed*=lvl*1.15f;}
 		});
 
 		_availableUpgrades.Add("damage", new PlayerUpgrade
@@ -123,7 +125,7 @@ public partial class ShopManager : CanvasLayer
 			BaseCost = 30,
 			MaxLevel = 10,
 			CurrentLevel = 0,
-			Action=(lvl)=>{Player.PlayerStats.DamageMod*=1.15f;}
+			Action=(lvl)=>{Player.PlayerStats.DamageMod*=lvl*1.15f;}
 		});
 
 		_availableUpgrades.Add("health", new PlayerUpgrade
@@ -140,13 +142,11 @@ public partial class ShopManager : CanvasLayer
 	
 	private void PopulateShop()
 	{
-		// Clear existing items first
 		foreach (Node child in UpgradeContainer.GetChildren())
 		{
 			child.QueueFree();
 		}
 		
-		// Create a UI item for each upgrade
 		PackedScene upgradeItemScene = GD.Load<PackedScene>("res://scenes/UpgradeItem.tscn");
 		
 		foreach (var upgrade in _availableUpgrades.Values)
@@ -154,16 +154,12 @@ public partial class ShopManager : CanvasLayer
 			var upgradeItem = (UpgradeItem)upgradeItemScene.Instantiate();
 			UpgradeContainer.AddChild(upgradeItem);
 			
-			// Setup the item
 			upgradeItem.SetUpgradeInfo(upgrade);
 			upgradeItem.SetShopManager(this);
-			
-			// Update the display based on purchased status
+
 			if (_purchasedUpgrades.ContainsKey(upgrade.Id))
 			{
 				upgradeItem.UpdateLevel(_purchasedUpgrades[upgrade.Id].CurrentLevel);
-
-				//load in the upgrades to player
 				_purchasedUpgrades[upgrade.Id].MakeActionInit();
 			}
 		}
@@ -171,20 +167,19 @@ public partial class ShopManager : CanvasLayer
 	
 	public void PurchaseUpgrade(string upgradeId)
 	{
-		// Get the upgrade
+		
 		if (!_availableUpgrades.ContainsKey(upgradeId))
 			return;
 			
 		PlayerUpgrade upgrade = _availableUpgrades[upgradeId];
 		int currentLevel = 0;
 		
-		// Check if we already have this upgrade
+		
 		if (_purchasedUpgrades.ContainsKey(upgradeId))
 		{
 			currentLevel = _purchasedUpgrades[upgradeId].CurrentLevel;
-			_purchasedUpgrades[upgradeId].MakeAction();
+			_availableUpgrades[upgradeId].MakeAction();
 			
-			// Check if max level reached
 			if (currentLevel >= upgrade.MaxLevel)
 			{
 				GD.Print($"Upgrade {upgrade.Name} already at max level!");
@@ -192,7 +187,7 @@ public partial class ShopManager : CanvasLayer
 			}
 		}
 		
-		// Calculate cost for the next level
+		
 		int cost = upgrade.BaseCost * (currentLevel + 1);
 		
 		// Check if we have enough currency
@@ -268,7 +263,6 @@ public partial class ShopManager : CanvasLayer
 		foreach (var kvp in data.PurchasedUpgrades)
 		{
 			kvp.Value.Action = null;
-
 		}
 		
 		try
@@ -311,8 +305,7 @@ public partial class ShopManager : CanvasLayer
 
 				foreach (var kvp in _purchasedUpgrades)
 					{
-						if (_availableUpgrades.TryGetValue(kvp.Key, out var baseUpgrade))
-						{
+					if (_availableUpgrades.TryGetValue(kvp.Key, out var baseUpgrade)){
 							kvp.Value.Action = baseUpgrade.Action;
 						}
 					}
@@ -344,7 +337,6 @@ public class PlayerUpgrade
 	{
 		Action?.Invoke(CurrentLevel);
 	}
-
 	public void MakeAction()
 	{
 		Action?.Invoke(1);

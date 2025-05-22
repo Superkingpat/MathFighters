@@ -129,17 +129,16 @@ public partial class Zone : Area2D
 	{
 		if (triggerShape.Disabled) return;
 		currRadius = 0f;
-		GD.Print("==>Body entered");
-		if (!isActivated && body is Player)
-		{
+		//GD.Print("==>Body entered");
+		if(!isActivated && body is Player){
 			isActivated = true;
 			sprite.Visible = false;
 			triggerShape.CallDeferred("set_disabled", true);
 			effectShape.CallDeferred("set_disabled", false);
 			QueueRedraw();
 			timer.Start();
-			GD.Print("Timer started");
-
+			//GD.Print("Timer started");
+			
 			switch (Type)
 			{
 				case ZoneType.heal:

@@ -1,65 +1,107 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 
 public partial class Spawner : Node
 {
-	private Vector2 range = new Vector2(1920 / 3, 1080 / 3);
-	Random rnd = new Random();
-	public static PackedScene ItemScene;
-	private Player Player;
+	private static Vector2 range = new Vector2(1056/3, 1056/3);
+	private static Random rnd = new Random();
 	
-	private PackedScene EnemyScene = ResourceLoader.Load<PackedScene>("res://scenes/enemys/enemy.tscn");
-
+	[Export] public PackedScene ItemScene;
 	
-	public override void _Ready(){
-		ItemScene = ResourceLoader.Load<PackedScene>("res://scenes/item.tscn");
-
-		GD.Print("spawner ready");
-	}
-
-	public void Test()
+	private static List<Item> _list = new List<Item>();
+	private static List<CharacterBody2D> _list_e= new List<CharacterBody2D>();
+	private static PackedScene EnemyScene = ResourceLoader.Load<PackedScene>("res://scenes/enemys/enemy.tscn");
+	// Singleton pattern
+	public static Spawner Instance { get; private set; }
+	
+	public override void _EnterTree()
 	{
-		GD.Print("Accesable");
+		if (Instance == null)
+		{
+			Instance = this;
+		}
+		else
+		{
+			GD.PrintErr("Multiple instances of Spawner detected!");
+		}
 	}
-
-	public void InitPlayer()
+	
+	public override void _Ready()
 	{
-		Player = GetTree().GetNodesInGroup("player")[0] as Player;
-		GD.Print(Player.GlobalPosition);
+		if (ItemScene == null)
+			ItemScene = ResourceLoader.Load<PackedScene>("res://scenes/item.tscn");
+		GD.Print("Spawner ready");
 	}
-
-	private Vector2 getRandPosition(Vector2 position)
+	
+	public static void Test()
 	{
-		return position + new Vector2(rnd.Next((int)-range[0], (int)range[0]), rnd.Next((int)-range[1], (int)range[1]));
+		GD.Print("Accessible");
 	}
-
-	private void SpawnEnemy(Vector2 position)
+	
+	private static Vector2 GetRandPosition(Vector2 position)
 	{
-		var enemyInstance = EnemyScene.Instantiate<CharacterBody2D>();
-		enemyInstance.GlobalPosition = getRandPosition(position); 
-		GetTree().CurrentScene.AddChild(enemyInstance);
-		GD.Print("Spawned enemy at: " + enemyInstance.GlobalPosition);
+		return position+ new Vector2(rnd.Next((int)-range[0], (int)range[0]), rnd.Next((int)-range[1], (int)range[1]));
 	}
-
-	private void spawnItem(Vector2 position, String path, Action function)
+	
+	public static void Reset()
 	{
-		var newItem = ItemScene.Instantiate<Item>();
-		AddChild(newItem);
+		foreach (var item in _list)
+		{
+			try
+			{
+				item.QueueFree();
+			}catch(Exception e){}
+		}
+		_list.Clear();
+		
+		
+		foreach (var enemy in _list_e)
+		{
+			try
+			{
+				enemy.QueueFree();
+			}catch(Exception e){}
+		}
+		_list_e.Clear();
+	}
+	
+	private static void SpawnItem(Vector2 position, String path, Action function)
+	{
+		//GD.Print(position);
+		var newItem = Instance.ItemScene.Instantiate<Item>();
+		_list.Add(newItem);
+		Instance.GetTree().CurrentScene.AddChild(newItem);
 		newItem.Initialize(0, position, GD.Load<Texture2D>(path), function);
 	}
+	
+	private static void SpawnEnemy(Vector2 position)
+	{
+		var enemyInstance = EnemyScene.Instantiate<CharacterBody2D>();
+		_list_e.Add(enemyInstance);
+		enemyInstance.GlobalPosition = GetRandPosition(position); 
+		Instance.GetTree().CurrentScene.AddChild(enemyInstance);
+		GD.Print("Spawned enemy at: " + enemyInstance.GlobalPosition);
+	}
+	
+	public static void Spawn(Vector2 position)
+	{
+		// Ensure we have instances of required resources
+		if (Instance == null || ChunkManager.Instance == null || ChunkManager.Instance.Player == null)
+		{
+			GD.PrintErr("Cannot spawn items: Missing required references");
+			return;
+		}
+
+		float p_ItemSpawn = 100; // Item spawn chance set to 100% for testing
+
+		SpawnItem(
+						GetRandPosition(position),
+						"res://assets/items/Icon_Coin.png",
+						() => { GetGold(100); }
+					);
 
 
-	public void Spawn(Vector2 position)
-	{ //ta funkcija bo skrbela za vse spawne pa chance
-		float p_ItemSpawn = 20f;
-		p_ItemSpawn = 100; //item spawn chance na 100 za testing
-
-		spawnItem(
-			getRandPosition(position),
-			"res://assets/items/Icon_Coin.png",
-			() => { _getGold(100); }
-		);
-		
 		if (rnd.Next(100) < p_ItemSpawn)
 		{
 			int r = rnd.Next(10);
@@ -68,19 +110,19 @@ public partial class Spawner : Node
 				case 0:
 				case 1:
 				case 2:
-					spawnItem(
-						getRandPosition(position),
+					SpawnItem(
+						GetRandPosition(position),
 						"res://assets/items/Icon_DamageUp.png",
-						() => { _damageUp(20, 2); }
+						() => { DamageUp(20, 2); }
 					);
 					break;
 				case 3:
 				case 4:
 				case 5:
-					spawnItem(
-						getRandPosition(position),
+					SpawnItem(
+						GetRandPosition(position),
 						"res://assets/items/Icon_Heal.png",
-						() => { _heal(50); }
+						() => { Heal(50); }
 					);
 					break;
 				case 6:
@@ -88,48 +130,52 @@ public partial class Spawner : Node
 				case 8:
 					for (int i = 0; i < 30; i++)
 					{
-						SpawnEnemy(getRandPosition(position));
+						SpawnEnemy(position);
 					}
 					break;
 				case 9:
-					spawnItem(
-						getRandPosition(position),
+					SpawnItem(
+						GetRandPosition(position),
 						"res://assets/items/Icon_EnergyDrink.png",
-						() => { _speedUp(10, 2); }
+						() => { SpeedUp(10, 2); }
 					);
 					break;
 			}
 		}
 	}
-	//Definirani efekti razlicnih itemov
-	private async void _speedUp(int duration, int multiplier)
+	
+	// Item effect methods
+	private static async void SpeedUp(int duration, int multiplier)
 	{
-		Player.PlayerStats.Speed *= multiplier;
-		Player.AttackSpeedAmp *= 2;
-		await ToSignal(GetTree().CreateTimer(duration), "timeout");
-		Player.PlayerStats.Speed /= multiplier;
-		Player.AttackSpeedAmp /= 2;
+		var player = ChunkManager.Instance.Player;
+		player.PlayerStats.Speed *= multiplier;
+		player.AttackSpeedAmp *= 2;
+		
+		await Instance.ToSignal(Instance.GetTree().CreateTimer(duration), "timeout");
+		
+		player.PlayerStats.Speed /= multiplier;
+		player.AttackSpeedAmp /= 2;
+	}
+	
+	private static async void DamageUp(int duration, int multiplier)
+	{
+		var player = ChunkManager.Instance.Player;
+		player.PlayerStats.DamageMod += multiplier;
+		
+		await Instance.ToSignal(Instance.GetTree().CreateTimer(duration), "timeout");
+		
+		player.PlayerStats.DamageMod -= multiplier;
+	}
+	
+	private static void Heal(int amount)
+	{
+		var player = ChunkManager.Instance.Player;
+		player.PlayerStats.CurrentHealth += amount;
 	}
 
-	private async void _damageUp(int duration, int multiplier)
+	private static void GetGold(int amount)
 	{
-		//GD.Print("Damage up not implemented yet!");
-		//ko bo player dobil dmg
-		Player.PlayerStats.Speed += multiplier;
-		await ToSignal(GetTree().CreateTimer(duration), "timeout");
-		Player.PlayerStats.Speed += multiplier;
+		var player = ChunkManager.Instance.Player;
+		player.PlayerStats.Gold += amount;
 	}
-	private async void _heal(int amount)
-	{
-		GD.Print("Heal not implemented yet!");
-		//dodaj ko player dobi health 
-	}
-
-	private async void _getGold(int amount)
-	{
-		Player.PlayerStats.Gold += amount;
-	}
-
-
-
 }
