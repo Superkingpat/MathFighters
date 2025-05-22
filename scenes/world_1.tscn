@@ -6,7 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://ba6i5v0ijgd7s" path="res://scenes/geo_triangle.tscn" id="4_cmxnd"]
 [ext_resource type="PackedScene" uid="uid://capughgreucm7" path="res://scenes/calculator.tscn" id="5_kwwa1"]
 [ext_resource type="PackedScene" uid="uid://td0n53sf2pih" path="res://scenes/ShopUi.tscn" id="6_77kw0"]
-/scenes/level_u[ext_resource type="PackedScene" uid="uid://do3bhxhomnp24" path="res:/p_screen.tscn" id="7_ol31w"]
+[ext_resource type="PackedScene" uid="uid://do3bhxhomnp24" path="res://scenes/level_up_screen.tscn" id="7_ol31w"]
 [ext_resource type="Script" uid="uid://8utgxploqql" path="res://scripts/player/LevelUpScreen.cs" id="8_ypmbo"]
 
 [node name="World_1" type="Node2D"]
