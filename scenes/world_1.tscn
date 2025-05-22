@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://bboxj5sqye13t"]
+[gd_scene load_steps=8 format=3 uid="uid://bboxj5sqye13t"]
 
 [ext_resource type="PackedScene" uid="uid://cwsiati3qwbjm" path="res://scenes/player.tscn" id="1_5lqpt"]
 [ext_resource type="PackedScene" uid="uid://bm071a2ffn1c1" path="res://scenes/weapon_pick_up.tscn" id="2_gawm5"]
@@ -7,10 +7,14 @@
 [ext_resource type="PackedScene" uid="uid://capughgreucm7" path="res://scenes/calculator.tscn" id="5_kwwa1"]
 [ext_resource type="PackedScene" uid="uid://td0n53sf2pih" path="res://scenes/ShopUi.tscn" id="6_77kw0"]
 [ext_resource type="PackedScene" uid="uid://do3bhxhomnp24" path="res://scenes/level_up_screen.tscn" id="7_ol31w"]
-[ext_resource type="Script" uid="uid://8utgxploqql" path="res://scripts/player/LevelUpScreen.cs" id="8_ypmbo"]
 
 [node name="World_1" type="Node2D"]
 script = ExtResource("3_4eyuj")
+
+[node name="UILayer" type="CanvasLayer" parent="."]
+layer = 100
+
+[node name="LevelUpScreen" parent="UILayer" instance=ExtResource("7_ol31w")]
 
 [node name="Player" parent="." instance=ExtResource("1_5lqpt")]
 
@@ -50,6 +54,3 @@ position = Vector2(-104, 256)
 WeaponScene = ExtResource("5_kwwa1")
 
 [node name="ShopUi" parent="." instance=ExtResource("6_77kw0")]
-
-[node name="LevelUpScreen" parent="." instance=ExtResource("7_ol31w")]
-script = ExtResource("8_ypmbo")

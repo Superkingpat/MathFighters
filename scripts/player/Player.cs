@@ -2,17 +2,16 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-//This is the player class.
 public partial class Player : CharacterBody2D {
-	//Export makes it so we can interact with the variable in the Godot UI
-
 	public class Stats {
-		public float BaseHealth { get; set; } = 100f;
-		public float CurrentHealth { get; set; }
-		public int S_Health { get; set; } = 2;
-		public float DamageMod = 1f;
-		public float Speed = 200.0f;
-		public float RangeMod = 1f;
+		// Public properties for direct access and modification
+		public float BaseHealth { get; set; } = 100f; // Base part of health
+		public int S_Health { get; set; } = 2;       // Skill part of health (e.g., 2 * S_Health)
+		public float CurrentHealth { get; private set; } // Current health, set internally
+		public float DamageMod { get; set; } = 1f;    // General damage multiplier (e.g., 1.1 for +10%)
+		public float Speed { get; set; } = 200.0f;    // Player movement speed
+		public float RangeMod { get; set; } = 1f;     // Weapon range multiplier (if applicable)
+
 		private int _gold;
 		public int Gold
 		{
@@ -29,10 +28,28 @@ public partial class Player : CharacterBody2D {
 
 		public event Action GoldChanged;
 
-
+		// Constructor to initialize CurrentHealth
 		public Stats()
 		{
-			CurrentHealth = BaseHealth + 2 * S_Health;
+			UpdateCurrentHealthToMax();
+		}
+
+		// Calculates the maximum health based on BaseHealth and S_Health
+		public float GetMaxHealth()
+		{
+			return BaseHealth + (2 * S_Health);
+		}
+
+		// Call this after changing BaseHealth or S_Health to update CurrentHealth
+		public void UpdateCurrentHealthToMax()
+		{
+			float maxHealth = GetMaxHealth();
+			// Ensure current health doesn't exceed new max, or set to max if previously 0
+			CurrentHealth = Mathf.Min(CurrentHealth, maxHealth);
+			if (CurrentHealth <= 0.01f) // If dead or just starting, set to max
+			{
+				CurrentHealth = maxHealth;
+			}
 		}
 
 		public void TakeDamage(float amount) {
@@ -40,7 +57,27 @@ public partial class Player : CharacterBody2D {
 		}
 
 		public void Heal(float amount) {
-			CurrentHealth = Mathf.Min(CurrentHealth + amount, BaseHealth + 2*S_Health);
+			CurrentHealth = Mathf.Min(CurrentHealth + amount, GetMaxHealth());
+		}
+
+		// --- New methods for upgrading stats ---
+
+		public void UpgradeDamage(float amount) {
+			DamageMod += amount;
+			GD.Print($"Player DamageMod increased to: {DamageMod}");
+		}
+
+		public void UpgradeSpeed(float amount) {
+			Speed += amount;
+			GD.Print($"Player Speed increased to: {Speed}");
+		}
+
+		// Increases max health by modifying BaseHealth and S_Health
+		public void UpgradeMaxHealth(float baseHealthIncrease, int sHealthIncrease) {
+			BaseHealth += baseHealthIncrease;
+			S_Health += sHealthIncrease;
+			UpdateCurrentHealthToMax(); // Recalculate max health and adjust current health
+			GD.Print($"Player Max Health increased. BaseHealth: {BaseHealth}, S_Health: {S_Health}. New Max: {GetMaxHealth()}. Current: {CurrentHealth}");
 		}
 	}
 
@@ -51,17 +88,14 @@ public partial class Player : CharacterBody2D {
 	public float AttackSpeedAmp=1;
 	private Weapon currentWeapon;
 	private Node2D weaponHolder;
-	public static Player Instance { get; private set; }
+	public static Player Instance { get; private set; } // Static instance for easy access
 	private Area2D screenBounds;
 	private AudioStreamPlayer2D shootingSound;
 	private AudioStreamPlayer2D weaponPickupSound;
 	private AudioStreamPlayer2D walkingSound;
-	[Export] public float MaxHealth = 100f;
-	public float CurrentHealth { get; private set; }
-	private Control levelUpScreen;
-	
 
-	public int Damage=1;
+	// Removed redundant MaxHealth and CurrentHealth as they are now in PlayerStats
+	// Removed int Damage = 1; as DamageMod in PlayerStats should handle this
 
 	private List<Weapon> weaponInventory = new List<Weapon>();
 	private int currentWeaponIndex = 0;
@@ -84,26 +118,20 @@ public partial class Player : CharacterBody2D {
 	public int Experience { get { return experience; } private set { experience = value; EmitSignal(SignalName.ExperienceChanged, experience, experienceToLevelUp); } }
 	public int ExperienceToLevelUp { get { return experienceToLevelUp; } private set { experienceToLevelUp = value; EmitSignal(SignalName.ExperienceChanged, experience, experienceToLevelUp); } }
 
-	
-	//With GetNode we get the instance of the AnimatedSprite2D that was addet in the Godot UI
-	//_Ready is called when the root node (Player) entered the scene
+
 	public override void _Ready()
 	{
-		//The AnimatedSprite2D handles animations
-		AddToGroup("player"); //da ga lagka iz chunkov/spavnerjov najlaze najdemo GetTree().GetNodesInGroup("player")[0] as Player
+		AddToGroup("player");
 		GetNode<Spawner>("/root/Spawner").InitPlayer();
 		animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
 		weaponHolder = GetNode<Node2D>("WeaponHolder");
 		shootingSound = GetNode<AudioStreamPlayer2D>("ShootingSound");
 		weaponPickupSound = GetNode<AudioStreamPlayer2D>("WeaponPickUpSound");
 		walkingSound = GetNode<AudioStreamPlayer2D>("WalkingSound");
-		Instance = this;
+		Instance = this; // Set the static instance here
 
-		// Init UI elements for XP and Level
-		CurrentHealth = MaxHealth;
-
-		levelUpScreen = GetNode<Control>("/root/World_1/LevelUpScreen");
-		levelUpScreen.Visible = false;
+		// Ensure PlayerStats.CurrentHealth is correctly set at start
+		PlayerStats.UpdateCurrentHealthToMax();
 	}
 
 	public override void _Input(InputEvent @event)
@@ -119,11 +147,9 @@ public partial class Player : CharacterBody2D {
 	}
 
 
-	//_PhysicsProcess updates the physics engine and animations in the background. MoveAndSlide() is used here, which means we don't need to care about delta time, it's handled automaticly
 	public override void _PhysicsProcess(double delta) {
 		Vector2 velocity = Vector2.Zero;
-		
-		//All Input.IsActionPressed are bound in the Godot UI under Project > Project Settings > Input Map
+
 		if (Input.IsActionPressed("move_up")) {
 			velocity.Y -= 1;
 			lastDir = 0;
@@ -139,6 +165,7 @@ public partial class Player : CharacterBody2D {
 		}
 
 		if (velocity.Length() > 0) {
+			// Use PlayerStats.Speed
 			velocity = velocity.Normalized() * PlayerStats.Speed;
 			UpdateAnimation(velocity);
 		} else {
@@ -151,7 +178,8 @@ public partial class Player : CharacterBody2D {
 
 		if(Input.IsActionJustPressed("attack")) {
 			GD.Print("Shooting");
-			currentWeapon?.TryShoot(GetGlobalMousePosition(), AttackSpeedAmp);
+			// Pass PlayerStats.DamageMod to weapon if it affects damage
+			currentWeapon?.TryShoot(GetGlobalMousePosition(), AttackSpeedAmp); // You might want to pass PlayerStats.DamageMod here
 		}
 
 		if (Input.IsActionJustPressed("next_weapon")) {
@@ -172,7 +200,6 @@ public partial class Player : CharacterBody2D {
 		}
 	}
 
-	//UpdateAnimation and PlayIdleAnimation handle the animations. Since AnimatedSprite2D::Play() is used here the animation speed is taken care of automaticly by Godot
 	private void UpdateAnimation(Vector2 velocity) {
 		if (velocity.Y < 0) {
 			animatedSprite.Play("walk_up");
@@ -194,7 +221,7 @@ public partial class Player : CharacterBody2D {
 			animatedSprite.Play("still_left");
 		} else if(lastDir == 3) {
 			animatedSprite.Play("still_right");
-		} 
+		}
 
 	}
 
@@ -249,7 +276,7 @@ public partial class Player : CharacterBody2D {
 		weaponPickupSound.Stream = stream;
 		weaponPickupSound.Play();
 	}
-	
+
 	private void Die()
 	{
 		GD.Print("Player died!");
@@ -257,9 +284,8 @@ public partial class Player : CharacterBody2D {
 		QueueFree();
 	}
 
-
 	public void TakeDamage(float dmg) {
-		PlayerStats.TakeDamage(dmg);
+		PlayerStats.TakeDamage(dmg); // Use PlayerStats method
 		GD.Print("Player took " + dmg + " damage. HP left: " + PlayerStats.CurrentHealth);
 		if(PlayerStats.CurrentHealth <= 0) {
 			GD.Print("Player is dead!");
@@ -268,13 +294,9 @@ public partial class Player : CharacterBody2D {
 	}
 
 	public void Heal(float heal) {
-		PlayerStats.Heal(heal);
-
+		PlayerStats.Heal(heal); // Use PlayerStats method
 		GD.Print("Player has been healed! Current health: " + PlayerStats.CurrentHealth);
 	}
-
-	//If a scene is bound to the external BulletScene variable we create a new instance of Bullet,
-	//position it at the player characters position and send it in the direction of the mouse cursor
 
 	public void GainExperience(int amount) {
 		if (amount <= 0) return;
@@ -294,17 +316,14 @@ public partial class Player : CharacterBody2D {
 		}
 	}
 
-	// Function to get current level (can be accessed from other scripts)
 	public int GetLevel() {
 		return Level;
 	}
 
-	// Function to get the current experience (can be accessed from other scripts)
 	public int GetExperience() {
 		return Experience;
 	}
 
-	// Function to get the experience needed to level up
 	public int GetExperienceToLevelUp() {
 		return ExperienceToLevelUp;
 	}
