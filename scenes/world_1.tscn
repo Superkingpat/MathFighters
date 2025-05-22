@@ -5,9 +5,9 @@
 [ext_resource type="Script" uid="uid://22bsow8glsim" path="res://scripts/world/ChunkManager.cs" id="3_4eyuj"]
 [ext_resource type="PackedScene" uid="uid://ba6i5v0ijgd7s" path="res://scenes/geo_triangle.tscn" id="4_cmxnd"]
 [ext_resource type="PackedScene" uid="uid://capughgreucm7" path="res://scenes/calculator.tscn" id="5_kwwa1"]
-[ext_resource type="PackedScene" path="res://scenes/ShopUi.tscn" id="6_77kw0"]
-[ext_resource type="PackedScene" uid="uid://djrqmt215m3e2" path="res://scenes/ChunkManager.tscn" id="7_ypmbo"]
-[ext_resource type="PackedScene" uid="uid://cd45shctosggf" path="res://scenes/Spawner.tscn" id="8_h5q77"]
+[ext_resource type="PackedScene" uid="uid://td0n53sf2pih" path="res://scenes/ShopUi.tscn" id="6_77kw0"]
+[ext_resource type="PackedScene" uid="uid://cdfb8nkif773" path="res://scenes/ChunkManager.tscn" id="7_ypmbo"]
+[ext_resource type="PackedScene" uid="uid://dkhjanhakvble" path="res://scenes/Spawner.tscn" id="8_h5q77"]
 
 [node name="World_1" type="Node2D"]
 
@@ -51,5 +51,8 @@ WeaponScene = ExtResource("5_kwwa1")
 [node name="ShopUi" parent="." instance=ExtResource("6_77kw0")]
 
 [node name="ChunkManager" parent="." instance=ExtResource("7_ypmbo")]
+ZoneScene = null
+ChunkScene = null
 
 [node name="Spawner" parent="." instance=ExtResource("8_h5q77")]
+ItemScene = null

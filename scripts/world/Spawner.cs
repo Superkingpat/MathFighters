@@ -10,7 +10,8 @@ public partial class Spawner : Node
 	[Export] public PackedScene ItemScene;
 	
 	private static List<Item> _list = new List<Item>();
-	
+	private static List<CharacterBody2D> _list_e= new List<CharacterBody2D>();
+	private static PackedScene EnemyScene = ResourceLoader.Load<PackedScene>("res://scenes/enemys/enemy.tscn");
 	// Singleton pattern
 	public static Spawner Instance { get; private set; }
 	
@@ -50,6 +51,13 @@ public partial class Spawner : Node
 			item.QueueFree();
 		}
 		_list.Clear();
+		
+		
+		foreach (var enemy in _list_e)
+		{
+			enemy.QueueFree();
+		}
+		_list_e.Clear();
 	}
 	
 	private static void SpawnItem(Vector2 position, String path, Action function)
@@ -61,6 +69,15 @@ public partial class Spawner : Node
 		newItem.Initialize(0, position, GD.Load<Texture2D>(path), function);
 	}
 	
+	private static void SpawnEnemy(Vector2 position)
+	{
+		var enemyInstance = EnemyScene.Instantiate<CharacterBody2D>();
+		_list_e.Add(enemyInstance);
+		enemyInstance.GlobalPosition = GetRandPosition(position); 
+		Instance.GetTree().CurrentScene.AddChild(enemyInstance);
+		GD.Print("Spawned enemy at: " + enemyInstance.GlobalPosition);
+	}
+	
 	public static void Spawn(Vector2 position)
 	{
 		// Ensure we have instances of required resources
@@ -69,9 +86,9 @@ public partial class Spawner : Node
 			GD.PrintErr("Cannot spawn items: Missing required references");
 			return;
 		}
-		
+
 		float p_ItemSpawn = 100; // Item spawn chance set to 100% for testing
-		
+
 		SpawnItem(
 						GetRandPosition(position),
 						"res://assets/items/Icon_Coin.png",
@@ -107,7 +124,7 @@ public partial class Spawner : Node
 				case 8:
 					for (int i = 0; i < 30; i++)
 					{
-						//SpawnEnemy(GetRandPosition(position));
+						SpawnEnemy(position);
 					}
 					break;
 				case 9:

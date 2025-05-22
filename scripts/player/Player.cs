@@ -242,7 +242,7 @@ public partial class Player : CharacterBody2D
 		GD.Print("Player died!");
 		// Disable movement, play animation, trigger game over, etc.
 		ResetMap();
-		QueueFree();
+		//QueueFree();a
 		this.Position = new Vector2(0, 0);
 	}
 
