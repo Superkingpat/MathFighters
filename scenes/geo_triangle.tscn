@@ -1,13 +1,14 @@
 [gd_scene load_steps=4 format=3 uid="uid://ba6i5v0ijgd7s"]
 
 [ext_resource type="Script" uid="uid://cs5u4yvkxddi2" path="res://scripts/weapons/geo triangle/GeoTriangle.cs" id="1_idfht"]
-[ext_resource type="Texture2D" uid="uid://dlohmcq3husa3" path="res://assets/weapons/GeoTriangle/geo.png" id="2_afykl"]
 [ext_resource type="PackedScene" uid="uid://ciw3r5c1tp1j5" path="res://scenes/geo_triangle_attack.tscn" id="2_wm3yw"]
+[ext_resource type="Texture2D" uid="uid://bdm4e83w51k0u" path="res://assets/weapons/GeoTriangle/weapon_ruler.png" id="3_afykl"]
 
 [node name="GeoTriangle" type="Node2D"]
 script = ExtResource("1_idfht")
 AttackScene = ExtResource("2_wm3yw")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-scale = Vector2(0.01, 0.01)
-texture = ExtResource("2_afykl")
+position = Vector2(1, 1)
+scale = Vector2(1.20438, 1.00125)
+texture = ExtResource("3_afykl")

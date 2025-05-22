@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dxc6r2agxgjk0" path="res://scripts/weapons/pen/Pen.cs" id="1_spjee"]
 [ext_resource type="PackedScene" uid="uid://cf34v5a0kcof5" path="res://scenes/pen_attack.tscn" id="2_j676a"]
-[ext_resource type="Texture2D" uid="uid://5pb2vaxfohvm" path="res://assets/weapons/basic weapon/bullet.png" id="2_xbp3v"]
+[ext_resource type="Texture2D" uid="uid://b455cgwyinjfd" path="res://assets/weapons/basic weapon/weapon_pencil.png" id="3_xbp3v"]
 
 [node name="Pen" type="Node2D"]
 script = ExtResource("1_spjee")
@@ -10,5 +10,6 @@ SpreadAngleDegrees = 5.0
 AttackScene = ExtResource("2_j676a")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-scale = Vector2(0.035, 0.035)
-texture = ExtResource("2_xbp3v")
+position = Vector2(0.14, 0.14)
+scale = Vector2(0.82125, 1.00875)
+texture = ExtResource("3_xbp3v")
