@@ -178,7 +178,4 @@ public partial class Spawner : Node
 		var player = ChunkManager.Instance.Player;
 		player.PlayerStats.Gold += amount;
 	}
-
-
-
 }

@@ -10,7 +10,7 @@ public partial class ChunkManager : Node
 	
 	// References
 	public Player Player { get; set; }
-	public static ChunkManager Instance { get; private set; }
+	public static ChunkManager Instance { get; set; }
 	
 	// State
 	public List<Chunk> Chunks { get; private set; } = new List<Chunk>();

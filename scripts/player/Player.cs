@@ -11,7 +11,7 @@ public partial class Player : CharacterBody2D
 		// Public properties for direct access and modification
 		public float BaseHealth { get; set; } = 100f; // Base part of health
 		public int S_Health { get; set; } = 2;       // Skill part of health (e.g., 2 * S_Health)
-		public float CurrentHealth { get; private set; } // Current health, set internally
+		public float CurrentHealth { get; set; } // Current health, set internally
 		public float DamageMod { get; set; } = 1f;    // General damage multiplier (e.g., 1.1 for +10%)
 		public float Speed { get; set; } = 200.0f;    // Player movement speed
 		public float RangeMod { get; set; } = 1f;     // Weapon range multiplier (if applicable)
@@ -131,7 +131,7 @@ public partial class Player : CharacterBody2D
 		//The AnimatedSprite2D handles animations
 		AddToGroup("player"); //da ga lagka iz chunkov/spavnerjov najlaze najdemo GetTree().GetNodesInGroup("player")[0] as Player
 		ChunkManager.Instance.Player = this;
-		GetNode<Spawner>("/root/Spawner").InitPlayer();
+		//GetNode<Spawner>("/root/Spawner").InitPlayer();
 		animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
 		weaponHolder = GetNode<Node2D>("WeaponHolder");
 		shootingSound = GetNode<AudioStreamPlayer2D>("ShootingSound");
