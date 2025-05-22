@@ -139,11 +139,11 @@ public partial class Player : CharacterBody2D {
 		if (velocity.Y < 0) {
 			animatedSprite.Play("walk_up");
 		} else if (velocity.Y > 0) {
-			animatedSprite.Play("walk_down");
+			animatedSprite.Play("walk_down2");
 		} else if (velocity.X < 0) {
-			animatedSprite.Play("walk_left");
+			animatedSprite.Play("walk_left2");
 		} else if (velocity.X > 0) {
-			animatedSprite.Play("walk_right");
+			animatedSprite.Play("walk_right2");
 		}
 	}
 
@@ -151,11 +151,11 @@ public partial class Player : CharacterBody2D {
 		if(lastDir == 0) {
 			animatedSprite.Play("still_up");
 		} else if(lastDir == 1) {
-			animatedSprite.Play("still_down");
+			animatedSprite.Play("still_down2");
 		} else if(lastDir == 2) {
-			animatedSprite.Play("still_left");
+			animatedSprite.Play("still_left2");
 		} else if(lastDir == 3) {
-			animatedSprite.Play("still_right");
+			animatedSprite.Play("still_right2");
 		} 
 
 	}

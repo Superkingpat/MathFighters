@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bielyua6rouk7"
-path="res://.godot/imported/Calculator.png-4156227709412ba188edc549f6958c71.ctex"
+uid="uid://b33yw664gnkat"
+path="res://.godot/imported/player_down_anim-Sheet.png-bf8e4572e5c0da5fffac0044c4832801.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/weapons/calculator/Calculator.png"
-dest_files=["res://.godot/imported/Calculator.png-4156227709412ba188edc549f6958c71.ctex"]
+source_file="res://assets/player/player_down_anim-Sheet.png"
+dest_files=["res://.godot/imported/player_down_anim-Sheet.png-bf8e4572e5c0da5fffac0044c4832801.ctex"]
 
 [params]
 
