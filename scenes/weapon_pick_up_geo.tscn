@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://ces7fsamlo08h"]
+[gd_scene load_steps=4 format=3 uid="uid://cruibc564qq6x"]
 
 [ext_resource type="Script" uid="uid://dowieo6v3jv3i" path="res://scripts/weapons/WeaponPickUp.cs" id="1_ie7vp"]
 [ext_resource type="PackedScene" uid="uid://d21rkt2tobhr1" path="res://scenes/pen.tscn" id="2_tk8ew"]

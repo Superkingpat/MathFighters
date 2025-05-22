@@ -48,14 +48,20 @@ public partial class Spawner : Node
 	{
 		foreach (var item in _list)
 		{
-			item.QueueFree();
+			try
+			{
+				item.QueueFree();
+			}catch(Exception e){}
 		}
 		_list.Clear();
 		
 		
 		foreach (var enemy in _list_e)
 		{
-			enemy.QueueFree();
+			try
+			{
+				enemy.QueueFree();
+			}catch(Exception e){}
 		}
 		_list_e.Clear();
 	}

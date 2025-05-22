@@ -50,7 +50,7 @@ public partial class ShopManager : CanvasLayer
 	private void OnGoldChanged()
 	{
 		UpdateCurrencyDisplay();
-		SaveShopData();
+		//SaveShopData();
 	}
 
 
@@ -114,7 +114,7 @@ public partial class ShopManager : CanvasLayer
 			BaseCost = 20,
 			MaxLevel = 10,
 			CurrentLevel = 0,
-			Action=(lvl)=>{Player.PlayerStats.Speed*=1.15f;}
+			Action=(lvl)=>{Player.PlayerStats.Speed*=lvl*1.15f;}
 		});
 
 		_availableUpgrades.Add("damage", new PlayerUpgrade
@@ -125,7 +125,7 @@ public partial class ShopManager : CanvasLayer
 			BaseCost = 30,
 			MaxLevel = 10,
 			CurrentLevel = 0,
-			Action=(lvl)=>{Player.PlayerStats.DamageMod*=1.15f;}
+			Action=(lvl)=>{Player.PlayerStats.DamageMod*=lvl*1.15f;}
 		});
 
 		_availableUpgrades.Add("health", new PlayerUpgrade
@@ -156,7 +156,7 @@ public partial class ShopManager : CanvasLayer
 			
 			upgradeItem.SetUpgradeInfo(upgrade);
 			upgradeItem.SetShopManager(this);
-			
+
 			if (_purchasedUpgrades.ContainsKey(upgrade.Id))
 			{
 				upgradeItem.UpdateLevel(_purchasedUpgrades[upgrade.Id].CurrentLevel);
@@ -305,8 +305,7 @@ public partial class ShopManager : CanvasLayer
 
 				foreach (var kvp in _purchasedUpgrades)
 					{
-						if (_availableUpgrades.TryGetValue(kvp.Key, out var baseUpgrade))
-						{
+					if (_availableUpgrades.TryGetValue(kvp.Key, out var baseUpgrade)){
 							kvp.Value.Action = baseUpgrade.Action;
 						}
 					}
@@ -338,7 +337,6 @@ public class PlayerUpgrade
 	{
 		Action?.Invoke(CurrentLevel);
 	}
-
 	public void MakeAction()
 	{
 		Action?.Invoke(1);
