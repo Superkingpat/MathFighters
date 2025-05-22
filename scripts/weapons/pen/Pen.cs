@@ -5,17 +5,26 @@ public partial class Pen : Weapon {
 	[Export] public int PelletCount = 1;
 	[Export] public float SpreadAngleDegrees = 15f;
 	[Export] public float FireCooldown = 1.0f;
-
+	private Sprite2D weaponSprite;
 	private float timeSinceLastShot = 0f;
+	private float radius = 50f;
+	private Vector2 dir;
 
-	public override void _Ready() {
+	public override void _Ready()
+	{
 		base._Ready();
+		weaponSprite = GetNode<Sprite2D>("Sprite2D");
 		AttackAnimation = "attack_pen";
 	}
 	public override void _Process(double delta) {
 		timeSinceLastShot += (float)delta;
-	}
 
+		dir = (GetGlobalMousePosition() - Player.Instance.GlobalPosition).Normalized();
+
+		weaponSprite.Rotation = dir.Angle() + (float)Math.PI / 2;
+
+		weaponSprite.GlobalPosition = Player.Instance.GlobalPosition + dir * radius;
+	}
 	public override Sprite2D GetPickupSprite() {
 		return GetNode<Sprite2D>("Sprite2D");
 	}

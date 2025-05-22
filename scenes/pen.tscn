@@ -10,6 +10,6 @@ SpreadAngleDegrees = 5.0
 AttackScene = ExtResource("2_j676a")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(0.14, 0.14)
-scale = Vector2(0.82125, 1.00875)
+position = Vector2(-0.499999, 2.38419e-07)
+scale = Vector2(1.46875, 1.875)
 texture = ExtResource("3_xbp3v")

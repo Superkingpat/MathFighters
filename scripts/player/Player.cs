@@ -173,7 +173,7 @@ public partial class Player : CharacterBody2D {
 	}
 
 	public void TryPickupWeapon(WeaponPickUp pickup) {
-	if (pickup == null) return;
+		if (pickup == null) return;
 
 		GD.Print("Trying to pick up weapon...");
 
