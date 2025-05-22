@@ -17,7 +17,7 @@ public partial class Chunk : Node2D
 	
 	public void Initialize(Vector2 chunkPosition, Vector2 chunkSize, Player player)
 	{
-		GD.Print(chunkPosition);
+		//GD.Print(chunkPosition);
 		this.Position = chunkPosition;
 		ZIndex = -100;
 		ChunkSize = chunkSize;
@@ -26,36 +26,33 @@ public partial class Chunk : Node2D
 	
 	public override void _Ready()
 	{
-		// Add to ChunkManager's list
 		ChunkManager.Instance.Chunks.Add(this);
-		
-		// Spawn items in this chunk
+		//GD.Print(ChunkSize);
 		Spawner.Spawn(Position);
-		GD.Print(Position);
+		//GD.Print(Position);
 		// Create zone
 		SpawnZone();
 	}
 	
 	public override void _Process(double delta)
 	{
-		// Check if player is null
+		
 		if (ChunkManager.Instance.Player == null)
 			return;
 		
-		// Check if player entered the chunk
+		
 		playerIsIn[0] = IsPlayerInChunk();
 		if (playerIsIn[0] != playerIsIn[1] && playerIsIn[0])
 		{
-			LoadChunks(); // Generate surrounding chunks
+			LoadChunks(); 
 		}
 		playerIsIn[1] = playerIsIn[0];
 		
-		// Check if chunk should be destroyed
 		if (!IsChunkNearPlayer())
 		{
 			ChunkManager.Instance.Chunks.Remove(this);
 			QueueFree();
-			GD.Print("Deleted chunk...");
+			//GD.Print("Deleted chunk...");
 		}
 	}
 	

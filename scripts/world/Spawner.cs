@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public partial class Spawner : Node
 {
-	private static Vector2 range = new Vector2(1920/3, 1080/3);
+	private static Vector2 range = new Vector2(1056/3, 1056/3);
 	private static Random rnd = new Random();
 	
 	[Export] public PackedScene ItemScene;
@@ -30,7 +30,6 @@ public partial class Spawner : Node
 	{
 		if (ItemScene == null)
 			ItemScene = ResourceLoader.Load<PackedScene>("res://scenes/item.tscn");
-			
 		GD.Print("Spawner ready");
 	}
 	
@@ -55,7 +54,7 @@ public partial class Spawner : Node
 	
 	private static void SpawnItem(Vector2 position, String path, Action function)
 	{
-		GD.Print(position);
+		//GD.Print(position);
 		var newItem = Instance.ItemScene.Instantiate<Item>();
 		_list.Add(newItem);
 		Instance.GetTree().CurrentScene.AddChild(newItem);
@@ -76,7 +75,7 @@ public partial class Spawner : Node
 		SpawnItem(
 						GetRandPosition(position),
 						"res://assets/items/Icon_Coin.png",
-						() => { DamageUp(20, 2); }
+						() => { GetGold(100); }
 					);
 
 
@@ -108,7 +107,7 @@ public partial class Spawner : Node
 				case 8:
 					for (int i = 0; i < 30; i++)
 					{
-						SpawnEnemy(getRandPosition(position));
+						//SpawnEnemy(GetRandPosition(position));
 					}
 					break;
 				case 9:
@@ -126,34 +125,35 @@ public partial class Spawner : Node
 	private static async void SpeedUp(int duration, int multiplier)
 	{
 		var player = ChunkManager.Instance.Player;
-		player.Speed *= multiplier;
+		player.PlayerStats.Speed *= multiplier;
 		player.AttackSpeedAmp *= 2;
 		
 		await Instance.ToSignal(Instance.GetTree().CreateTimer(duration), "timeout");
 		
-		player.Speed /= multiplier;
+		player.PlayerStats.Speed /= multiplier;
 		player.AttackSpeedAmp /= 2;
 	}
 	
 	private static async void DamageUp(int duration, int multiplier)
 	{
 		var player = ChunkManager.Instance.Player;
-		player.Speed += multiplier;
+		player.PlayerStats.DamageMod += multiplier;
 		
 		await Instance.ToSignal(Instance.GetTree().CreateTimer(duration), "timeout");
 		
-		player.Speed -= multiplier;
+		player.PlayerStats.DamageMod -= multiplier;
 	}
 	
 	private static void Heal(int amount)
 	{
-		GD.Print("Heal not implemented yet!");
-		// Add code to heal player when health system is implemented
+		var player = ChunkManager.Instance.Player;
+		player.PlayerStats.CurrentHealth += amount;
 	}
 
-	private async void GetGold(int amount)
+	private static void GetGold(int amount)
 	{
-		Player.PlayerStats.Gold += amount;
+		var player = ChunkManager.Instance.Player;
+		player.PlayerStats.Gold += amount;
 	}
 
 

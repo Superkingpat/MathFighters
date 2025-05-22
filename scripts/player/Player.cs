@@ -150,7 +150,7 @@ public partial class Player : CharacterBody2D
 		{
 			animatedSprite.Play("walk_up");
 		}
-		else if (velocity.Y > 0)
+		else if (velocity.Y > 0) 
 		{
 			animatedSprite.Play("walk_down");
 		}
@@ -236,12 +236,14 @@ public partial class Player : CharacterBody2D
 		weaponPickupSound.Stream = stream;
 		weaponPickupSound.Play();
 	}
-	
+
 	private void Die()
 	{
 		GD.Print("Player died!");
 		// Disable movement, play animation, trigger game over, etc.
+		ResetMap();
 		QueueFree();
+		this.Position = new Vector2(0, 0);
 	}
 
 
@@ -260,8 +262,7 @@ public partial class Player : CharacterBody2D
 		GD.Print("Player has been healed! Current health: " + PlayerStats.CurrentHealth);
 	}
 
-	public void ResetMap()
-
+	public void ResetMap(){
 		ChunkManager.Instance.Reset();
 		Spawner.Reset();
 	}
