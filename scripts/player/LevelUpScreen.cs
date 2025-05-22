@@ -11,7 +11,6 @@ public partial class LevelUpScreen : Control {
 		DamageUpgradeButton.Pressed += _on_DamageUpgradeButton_pressed; 
 		SpeedUpgradeButton.Pressed += _on_SpeedUpgradeButton_pressed;
 		HealthUpgradeButton.Pressed += _on_HealthUpgradeButton_pressed;
-		
 
 		Player player = GetNode<Player>("/root/World_1/Player");
 
@@ -28,7 +27,7 @@ public partial class LevelUpScreen : Control {
 	private void OnPlayerLevelUp(int newLevel) {
 		GD.Print($"LevelUpScreen: Received LevelUp signal! Player leveled up to level {newLevel}!");
 		Visible = true;
-		//GetTree().Paused = true;
+		GetTree().Paused = true;
 	}
 
 
@@ -79,6 +78,6 @@ public partial class LevelUpScreen : Control {
 	private void ContinueGame()
 	{
 		Visible = false;
-		//GetTree().Paused = false;
+		GetTree().Paused = false;
 	}
 }

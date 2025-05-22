@@ -9,6 +9,7 @@ bg_color = Color(0.654777, 0.762326, 1, 1)
 font_size = 22
 
 [node name="LevelUpScreen" type="Control" node_paths=PackedStringArray("DamageUpgradeButton", "SpeedUpgradeButton", "HealthUpgradeButton")]
+process_mode = 1
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -52,14 +53,17 @@ label_settings = SubResource("LabelSettings_tujht")
 horizontal_alignment = 1
 
 [node name="DamageUpgradeButton" type="Button" parent="Panel/VBoxContainer"]
+process_mode = 3
 layout_mode = 2
 text = "Increase Damage"
 
 [node name="SpeedUpgradeButton" type="Button" parent="Panel/VBoxContainer"]
+process_mode = 3
 layout_mode = 2
 size_flags_vertical = 4
 text = "Increase Speed"
 
 [node name="HealthUpgradeButton" type="Button" parent="Panel/VBoxContainer"]
+process_mode = 3
 layout_mode = 2
 text = "Increase Health"
