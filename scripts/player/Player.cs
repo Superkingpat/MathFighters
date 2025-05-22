@@ -58,6 +58,7 @@ public partial class Player : CharacterBody2D {
 	private AudioStreamPlayer2D walkingSound;
 	[Export] public float MaxHealth = 100f;
 	public float CurrentHealth { get; private set; }
+	private Control levelUpScreen;
 	
 
 	public int Damage=1;
@@ -100,7 +101,23 @@ public partial class Player : CharacterBody2D {
 
 		// Init UI elements for XP and Level
 		CurrentHealth = MaxHealth;
+
+		levelUpScreen = GetNode<Control>("/root/World_1/LevelUpScreen");
+		levelUpScreen.Visible = false;
 	}
+
+	public override void _Input(InputEvent @event)
+	{
+		if (@event is InputEventKey eventKey && eventKey.Pressed && !eventKey.Echo)
+		{
+			if (eventKey.Keycode == Key.Z)
+			{
+				GainExperience(150);
+				GD.Print("Added 150 EXP by pressing Z");
+			}
+		}
+	}
+
 
 	//_PhysicsProcess updates the physics engine and animations in the background. MoveAndSlide() is used here, which means we don't need to care about delta time, it's handled automaticly
 	public override void _PhysicsProcess(double delta) {
@@ -263,6 +280,7 @@ public partial class Player : CharacterBody2D {
 		if (amount <= 0) return;
 
 		Experience += amount;
+		GD.Print($"Gained {amount} EXP! Total: {Experience}");
 		CheckLevelUp();
 	}
 
@@ -273,8 +291,6 @@ public partial class Player : CharacterBody2D {
 			ExperienceToLevelUp = (int)(ExperienceToLevelUp * levelUpExperienceMultiplier); // Lets make this non-linear in the future
 			GD.Print($"Player leveled up! New level: {Level}");
 			EmitSignal(SignalName.LevelUp, Level);
-
-			// Show level up screen to choose a perk
 		}
 	}
 
