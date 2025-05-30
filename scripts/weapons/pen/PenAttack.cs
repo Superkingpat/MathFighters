@@ -41,7 +41,7 @@ public partial class PenAttack : Attack {
 				ExpandedTime = 1.5f;
 				break;
 		}
-    }
+	}
 
 	public override void _PhysicsProcess(double delta)
 	{
@@ -92,8 +92,8 @@ public partial class PenAttack : Attack {
 
 	}
   	protected override void PlayAttackSound() {
-        if (AudioManager.Instance != null) {
-            AudioManager.Instance.PlayShootSound("pen");
-        }
+		if (AudioManager.Instance != null) {
+			AudioManager.Instance.PlayShootSound("pen");
+		}
 	}
 }
