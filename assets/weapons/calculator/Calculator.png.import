@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bielyua6rouk7"
-path="res://.godot/imported/calculator.png-456e18b59db60b0cde330558526685f8.ctex"
+path="res://.godot/imported/Calculator.png-4156227709412ba188edc549f6958c71.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/weapons/calculator/calculator.png"
-dest_files=["res://.godot/imported/calculator.png-456e18b59db60b0cde330558526685f8.ctex"]
+source_file="res://assets/weapons/calculator/Calculator.png"
+dest_files=["res://.godot/imported/Calculator.png-4156227709412ba188edc549f6958c71.ctex"]
 
 [params]
 

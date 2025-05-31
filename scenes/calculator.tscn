@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cxh8krutfnll0" path="res://scripts/weapons/calculator/Calculator.cs" id="1_iofbv"]
 [ext_resource type="PackedScene" uid="uid://k005bauhij3s" path="res://scenes/calculator_attack.tscn" id="2_q1y2q"]
-[ext_resource type="Texture2D" uid="uid://bielyua6rouk7" path="res://assets/weapons/calculator/calculator.png" id="3_j8sg6"]
+[ext_resource type="Texture2D" uid="uid://bielyua6rouk7" path="res://assets/weapons/calculator/Calculator.png" id="3_j8sg6"]
 
 [node name="Calculator" type="Node2D"]
 script = ExtResource("1_iofbv")

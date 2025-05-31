@@ -224,7 +224,7 @@ public partial class Player : CharacterBody2D
 	{
 		if (velocity.Y < 0)
 		{
-			animatedSprite.Play("walk_up");
+			animatedSprite.Play("walk_down2");
 		} else if (velocity.Y > 0) {
 			animatedSprite.Play("walk_down2");
 		} else if (velocity.X < 0) {
@@ -238,7 +238,7 @@ public partial class Player : CharacterBody2D
 	{
 		if (lastDir == 0)
 		{
-			animatedSprite.Play("still_up");
+			animatedSprite.Play("still_down2");
 		} else if(lastDir == 1) {
 			animatedSprite.Play("still_down2");
 		} else if(lastDir == 2) {
