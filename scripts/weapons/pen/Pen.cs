@@ -35,17 +35,17 @@ public partial class Pen : Weapon {
 			case 1:
 				FireCooldown = 1f;
 				PelletCount = 1;
-				SpreadAngleDegrees = 15f;
+				SpreadAngleDegrees = 5f;
 				break;
 			case 2:
 				FireCooldown = 0.7f;
 				PelletCount = 3;
-				SpreadAngleDegrees = 45f;
+				SpreadAngleDegrees = 15f;
 				break;
 			case 3:
 				FireCooldown = 0.4f;
 				PelletCount = 6;
-				SpreadAngleDegrees = 90f;
+				SpreadAngleDegrees = 25f;
 				break;
 		}
 

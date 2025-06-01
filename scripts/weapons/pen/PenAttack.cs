@@ -1,33 +1,50 @@
 using Godot;
 using System;
 
-public partial class PenAttack : Attack {
+public partial class PenAttack : Attack
+{
 	[Export] public float ExpandScale = 5.0f;
 	[Export] public float TravelTime = 1.0f;
 	[Export] public float ExpandedTime = 1.0f;
+	[Export] public float DamageInterval = 0.3f;
+	[Export] public int baseDamage = 10;
 
 	private float timer = 0f;
+	private float damageTickTimer = 0f;
 	private Vector2 originalScale;
 	private bool hasExpanded = false;
 	private bool hasStopped = false;
+	private bool hasHitEnemy = false;
 	private CollisionShape2D collisionShape;
 	private Shape2D originalCollisionShape;
-	public override void _Ready() {
+	[Export] public float ExpandAnimationTime = 0.2f;
+	[Export] public float ShrinkAnimationTime = 0.15f;
+
+	private Tween scaleTween;
+	private Vector2 targetScale;
+	private bool isShrinking = false;
+
+	public override void _Ready()
+	{
 		base._Ready();
 		originalScale = Scale;
 		collisionShape = GetNode<CollisionShape2D>("CollisionShape2D");
-		if (collisionShape != null) {
+		if (collisionShape != null)
+		{
 			originalCollisionShape = collisionShape.Shape;
-		} else {
-			GD.PrintErr("CollisionShape2D not found!");
 		}
+		scaleTween = CreateTween();
 	}
 
 	public override void Init(Vector2 targetPosition, Vector2 startPosition, int WeaponLevel)
 	{
 		base.Init(targetPosition, startPosition, WeaponLevel);
+		TravelTime = (float)GD.Randf() * 1.0f + 0.3f;
+		ExpandedTime = (float)GD.Randf() * 0.8f + 0.3f;
+
 		
-		switch (WeaponLevel) {
+		switch (WeaponLevel)
+		{
 			case 1:
 				ExpandScale = 5f;
 				ExpandedTime = 0.5f;
@@ -52,47 +69,105 @@ public partial class PenAttack : Attack {
 			hasStopped = true;
 			Speed = 0f;
 			timer = 0f;
+			ExpandAndStop();
 		}
 
-		if (hasStopped && !hasExpanded)
+		if (hasExpanded)
 		{
-			Scale = originalScale * ExpandScale;
-
-			if (collisionShape != null && originalCollisionShape != null)
+			damageTickTimer += (float)delta;
+			if (damageTickTimer >= DamageInterval)
 			{
-				if (originalCollisionShape is CircleShape2D circleShape)
-				{
-					var newShape = new CircleShape2D();
-					newShape.Radius = circleShape.Radius * ExpandScale;
-					collisionShape.Shape = newShape;
-				}
+				damageTickTimer = 0f;
+				ApplyAreaDamage();
 			}
 
-			hasExpanded = true;
-		}
-		else if (hasExpanded && timer >= ExpandedTime)
-		{
-			QueueFree();
-			GD.Print("Pen bullet was deleted!");
+			if (timer >= ExpandedTime && !isShrinking)
+			{
+				StartShrinkAnimation();
+			}
 		}
 
 		if (!hasStopped)
 		{
-			base._PhysicsProcess(delta); // MAIN
-
+			base._PhysicsProcess(delta);
 			Velocity = direction * Speed;
 			var collision = MoveAndCollide(Velocity * (float)delta);
-
 			if (collision != null && collision.GetCollider() is Enemy enemy)
 			{
-				enemy.TakeDamage(10); // ali karkoli želiš
-				QueueFree();
+				enemy.TakeDamage(baseDamage * weaponLevel);
+				ExpandAndStop();
+			}
+		}
+	}
+
+	private void ExpandAndStop()
+	{
+		hasStopped = true;
+		Speed = 0f;
+		timer = 0f;
+		targetScale = originalScale * ExpandScale;
+
+		if (collisionShape != null && originalCollisionShape != null)
+		{
+			if (originalCollisionShape is CircleShape2D circleShape)
+			{
+				var newShape = new CircleShape2D();
+				newShape.Radius = circleShape.Radius * ExpandScale;
+				collisionShape.Shape = newShape;
 			}
 		}
 
+		scaleTween.Kill();
+		scaleTween = CreateTween();
+		scaleTween.TweenProperty(this, "scale", targetScale, ExpandAnimationTime)
+			.SetTrans(Tween.TransitionType.Back)
+			.SetEase(Tween.EaseType.Out);
+
+		hasExpanded = true;
 	}
-  	protected override void PlayAttackSound() {
-		if (AudioManager.Instance != null) {
+
+	private void StartShrinkAnimation()
+	{
+		isShrinking = true;
+		scaleTween.Kill();
+		scaleTween = CreateTween();
+		scaleTween.TweenProperty(this, "scale", Vector2.Zero, ShrinkAnimationTime)
+			.SetTrans(Tween.TransitionType.Back)
+			.SetEase(Tween.EaseType.In)
+			.Connect("finished", new Callable(this, nameof(OnShrinkComplete)));
+	}
+
+	private void OnShrinkComplete()
+	{
+		QueueFree();
+		GD.Print("Pen bullet was deleted after shrink animation!");
+	}
+
+	private void ApplyAreaDamage()
+	{
+		if (!(collisionShape?.Shape is CircleShape2D circle)) return;
+
+		float radiusSquared = circle.Radius * circle.Radius;
+		Vector2 attackPos = GlobalPosition;
+		int hits = 0;
+
+		foreach (Enemy enemy in GetTree().GetNodesInGroup("enemies"))
+		{
+			if (attackPos.DistanceSquaredTo(enemy.GlobalPosition) <= radiusSquared)
+			{
+				enemy.TakeDamage(baseDamage * weaponLevel);
+				hits++;
+			}
+		}
+
+		GD.Print($"Hit {hits} enemies this tick");
+	}
+
+
+	protected override void PlayAttackSound()
+	{
+		if (AudioManager.Instance != null)
+		{
 			AudioManager.Instance.PlayShootSound("pen");
 		}
 	}

@@ -1,13 +1,13 @@
 [gd_scene load_steps=4 format=3 uid="uid://cf34v5a0kcof5"]
 
-[ext_resource type="Texture2D" uid="uid://5pb2vaxfohvm" path="res://assets/weapons/basic weapon/bullet.png" id="1_525rl"]
 [ext_resource type="Script" uid="uid://csd6c13nqtbgh" path="res://scripts/weapons/pen/PenAttack.cs" id="1_ye2yj"]
+[ext_resource type="Texture2D" uid="uid://dj7ihi0mf8261" path="res://assets/weapons/pencil/blue-inkdrop.png" id="2_ye2yj"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_ai43t"]
 radius = 6.0
 
 [node name="PenAttack" type="CharacterBody2D"]
-collision_layer = 4
+collision_layer = 0
 collision_mask = 6
 script = ExtResource("1_ye2yj")
 Speed = 250.0
@@ -16,7 +16,7 @@ Speed = 250.0
 shape = SubResource("CircleShape2D_ai43t")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-scale = Vector2(0.015, 0.015)
-texture = ExtResource("1_525rl")
+scale = Vector2(0.005, 0.005)
+texture = ExtResource("2_ye2yj")
 
 [node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]

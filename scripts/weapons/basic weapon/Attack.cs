@@ -20,7 +20,7 @@ public partial class Attack : CharacterBody2D {
 		weaponLevel = WeaponLevel;
 		Position = startPosition;
 		direction = (targetPosition - startPosition).Normalized();
-		Rotation = direction.Angle();
+		Rotation = direction.Angle() - (float)Math.PI/2f;
 	}
 
 	//Moves the Bullet in the direction of direction at the speed of speed. Delta time is taken care of automaticly by Godot

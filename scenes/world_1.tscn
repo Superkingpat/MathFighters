@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://bboxj5sqye13t"]
+[gd_scene load_steps=11 format=3 uid="uid://bboxj5sqye13t"]
 
 [ext_resource type="PackedScene" uid="uid://cwsiati3qwbjm" path="res://scenes/player.tscn" id="1_5lqpt"]
 [ext_resource type="PackedScene" uid="uid://cruibc564qq6x" path="res://scenes/weapon_pick_up_geo.tscn" id="2_gawm5"]
@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://do3bhxhomnp24" path="res://scenes/level_up_screen.tscn" id="7_ol31w"]
 [ext_resource type="PackedScene" uid="uid://cdfb8nkif773" path="res://scenes/ChunkManager.tscn" id="7_ypmbo"]
 [ext_resource type="PackedScene" uid="uid://dkhjanhakvble" path="res://scenes/Spawner.tscn" id="8_h5q77"]
+[ext_resource type="PackedScene" uid="uid://mb3ijl33kch" path="res://scenes/Enemys/AbsoluteJuggernaut.tscn" id="11_6deva"]
 
 [node name="World_1" type="Node2D"]
 
@@ -60,3 +61,6 @@ WeaponScene = ExtResource("5_kwwa1")
 [node name="ChunkManager" parent="." instance=ExtResource("7_ypmbo")]
 
 [node name="Spawner" parent="." instance=ExtResource("8_h5q77")]
+
+[node name="AbsoluteJuggernaut" parent="." instance=ExtResource("11_6deva")]
+position = Vector2(-40, 473)
