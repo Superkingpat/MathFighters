@@ -19,8 +19,11 @@ public partial class PenAttack : Attack
 	private Shape2D originalCollisionShape;
 	[Export] public float ExpandAnimationTime = 0.2f;
 	[Export] public float ShrinkAnimationTime = 0.15f;
+	[Export] public Texture2D normalSprite;
+	[Export] public Texture2D expandedSprite;
+	[Export] public Sprite2D sprite;
 
-	private Tween scaleTween;
+	private Tween scaleTween = null;
 	private Vector2 targetScale;
 	private bool isShrinking = false;
 
@@ -29,11 +32,16 @@ public partial class PenAttack : Attack
 		base._Ready();
 		originalScale = Scale;
 		collisionShape = GetNode<CollisionShape2D>("CollisionShape2D");
+
+		if (sprite == null)
+		{
+			sprite = GetNode<Sprite2D>("Sprite2D");
+		}
+
 		if (collisionShape != null)
 		{
 			originalCollisionShape = collisionShape.Shape;
 		}
-		scaleTween = CreateTween();
 	}
 
 	public override void Init(Vector2 targetPosition, Vector2 startPosition, int WeaponLevel)
@@ -42,7 +50,8 @@ public partial class PenAttack : Attack
 		TravelTime = (float)GD.Randf() * 1.0f + 0.3f;
 		ExpandedTime = (float)GD.Randf() * 0.8f + 0.3f;
 
-		
+		scaleTween = CreateTween();
+
 		switch (WeaponLevel)
 		{
 			case 1:
@@ -106,6 +115,15 @@ public partial class PenAttack : Attack
 		Speed = 0f;
 		timer = 0f;
 		targetScale = originalScale * ExpandScale;
+
+		if (expandedSprite != null && sprite != null)
+		{
+			Vector2 scale;
+			scale.X = 3f;
+			scale.Y = 3f;
+			sprite.Texture = expandedSprite;
+			sprite.ApplyScale(scale);
+		}
 
 		if (collisionShape != null && originalCollisionShape != null)
 		{

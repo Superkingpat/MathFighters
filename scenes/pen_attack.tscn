@@ -1,15 +1,19 @@
-[gd_scene load_steps=4 format=3 uid="uid://cf34v5a0kcof5"]
+[gd_scene load_steps=5 format=3 uid="uid://cf34v5a0kcof5"]
 
 [ext_resource type="Script" uid="uid://csd6c13nqtbgh" path="res://scripts/weapons/pen/PenAttack.cs" id="1_ye2yj"]
 [ext_resource type="Texture2D" uid="uid://dj7ihi0mf8261" path="res://assets/weapons/pencil/blue-inkdrop.png" id="2_ye2yj"]
+[ext_resource type="Texture2D" uid="uid://xl73lfgla517" path="res://assets/weapons/pencil/inksplash.png" id="3_ayevy"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_ai43t"]
 radius = 6.0
 
-[node name="PenAttack" type="CharacterBody2D"]
+[node name="PenAttack" type="CharacterBody2D" node_paths=PackedStringArray("sprite")]
 collision_layer = 0
 collision_mask = 6
 script = ExtResource("1_ye2yj")
+normalSprite = ExtResource("2_ye2yj")
+expandedSprite = ExtResource("3_ayevy")
+sprite = NodePath("Sprite2D")
 Speed = 250.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
