@@ -6,7 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://ba6i5v0ijgd7s" path="res://scenes/geo_triangle.tscn" id="4_cmxnd"]
 [ext_resource type="PackedScene" uid="uid://capughgreucm7" path="res://scenes/calculator.tscn" id="5_kwwa1"]
 [ext_resource type="PackedScene" uid="uid://td0n53sf2pih" path="res://scenes/ShopUi.tscn" id="6_77kw0"]
-[ext_resource type="PackedScene" uid="uid://do3bhxhomnp24" path="res://scenes/level_up_screen.tscn" id="7_ol31w"]
+[ext_resource type="PackedScene" path="res://scenes/level_up_screen.tscn" id="7_ol31w"]
 [ext_resource type="PackedScene" uid="uid://cdfb8nkif773" path="res://scenes/ChunkManager.tscn" id="7_ypmbo"]
 [ext_resource type="PackedScene" uid="uid://dkhjanhakvble" path="res://scenes/Spawner.tscn" id="8_h5q77"]
 
