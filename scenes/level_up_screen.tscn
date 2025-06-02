@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://do3bhxhomnp24"]
+[gd_scene load_steps=4 format=3 uid="uid://vn2xebpch3ru"]
 
 [ext_resource type="Script" uid="uid://8utgxploqql" path="res://scripts/player/LevelUpScreen.cs" id="1_tujht"]
 

@@ -11,7 +11,17 @@ public partial class Player : CharacterBody2D
 		// Public properties for direct access and modification
 		public float BaseHealth { get; set; } = 100f; // Base part of health
 		public int S_Health { get; set; } = 2;       // Skill part of health (e.g., 2 * S_Health)
-		public float CurrentHealth { get; set; } // Current health, set internally
+		private float _currentHealth = 0;
+		public float CurrentHealth
+		{
+			get=>_currentHealth;
+			set
+			{
+				_currentHealth = value;
+				if (_currentHealth > BaseHealth)
+					_currentHealth = BaseHealth;
+			}
+		} // Current health, set internally
 		public float DamageMod { get; set; } = 1f;    // General damage multiplier (e.g., 1.1 for +10%)
 		public float Speed { get; set; } = 200.0f;    // Player movement speed
 		public float RangeMod { get; set; } = 1f;     // Weapon range multiplier (if applicable)

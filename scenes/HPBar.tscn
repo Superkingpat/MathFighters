@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3 uid="uid://cl0nrfn3vm2vm"]
+
+[ext_resource type="Script" uid="uid://c7v1byy1limca" path="res://scripts/player/HPBar.cs" id="1_ue3yd"]
+
+[node name="HpBar" type="Control" node_paths=PackedStringArray("HPSprite")]
+layout_mode = 3
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+grow_horizontal = 0
+script = ExtResource("1_ue3yd")
+HPSprite = NodePath("Sprite2D")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]

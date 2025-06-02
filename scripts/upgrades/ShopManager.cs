@@ -136,7 +136,11 @@ public partial class ShopManager : CanvasLayer
 			BaseCost = 40,
 			MaxLevel = 10,
 			CurrentLevel = 0,
-			Action=(lvl)=>{Player.PlayerStats.BaseHealth+=lvl*25;}
+			Action=(lvl)=>
+			{
+				Player.PlayerStats.BaseHealth += lvl * 25;
+				Player.PlayerStats.CurrentHealth += lvl * 25;
+			}
 		});
 	}
 	
