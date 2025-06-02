@@ -4,6 +4,7 @@
 [ext_resource type="Theme" uid="uid://ba3mmqmtbntv3" path="res://theme/shop_theme.tres" id="2_2iw0u"]
 
 [node name="ShopUi" type="CanvasLayer" node_paths=PackedStringArray("ShopPanel", "UpgradeContainer", "CurrencyLabel")]
+layer = 4
 script = ExtResource("1_au2f5")
 ShopPanel = NodePath("ShopPanel")
 UpgradeContainer = NodePath("ShopPanel/VBoxContainer/ScrollContainer/VBoxContainer")
