@@ -19,7 +19,7 @@ public partial class HPBar : Node
 	public override void _Ready()
 	{
 		Player = GetTree().GetNodesInGroup("player")[0] as Player;
-		GD.Print("HP BAR STARTED!");
+		//GD.Print("HP BAR STARTED!");
 		HPSprite.Position += new Vector2(100, 30);
 		HPSprite.Scale = new Vector2(3, 3);
 
@@ -46,7 +46,7 @@ public partial class HPBar : Node
 			else if (currentHpPercent >= 0.0)
 				HPSprite.Texture = _presets[0];
 
-			GD.Print("MAX HP: " + Player.PlayerStats.BaseHealth + " CUR HP: " + Player.PlayerStats.CurrentHealth);
+			//GD.Print("MAX HP: " + Player.PlayerStats.BaseHealth + " CUR HP: " + Player.PlayerStats.CurrentHealth);
 		} 
 			
 	}
