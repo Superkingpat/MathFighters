@@ -130,14 +130,43 @@ public partial class Radical : Enemy
 	}
 
 	public override void TakeDamage(float val)
+{
+	base.TakeDamage(val);
+	TryToCharge();
+
+	if (healthBar != null)
 	{
-		base.TakeDamage(val);
-		TryToCharge();
-		if (healthBar != null)
-		{
-			healthBar.Value = CurrentHealth;
-		}
+		healthBar.Value = CurrentHealth;
 	}
+
+	if (CurrentHealth <= 0)
+	{
+		Die();
+	}
+}
+
+private void Die()
+{
+	SetPhysicsProcess(false);
+
+	var anim = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
+	if (anim != null && anim.SpriteFrames.HasAnimation("death"))
+	{
+		anim.Play("death");
+	}
+	else
+	{
+		GD.PrintErr("Death animacija ne obstaja ali AnimatedSprite2D manjka!");
+	}
+
+	var deathTimer = new Timer();
+	deathTimer.WaitTime = 1.2;
+	deathTimer.OneShot = true;
+	deathTimer.Timeout += () => QueueFree();
+	AddChild(deathTimer);
+	deathTimer.Start();
+}
+
 
 	private void FireWave(Vector2 dir)
 	{

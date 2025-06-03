@@ -31,6 +31,9 @@ public partial class Enemy : CharacterBody2D
 	protected CollisionShape2D bodyCollision;
 	protected bool isStunned = false;
 	protected bool isSlowed = false;
+	private Color? storedOriginalColor = null;
+	private int tintStackCount = 0;
+
 	
 	protected Vector2 externalForce = Vector2.Zero;
 	
@@ -224,6 +227,9 @@ public partial class Enemy : CharacterBody2D
 	{
 		CurrentHealth -= amount;
 		GD.Print($"[Enemy {EnemyName}] Hit for {amount} damage");
+		
+		Tint(new Color(1, 0.3f, 0.3f), 0.1f);
+		
 		if (CurrentHealth <= 0)
 		{
 			Die();
@@ -288,6 +294,28 @@ public partial class Enemy : CharacterBody2D
 	{
 		externalForce += force;
 	}
+	
+	public async void Tint(Color color, float duration)
+	{
+		if (animatedSprite == null) return;
+
+		if (storedOriginalColor == null)
+			storedOriginalColor = animatedSprite.Modulate;
+
+		tintStackCount++;
+		animatedSprite.Modulate = color;
+
+		await ToSignal(GetTree().CreateTimer(duration), "timeout");
+
+		tintStackCount--;
+		if (tintStackCount <= 0 && IsInstanceValid(this) && storedOriginalColor.HasValue)
+		{
+			animatedSprite.Modulate = storedOriginalColor.Value;
+			storedOriginalColor = null;
+		}
+	}
+
+
 }
 
 public class Drop

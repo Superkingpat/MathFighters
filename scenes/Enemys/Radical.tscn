@@ -1,8 +1,10 @@
-[gd_scene load_steps=7 format=3 uid="uid://x12u41qu0djr"]
+[gd_scene load_steps=28 format=3 uid="uid://x12u41qu0djr"]
 
 [ext_resource type="Script" uid="uid://bprw2vloqcnue" path="res://scripts/enemys/Radical/Radical.cs" id="1_fnmkq"]
 [ext_resource type="Texture2D" uid="uid://c6adpvonf1krh" path="res://assets/enemys/Radical/radical.png" id="1_w0wne"]
 [ext_resource type="PackedScene" uid="uid://dpwlewwpv8qme" path="res://scenes/Enemys/RadicalWaveProjectile.tscn" id="2_8hsj3"]
+[ext_resource type="Texture2D" uid="uid://ccsl7a45em0yn" path="res://assets/enemys/Radical/radical_glow_levels.png" id="4_al7os"]
+[ext_resource type="Texture2D" uid="uid://nn50tlmry52o" path="res://assets/enemys/Radical/radical_death_glow_2.png" id="4_wbus4"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_fnmkq"]
 radius = 43.4166
@@ -21,12 +23,152 @@ corner_radius_top_right = 8
 corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_idb8n"]
+atlas = ExtResource("4_wbus4")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cgo1t"]
+atlas = ExtResource("4_wbus4")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_647mp"]
+atlas = ExtResource("4_wbus4")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2t3vb"]
+atlas = ExtResource("4_wbus4")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vbdbt"]
+atlas = ExtResource("4_wbus4")
+region = Rect2(256, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_j8qvg"]
+atlas = ExtResource("4_wbus4")
+region = Rect2(320, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hoyhg"]
+atlas = ExtResource("4_wbus4")
+region = Rect2(384, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_52xt0"]
+atlas = ExtResource("4_wbus4")
+region = Rect2(448, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rjv0r"]
+atlas = ExtResource("4_wbus4")
+region = Rect2(512, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bqnxq"]
+atlas = ExtResource("4_wbus4")
+region = Rect2(576, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dgyxl"]
+atlas = ExtResource("4_wbus4")
+region = Rect2(640, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lfgwd"]
+atlas = ExtResource("4_wbus4")
+region = Rect2(704, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xqfu1"]
+atlas = ExtResource("4_wbus4")
+region = Rect2(768, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hbbsj"]
+atlas = ExtResource("4_wbus4")
+region = Rect2(832, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wbus4"]
+atlas = ExtResource("4_al7os")
+region = Rect2(0, 0, 88, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rrjbd"]
+atlas = ExtResource("4_al7os")
+region = Rect2(88, 0, 88, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4vcl5"]
+atlas = ExtResource("4_al7os")
+region = Rect2(176, 0, 88, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ex7qo"]
+atlas = ExtResource("4_al7os")
+region = Rect2(264, 0, 88, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_idb8n"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_idb8n")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cgo1t")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_647mp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2t3vb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vbdbt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_j8qvg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hoyhg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_52xt0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rjv0r")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bqnxq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dgyxl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lfgwd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xqfu1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hbbsj")
+}],
+"loop": true,
+"name": &"death",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wbus4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rrjbd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4vcl5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ex7qo")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
 [node name="Radical" type="CharacterBody2D"]
 collision_layer = 5
 script = ExtResource("1_fnmkq")
 WaveProjectileScene = ExtResource("2_8hsj3")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
+visible = false
 scale = Vector2(0.1475, 0.1475)
 texture = ExtResource("1_w0wne")
 
@@ -46,3 +188,8 @@ value = 100.0
 show_percentage = false
 
 [node name="WaveCooldown" type="Timer" parent="."]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_idb8n")
+animation = &"death"
+autoplay = "default"
