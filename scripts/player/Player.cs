@@ -5,24 +5,27 @@ using System.Collections.Generic;
 //This is the player class.
 public partial class Player : CharacterBody2D {
 	//Export makes it so we can interact with the variable in the Godot UI
+	private AudioStreamPlayer2D shootingSound;
+	private AudioStreamPlayer2D weaponPickupSound;
+
 
 	public class Stats {
-        public float BaseHealth { get; set; } = 100f;
-        public float CurrentHealth { get; set; }
-        public int S_Health { get; set; } = 2;
+		public float BaseHealth { get; set; } = 100f;
+		public float CurrentHealth { get; set; }
+		public int S_Health { get; set; } = 2;
 
-        public Stats() {
-            CurrentHealth = BaseHealth + 2*S_Health;
-        }
+		public Stats() {
+			CurrentHealth = BaseHealth + 2*S_Health;
+		}
 
-        public void TakeDamage(float amount) {
-            CurrentHealth = Mathf.Max(CurrentHealth - amount, 0);
-        }
+		public void TakeDamage(float amount) {
+			CurrentHealth = Mathf.Max(CurrentHealth - amount, 0);
+		}
 
-        public void Heal(float amount) {
-            CurrentHealth = Mathf.Min(CurrentHealth + amount, BaseHealth + 2*S_Health);
-        }
-    }
+		public void Heal(float amount) {
+			CurrentHealth = Mathf.Min(CurrentHealth + amount, BaseHealth + 2*S_Health);
+		}
+	}
 
 	public Stats PlayerStats { get; private set; } = new Stats();
 
@@ -49,6 +52,8 @@ public partial class Player : CharacterBody2D {
 		GetNode<Spawner>("/root/Spawner").InitPlayer();
 		animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
 		weaponHolder = GetNode<Node2D>("WeaponHolder");
+		shootingSound = GetNode<AudioStreamPlayer2D>("ShootingSound");
+		weaponPickupSound = GetNode<AudioStreamPlayer2D>("WeaponPickUpSound");
 		Instance = this;
 	}
 
@@ -85,15 +90,16 @@ public partial class Player : CharacterBody2D {
 		if(Input.IsActionJustPressed("attack")) {
 			GD.Print("Shooting");
 			currentWeapon?.TryShoot(GetGlobalMousePosition(),AttackSpeedAmp);
+			shootingSound?.Play();
 		}
 
 		if (Input.IsActionJustPressed("next_weapon")) {
-        	currentWeaponIndex = (currentWeaponIndex + 1) % weaponInventory.Count;
-        	EquipWeapon(currentWeaponIndex);
-    	} else if (Input.IsActionJustPressed("previous_weapon")) {
-        	currentWeaponIndex = (currentWeaponIndex - 1 + weaponInventory.Count) % weaponInventory.Count;
-        	EquipWeapon(currentWeaponIndex);
-    	}
+			currentWeaponIndex = (currentWeaponIndex + 1) % weaponInventory.Count;
+			EquipWeapon(currentWeaponIndex);
+		} else if (Input.IsActionJustPressed("previous_weapon")) {
+			currentWeaponIndex = (currentWeaponIndex - 1 + weaponInventory.Count) % weaponInventory.Count;
+			EquipWeapon(currentWeaponIndex);
+		}
 	}
 
 	//UpdateAnimation and PlayIdleAnimation handle the animations. Since AnimatedSprite2D::Play() is used here the animation speed is taken care of automaticly by Godot
@@ -123,32 +129,46 @@ public partial class Player : CharacterBody2D {
 	}
 
 	private void EquipWeapon(int index) {
-    	if (weaponInventory.Count == 0) return;
+		if (weaponInventory.Count == 0) return;
 
-    	foreach (var weapon in weaponInventory) {
-        	weapon.Visible = false;
-    	}
+		foreach (var weapon in weaponInventory) {
+			weapon.Visible = false;
+		}
 
-    	currentWeaponIndex = index % weaponInventory.Count;
-    	weaponInventory[currentWeaponIndex].Visible = true;
-    	currentWeapon = weaponInventory[currentWeaponIndex];
+		currentWeaponIndex = index % weaponInventory.Count;
+		weaponInventory[currentWeaponIndex].Visible = true;
+		currentWeapon = weaponInventory[currentWeaponIndex];
 	}
 
 	public void TryPickupWeapon(WeaponPickUp pickup) {
-		if (pickup == null) return;
+	if (pickup == null) return;
 
-    	GD.Print("Picked up new weapon!");
+	GD.Print("Picked up new weapon!");
 
-    	Weapon newWeapon = pickup.GetWeapon();
-    	weaponHolder.AddChild(newWeapon);
-    	newWeapon.Position = Vector2.Zero;
+	Weapon newWeapon = pickup.GetWeapon();
+	weaponHolder.AddChild(newWeapon);
+	newWeapon.Position = Vector2.Zero;
 
-    	weaponInventory.Add(newWeapon);
-    	currentWeaponIndex = weaponInventory.Count - 1;
-    	EquipWeapon(currentWeaponIndex);
+	weaponInventory.Add(newWeapon);
+	currentWeaponIndex = weaponInventory.Count - 1;
+	EquipWeapon(currentWeaponIndex);
 
-    	pickup.QueueFree();
+	string weaponName = newWeapon.Name.ToString().ToLower();
+	string soundPath = "res://assets/audio/weapon_default.wav"; // fallback
+
+	if (weaponName.Contains("geotriangle")) {
+		soundPath = "res://assets/audio/weapon_geotriangle.wav";
+	} else if (weaponName.Contains("pen")) {
+		soundPath = "res://assets/audio/weapon_pen.wav";
 	}
+
+	var stream = GD.Load<AudioStream>(soundPath);
+	weaponPickupSound.Stream = stream;
+	weaponPickupSound.Play();
+
+	pickup.QueueFree();
+}
+
 
 	public void TakeDamage(float dmg) {
 		PlayerStats.TakeDamage(dmg);
