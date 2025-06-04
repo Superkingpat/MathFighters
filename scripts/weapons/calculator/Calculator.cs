@@ -10,26 +10,72 @@ public partial class Calculator : Weapon {
     private double chargeSpeed = 1f;
     private bool actuallyUsed = false;
     private Vector2 originalPosition;
-    
+    private Sprite2D sprite;
+    private Vector2 originalScale;
+    private Color originalColor;
+    [Export] private AudioStreamPlayer2D chargingSoundPlayer;
+    [Export] private AudioStreamPlayer2D dischargeSoundPlayer;
+    private bool isPlayingChargingSound = false;
     public override void _Ready()
     {
         base._Ready();
         AttackAnimation = "attack_calc";
         originalPosition = Position;
+        sprite = GetNode<Sprite2D>("Sprite2D");
+        originalScale = sprite.Scale;
+        originalColor = sprite.Modulate;
     }
     
     public override void _Process(double delta) {
         if (actuallyUsed && Input.IsActionPressed("attack") && (timeSinceLastAttacked >= AttackCooldown)) {
-            Position = new Vector2(-5, -30);
+            Position = new Vector2(-5, -80);
             currChargeTime += delta * chargeSpeedAmp * chargeSpeed;
+
+            if (!isPlayingChargingSound)
+            {
+                chargingSoundPlayer.Play();
+                isPlayingChargingSound = true;
+            }
+            
+            float chargeRatio = (float)(currChargeTime / MaxChargeTime);
+            chargingSoundPlayer.PitchScale = 1.0f + chargeRatio * 0.5f;
+            
+            sprite.Scale = originalScale * (1 + chargeRatio * 2f);
+            sprite.Modulate = new Color(
+                originalColor.R * (1 - chargeRatio * 0.5f),
+                originalColor.G, 
+                originalColor.B * (1 + chargeRatio * 0.5f),
+                originalColor.A
+            );
+            
             GD.Print("Charging!!!");
         } else {
             Position = originalPosition;
             timeSinceLastAttacked += (float)delta;
+            
+            if (isPlayingChargingSound)
+            {
+                chargingSoundPlayer.Stop();
+                isPlayingChargingSound = false;
+            }
+            
+            if (sprite.Scale != originalScale || sprite.Modulate != originalColor)
+            {
+                sprite.Scale = originalScale;
+                sprite.Modulate = originalColor;
+            }
         }
 
         if ((AttackScene != null) && ((actuallyUsed && Input.IsActionJustReleased("attack")) || (currChargeTime >= MaxChargeTime)))
         {
+            dischargeSoundPlayer.Play();
+            
+            if (isPlayingChargingSound)
+            {
+                chargingSoundPlayer.Stop();
+                isPlayingChargingSound = false;
+            }
+
             timeSinceLastAttacked = 0f;
             CalculatorAttack attack = (CalculatorAttack)AttackScene.Instantiate();
             GetTree().CurrentScene.AddChild(attack);
@@ -37,6 +83,9 @@ public partial class Calculator : Weapon {
             currChargeTime = 0;
             actuallyUsed = false;
             Position = originalPosition;
+            
+            sprite.Scale = originalScale;
+            sprite.Modulate = originalColor;
         }
     }
     
