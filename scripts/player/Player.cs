@@ -317,6 +317,7 @@ public partial class Player : CharacterBody2D
 		// Disable movement, play animation, trigger game over, etc.
 		ResetMap();
 		//QueueFree();a
+		this.PlayerStats.UpdateCurrentHealthToMax();
 		this.Position = new Vector2(0, 0);
 	}
 
