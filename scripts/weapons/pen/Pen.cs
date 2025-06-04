@@ -5,6 +5,8 @@ public partial class Pen : Weapon {
 	[Export] public int PelletCount = 1;
 	[Export] public float SpreadAngleDegrees = 15f;
 	[Export] public float FireCooldown = 1.0f;
+	[Export] public AudioStreamPlayer2D attackSoundPlayer;
+	
 	private Sprite2D weaponSprite;
 	private float timeSinceLastShot = 0f;
 	private float radius = 50f;
@@ -16,6 +18,7 @@ public partial class Pen : Weapon {
 		weaponSprite = GetNode<Sprite2D>("Sprite2D");
 		AttackAnimation = "attack_pen";
 	}
+
 	public override void _Process(double delta) {
 		timeSinceLastShot += (float)delta;
 
@@ -25,12 +28,12 @@ public partial class Pen : Weapon {
 
 		weaponSprite.GlobalPosition = Player.Instance.GlobalPosition + dir * radius;
 	}
+
 	public override Sprite2D GetPickupSprite() {
 		return GetNode<Sprite2D>("Sprite2D");
 	}
 
 	public override void TryShoot(Vector2 targetPosition, float attackSpeedAmp) {
-
 		switch (WeaponLevel) {
 			case 1:
 				FireCooldown = 1f;
@@ -51,6 +54,13 @@ public partial class Pen : Weapon {
 
 		if (timeSinceLastShot < FireCooldown / attackSpeedAmp) return;
 		timeSinceLastShot = 0f;
+
+		if (attackSoundPlayer != null)
+		{
+			attackSoundPlayer.PitchScale = (float)GD.RandRange(0.95f, 1.05f);
+			attackSoundPlayer.VolumeDb = (float)GD.RandRange(-3f, 0f);
+			attackSoundPlayer.Play();
+		}
 
 		Vector2 baseDirection = (targetPosition - Player.Instance.GlobalPosition).Normalized();
 		float baseAngle = baseDirection.Angle();

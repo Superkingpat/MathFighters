@@ -1,16 +1,18 @@
-[gd_scene load_steps=5 format=3 uid="uid://cf34v5a0kcof5"]
+[gd_scene load_steps=6 format=3 uid="uid://cf34v5a0kcof5"]
 
 [ext_resource type="Script" uid="uid://csd6c13nqtbgh" path="res://scripts/weapons/pen/PenAttack.cs" id="1_ye2yj"]
 [ext_resource type="Texture2D" uid="uid://dj7ihi0mf8261" path="res://assets/weapons/pencil/blue-inkdrop.png" id="2_ye2yj"]
 [ext_resource type="Texture2D" uid="uid://xl73lfgla517" path="res://assets/weapons/pencil/inksplash.png" id="3_ayevy"]
+[ext_resource type="AudioStream" uid="uid://djr28dciaymqx" path="res://assets/audio/pen_splat.mp3" id="4_smqxn"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_ai43t"]
 radius = 6.0
 
-[node name="PenAttack" type="CharacterBody2D" node_paths=PackedStringArray("sprite")]
+[node name="PenAttack" type="CharacterBody2D" node_paths=PackedStringArray("splatSoundPlayer", "sprite")]
 collision_layer = 0
 collision_mask = 6
 script = ExtResource("1_ye2yj")
+splatSoundPlayer = NodePath("AudioStreamPlayer2D")
 normalSprite = ExtResource("2_ye2yj")
 expandedSprite = ExtResource("3_ayevy")
 sprite = NodePath("Sprite2D")
@@ -24,3 +26,6 @@ scale = Vector2(0.005, 0.005)
 texture = ExtResource("2_ye2yj")
 
 [node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_smqxn")
