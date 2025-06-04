@@ -74,7 +74,7 @@ public partial class Pen : Weapon {
 			if (AttackScene != null) {
 				PenAttack pellet = (PenAttack)AttackScene.Instantiate();
 				GetTree().CurrentScene.AddChild(pellet);
-				pellet.Init(Player.Instance.GlobalPosition + spreadDirection * 8, Player.Instance.GlobalPosition, WeaponLevel);
+				pellet.Init(Player.Instance.GlobalPosition + spreadDirection * 300, Player.Instance.GlobalPosition + baseDirection * 80, WeaponLevel);
 			}
 		}
 	}
