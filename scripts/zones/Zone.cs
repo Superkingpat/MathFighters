@@ -183,8 +183,10 @@ public partial class Zone : Area2D
 					break;
 			}
 		}
-		
-		if (triggerShape.Disabled || isActivated || !(body is Player)) return;
+
+		else if (triggerShape.Disabled || isActivated || !(body is Player)) return;
+		else
+		{
 			isActivated = true;
 			sprite.Visible = false;
 			triggerShape.CallDeferred("set_disabled", true);
