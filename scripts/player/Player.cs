@@ -12,6 +12,10 @@ public partial class Player : CharacterBody2D
 		public float BaseHealth { get; set; } = 100f; // Base part of health
 		public int S_Health { get; set; } = 2;       // Skill part of health (e.g., 2 * S_Health)
 		private float _currentHealth = 0;
+		public float DamageMod { get; set; } = 1f;    // General damage multiplier (e.g., 1.1 for +10%)
+		public float Speed { get; set; } = 200.0f;    // Player movement speed
+		public float RangeMod { get; set; } = 1f;     // Weapon range multiplier (if applicable)
+
 		public float CurrentHealth
 		{
 			get=>_currentHealth;
@@ -22,9 +26,7 @@ public partial class Player : CharacterBody2D
 					_currentHealth = BaseHealth;
 			}
 		} // Current health, set internally
-		public float DamageMod { get; set; } = 1f;    // General damage multiplier (e.g., 1.1 for +10%)
-		public float Speed { get; set; } = 200.0f;    // Player movement speed
-		public float RangeMod { get; set; } = 1f;     // Weapon range multiplier (if applicable)
+
 
 		private int _gold;
 		public int Gold
@@ -107,6 +109,13 @@ public partial class Player : CharacterBody2D
 	private AudioStreamPlayer2D shootingSound;
 	private AudioStreamPlayer2D weaponPickupSound;
 	private AudioStreamPlayer2D walkingSound;
+	private AudioStreamPlayer2D losingLifeSound;
+	private AudioStreamPlayer2D winningSound;
+	private AudioStreamPlayer2D kickingSound;
+		private float kickRange = 100f; 
+	private float kickDamage = 25f; 
+	private float kickCooldown = 0.5f; 
+	private float lastKickTime = 0f; 
 	[Export] public float MaxHealth = 100f;
 	public float CurrentHealth { get; private set; }
 	
@@ -134,6 +143,7 @@ public partial class Player : CharacterBody2D
 	public int Level { get { return level; } private set { level = value; } }
 	public int Experience { get { return experience; } private set { experience = value; EmitSignal(SignalName.ExperienceChanged, experience, experienceToLevelUp); } }
 	public int ExperienceToLevelUp { get { return experienceToLevelUp; } private set { experienceToLevelUp = value; EmitSignal(SignalName.ExperienceChanged, experience, experienceToLevelUp); } }
+	private bool walkingSoundErrorShown = false;
 
 
 	public override void _Ready()
@@ -146,9 +156,133 @@ public partial class Player : CharacterBody2D
 		weaponHolder = GetNode<Node2D>("WeaponHolder");
 		shootingSound = GetNode<AudioStreamPlayer2D>("ShootingSound");
 		weaponPickupSound = GetNode<AudioStreamPlayer2D>("WeaponPickUpSound");
-		walkingSound = GetNode<AudioStreamPlayer2D>("WalkingSound");
-		Instance = this; // Set the static instance here
 
+		try { walkingSound = GetNode<AudioStreamPlayer2D>("WalkingSound"); GD.Print("WalkingSound node found!"); } 
+		catch { GD.PrintErr("WalkingSound node not found!"); }
+		
+		try { winningSound = GetNode<AudioStreamPlayer2D>("WinningSound"); GD.Print("WinningSound node found!"); } 
+		catch { GD.PrintErr("WinningSound node not found!"); }
+		Instance = this; // Set the static instance here
+if (winningSound != null)
+		{
+			string[] winningSoundPaths = {
+				"res://assets/audio/winning.wav"
+			};
+			
+			bool winningSoundLoaded = false;
+			foreach (string path in winningSoundPaths)
+			{
+				try 
+				{
+					var audioStream = GD.Load<AudioStream>(path);
+					if (audioStream != null)
+					{
+						winningSound.Stream = audioStream;
+						GD.Print($"WinningSound loaded successfully from: {path}");
+						winningSoundLoaded = true;
+						break;
+					}
+				}
+				catch (Exception e)
+				{
+				}
+			}
+			
+			if (!winningSoundLoaded)
+			{
+				GD.PrintErr("Could not load winning sound from any of the tried paths!");
+			}
+		}
+		
+		losingLifeSound = GetNodeOrNull<AudioStreamPlayer2D>("LosingLifeSound");
+		if (losingLifeSound != null)
+		{
+			GD.Print("LosingLifeSound node found successfully!");
+			
+			string[] possiblePaths = {
+				"res://assets/audio/losing_life.wav"
+			};
+			
+			bool streamLoaded = false;
+			foreach (string path in possiblePaths)
+			{
+				try 
+				{
+					var audioStream = GD.Load<AudioStream>(path);
+					if (audioStream != null)
+					{
+						losingLifeSound.Stream = audioStream;
+						GD.Print($"LosingLifeSound loaded successfully from: {path}");
+						
+						GD.Print($"Audio stream details - Length: {audioStream.GetLength()}, Valid: {audioStream != null}");
+						
+						streamLoaded = true;
+						break;
+					}
+					else
+					{
+						GD.Print($"Failed to load audio from {path} - stream was null");
+					}
+				}
+				catch (Exception e)
+				{
+					GD.Print($"Could not load audio from {path}: {e.Message}");
+				}
+			}
+			
+			if (!streamLoaded)
+			{
+				GD.PrintErr("Could not load losing life audio file from any of the tried paths!");
+			}
+		}
+		else
+		{
+			GD.PrintErr("CRITICAL: LosingLifeSound node not found!");
+			GD.PrintErr("Please add an AudioStreamPlayer2D node named 'LosingLifeSound' as a child of the Player node.");
+		}
+		Instance = this; 
+		
+		// Load walking sound
+		if (walkingSound != null)
+		{
+			string[] walkingSoundPaths = {
+				"res://assets/audio/walking_sound.wav"
+			};
+			
+			bool walkingSoundLoaded = false;
+			foreach (string path in walkingSoundPaths)
+			{
+				try 
+				{
+					var audioStream = GD.Load<AudioStream>(path);
+					if (audioStream != null)
+					{
+						walkingSound.Stream = audioStream;
+						GD.Print($"WalkingSound loaded successfully from: {path}");
+						walkingSoundLoaded = true;
+						break;
+					}
+				}
+				catch (Exception e)
+				{
+				}
+			}
+			
+			if (!walkingSoundLoaded)
+			{
+				GD.PrintErr("Could not load walking sound from any of the tried paths!");
+			}
+		}
+		
+		GD.Print("=== Listing all AudioStreamPlayer2D children ===");
+		foreach (Node child in GetChildren())
+		{
+			if (child is AudioStreamPlayer2D)
+			{
+				GD.Print($"Found AudioStreamPlayer2D: {child.Name}");
+			}
+		}
+		GD.Print("=== End of AudioStreamPlayer2D list ===");
 		// Ensure PlayerStats.CurrentHealth is correctly set at start
 		PlayerStats.UpdateCurrentHealthToMax();
 	}
@@ -191,13 +325,19 @@ public partial class Player : CharacterBody2D
 		}
 
 		if (velocity.Length() > 0) {
-			// Use PlayerStats.Speed
+            // Use PlayerStats.Speed
 			velocity = velocity.Normalized() * PlayerStats.Speed;
 			UpdateAnimation(velocity);
+			PlayFootstepSound(); // Play walking sound when moving
 		}
 		else
 		{
-			PlayIdleAnimation();
+			PlayIdleAnimation();PlayIdleAnimation();
+			// Stop walking sound when not moving
+			if (walkingSound != null && walkingSound.Playing)
+			{
+				walkingSound.Stop();
+			}
 
 		}
 
@@ -222,10 +362,22 @@ public partial class Player : CharacterBody2D
 	private void PlayFootstepSound() {
 		if (walkingSound != null && walkingSound.Stream != null) {
 			if (!walkingSound.Playing) {
+				GD.Print("Playing walking sound...");
 				walkingSound.Play();
 			}
 		} else {
-			GD.PrintErr("WalkingSound node not properly configured");
+			if (!walkingSoundErrorShown)
+			{
+				if (walkingSound == null)
+				{
+					GD.PrintErr("WalkingSound node is null");
+				}
+				else if (walkingSound.Stream == null)
+				{
+					GD.PrintErr("WalkingSound stream is null - no audio file loaded");
+				}
+				walkingSoundErrorShown = true;
+			}
 		}
 	}
 
