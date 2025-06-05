@@ -325,7 +325,7 @@ if (winningSound != null)
 		}
 
 		if (velocity.Length() > 0) {
-            // Use PlayerStats.Speed
+			// Use PlayerStats.Speed
 			velocity = velocity.Normalized() * PlayerStats.Speed;
 			UpdateAnimation(velocity);
 			PlayFootstepSound(); // Play walking sound when moving
@@ -377,6 +377,117 @@ if (winningSound != null)
 					GD.PrintErr("WalkingSound stream is null - no audio file loaded");
 				}
 				walkingSoundErrorShown = true;
+			}
+		}
+	}
+	//za winning sound samo
+	public void PlayWinningSound()
+	{
+		GD.Print("=== ATTEMPTING TO PLAY WINNING SOUND ===");
+		
+		if (winningSound == null)
+		{
+			GD.PrintErr("WinningSound node is NULL!");
+			winningSound = GetNodeOrNull<AudioStreamPlayer2D>("WinningSound");
+			if (winningSound == null)
+			{
+				GD.PrintErr("Could not find WinningSound node in scene tree!");
+				return;
+			}
+			else
+			{
+				GD.Print("Found WinningSound node on retry!");
+			}
+		}
+		
+		if (winningSound.Stream == null)
+		{
+			GD.PrintErr("WinningSound stream is NULL! Attempting to load winning.wav...");
+			
+			// Try to load the winning.wav file we can see in your project
+			try
+			{
+				var audioStream = GD.Load<AudioStream>("res://assets/audio/winning.wav");
+				if (audioStream != null)
+				{
+					winningSound.Stream = audioStream;
+					GD.Print("Successfully loaded winning.wav!");
+				}
+				else
+				{
+					GD.PrintErr("Failed to load winning.wav - file exists but returned null");
+					return;
+				}
+			}
+			catch (Exception e)
+			{
+				GD.PrintErr($"Exception loading winning.wav: {e.Message}");
+				return;
+			}
+		}
+		
+		try
+		{
+			GD.Print("Playing winning sound...");
+			
+			// Stop any currently playing sound
+			if (winningSound.Playing)
+			{
+				winningSound.Stop();
+			}
+			
+			winningSound.VolumeDb = 0.0f;  // Full volume
+			winningSound.PitchScale = 1.0f; // Normal pitch
+			
+			// Play the sound
+			winningSound.Play();
+			//AudioLogHelper.LogSoundPlayed("WinningSound");
+
+			GD.Print($"Sound playing status: {winningSound.Playing}");
+			GD.Print($"Sound stream length: {winningSound.Stream?.GetLength() ?? 0}");
+			GD.Print($"Sound volume: {winningSound.VolumeDb} dB");
+			
+			if (!winningSound.Playing)
+			{
+				GD.PrintErr("Sound is not playing even after Play() call!");
+				
+				winningSound.Play(0.0f);
+				GD.Print($"Retry play status: {winningSound.Playing}");
+			}
+			else
+			{
+				GD.Print("Winning sound is successfully playing!");
+			}
+		}
+		catch (Exception e)
+		{
+			GD.PrintErr($"Exception when trying to play winning sound: {e.Message}");
+			GD.PrintErr($"Stack trace: {e.StackTrace}");
+		}
+		
+		GD.Print("=== END WINNING SOUND ATTEMPT ===");
+	}
+
+	public void ForcePlayWinningSound()
+	{
+		PlayWinningSound();
+	}
+
+	private void CheckLevelUp() {
+		if (Experience >= ExperienceToLevelUp) {
+			Experience -= ExperienceToLevelUp;
+			Level++;
+			ExperienceToLevelUp = (int)(ExperienceToLevelUp * levelUpExperienceMultiplier);
+			GD.Print($"Player leveled up! New level: {Level}");
+			
+			PlayWinningSound();
+			
+			GetTree().CreateTimer(0.1).Timeout += () => {
+				EmitSignal(SignalName.LevelUp, Level);
+			};
+			
+			if (Experience >= ExperienceToLevelUp) {
+				GetTree().CreateTimer(0.5).Timeout += CheckLevelUp;
 			}
 		}
 	}
@@ -466,11 +577,57 @@ if (winningSound != null)
 	private void Die()
 	{
 		GD.Print("Player died!");
+		PlayLosingLifeSound();
+
 		// Disable movement, play animation, trigger game over, etc.
 		ResetMap();
 		//QueueFree();a
 		this.PlayerStats.UpdateCurrentHealthToMax();
 		this.Position = new Vector2(0, 0);
+	}
+
+private void PlayLosingLifeSound()
+	{
+		if (losingLifeSound != null)
+		{
+			if (losingLifeSound.Stream != null)
+			{
+				try
+				{
+					GD.Print("Player died - playing losing life sound...");
+					
+					if (losingLifeSound.Playing)
+					{
+						losingLifeSound.Stop();
+					}
+					
+					losingLifeSound.Play();
+					//AudioLogHelper.LogSoundPlayed("LosingLifeSound");
+
+					
+					if (losingLifeSound.Playing)
+					{
+						GD.Print("Losing life sound is now playing!");
+					}
+					else
+					{
+						GD.PrintErr("Sound failed to play - Playing property is still false");
+					}
+				}
+				catch (Exception e)
+				{
+					GD.PrintErr($"Exception when trying to play losing life sound: {e.Message}");
+				}
+			}
+			else
+			{
+				GD.PrintErr("LosingLifeSound stream is null - audio file not loaded properly");
+			}
+		}
+		else
+		{
+			GD.PrintErr("LosingLifeSound node is null - node not found in scene tree");
+		}
 	}
 
 	public void TakeDamage(float dmg) {
@@ -502,7 +659,7 @@ if (winningSound != null)
 		CheckLevelUp();
 	}
 
-	private void CheckLevelUp() {
+	/*private void CheckLevelUp() {
 		while (Experience >= ExperienceToLevelUp) {
 			Experience -= ExperienceToLevelUp;
 			Level++;
@@ -510,7 +667,7 @@ if (winningSound != null)
 			GD.Print($"Player leveled up! New level: {Level}");
 			EmitSignal(SignalName.LevelUp, Level);
 		}
-	}
+	}*/
 
 	public int GetLevel() {
 		return Level;
@@ -523,4 +680,71 @@ if (winningSound != null)
 	public int GetExperienceToLevelUp() {
 		return ExperienceToLevelUp;
 	}
+
+	public float GetKickRange() {
+		return kickRange;
+	}
+	
+	public void SetKickRange(float newRange) {
+		kickRange = newRange;
+		//GD.Print($"Kick range set to: {kickRange}");
+	}
+	
+	public float GetKickDamage() {
+		return kickDamage;
+	}
+	
+	public void SetKickDamage(float newDamage) {
+		kickDamage = newDamage;
+		//GD.Print($"Kick damage set to: {kickDamage}");
+	}
+	
+	public float GetKickCooldown() {
+		return kickCooldown;
+	}
+	
+	public void SetKickCooldown(float newCooldown) {
+		kickCooldown = newCooldown;
+		//GD.Print($"Kick cooldown set to: {kickCooldown}");
+	}
 }
+
+
+/*public static class AudioLogHelper
+{
+	//treba popravek
+	private static readonly string LogFilePath = "user://audio_log.txt"; 
+	private static readonly string EncryptionKey = "secureKey";
+
+	public static void LogSoundPlayed(string soundName)
+	{
+		string message = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Sound played: {soundName}";
+		string encrypted = Encrypt(message);
+
+		string globalPath = ProjectSettings.GlobalizePath(LogFilePath);
+		
+		string directory = Path.GetDirectoryName(globalPath);// problem ne se zapisva 
+		if (!Directory.Exists(directory))
+			Directory.CreateDirectory(directory);
+		//za preverka
+		//GD.Print("Zapisano v: " + ProjectSettings.GlobalizePath(LogFilePath));
+
+		File.AppendAllText(globalPath, encrypted + System.Environment.NewLine);
+	}
+
+	private static string Encrypt(string input)
+	{
+		var output = new StringBuilder();
+		for (int i = 0; i < input.Length; i++)
+		{
+			char encryptedChar = (char)(input[i] ^ EncryptionKey[i % EncryptionKey.Length]);
+			output.Append(encryptedChar);
+		}
+		return output.ToString();
+	}
+
+	public static string Decrypt(string encrypted)
+	{
+		return Encrypt(encrypted); 
+	}
+}*/
