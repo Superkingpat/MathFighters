@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 public partial class Zone : Area2D
 {
@@ -11,6 +12,7 @@ public partial class Zone : Area2D
 
 	private Timer timer;
 	private bool isActivated = false;
+	private bool effectApplied = false;
 	private Color zoneColor;
 	private float currRadius = 0f;
 	private float maxRadius = 215f;
@@ -29,24 +31,42 @@ public partial class Zone : Area2D
 
 	public override void _Ready()
 	{
-		player = GetTree().GetNodesInGroup("player")[0] as Player;
+		player = GetTree().GetFirstNodeInGroup("player") as Player;
+		if (player == null)
+		{
+			GD.PrintErr("Player not found in group 'player'.");
+			QueueFree();
+			return;
+		}
 
 		GD.Randomize();
 		int enumCount = Enum.GetValues(typeof(ZoneType)).Length;
-		int randomIndex = (int)(GD.Randi() % enumCount);
-		Type = (ZoneType)(randomIndex + 1);
+		Type = (ZoneType)GD.RandRange(1, enumCount);
 
-		sprite = GetNode<Sprite2D>("Sprite2D");
-		SetIconForZoneType();
-		triggerShape = GetNode<CollisionShape2D>("triggerShape");
-		effectShape = GetNode<CollisionShape2D>("effectShape");
-		effectShape.Disabled = true;
-		effectCircle = (CircleShape2D)effectShape.Shape;
+		sprite = GetNodeOrNull<Sprite2D>("Sprite2D");
+		triggerShape = GetNodeOrNull<CollisionShape2D>("triggerShape");
+		effectShape = GetNodeOrNull<CollisionShape2D>("effectShape");
+		if (sprite == null || triggerShape == null || effectShape == null)
+		{
+			GD.PrintErr("Missing essential nodes in Zone.");
+			QueueFree();
+			return;
+		}
+
+		effectCircle = effectShape.Shape as CircleShape2D;
 		effectCircle.Radius = maxRadius;
+		effectShape.Disabled = true;
 
-		//GD.Print("Naključen zone tip: " + Type);
+		SetIconForZoneType();
+		zoneColor = GetZoneColor(Type);
 
-		timer = GetNode<Timer>("Timer");
+		timer = GetNodeOrNull<Timer>("Timer");
+		if (timer == null)
+		{
+			GD.PrintErr("Timer node missing.");
+			QueueFree();
+			return;
+		}
 		timer.WaitTime = ActivationDelay;
 		timer.OneShot = true;
 		timer.Timeout += OnTimerTimeout;
@@ -57,7 +77,11 @@ public partial class Zone : Area2D
 	private void OnTimerTimeout()
 	{
 		triggerShape.Disabled = false;
-		ActivateEffect();
+		if (!effectApplied)
+		{
+			ActivateEffect();
+			effectApplied = true;
+		}
 		if (Type != ZoneType.blackHole)
 			QueueFree();
 	}
@@ -77,12 +101,10 @@ public partial class Zone : Area2D
 		if (iconPaths.TryGetValue(Type, out string path))
 		{
 			var texture = GD.Load<Texture2D>(path);
-			sprite.Texture = texture;
+			if (texture != null) sprite.Texture = texture;
+			else GD.PrintErr("Texture load failed: " + path);
 		}
-		else
-		{
-			GD.PrintErr("Ni ikone za tip: " + Type);
-		}
+		else GD.PrintErr("No icon for ZoneType: " + Type);
 	}
 
 	private void ActivateEffect()
@@ -90,7 +112,7 @@ public partial class Zone : Area2D
 		var overlappingBodies = GetOverlappingBodies();
 		foreach (var body in overlappingBodies)
 		{
-			if (body is Player player)
+			if (body is Player p)
 			{
 				switch (Type)
 				{
@@ -98,7 +120,7 @@ public partial class Zone : Area2D
 						HealPlayer(50);
 						break;
 					case ZoneType.damageBoost:
-						DamageUpPlayer(5, 20);
+						_ = DamageUpPlayer(5, 20);
 						break;
 				}
 			}
@@ -111,10 +133,10 @@ public partial class Zone : Area2D
 						DamageEnemies(90);
 						break;
 					case ZoneType.slowEnemy:
-						SlowEnemy(3f);
+						_ = SlowEnemy(3f);
 						break;
 					case ZoneType.stunEnemy:
-						StunEnemy(1f);
+						_ = StunEnemy(1f);
 						break;
 					case ZoneType.blackHole:
 						isBlackHoleActive = true;
@@ -161,6 +183,16 @@ public partial class Zone : Area2D
 					break;
 			}
 		}
+		
+		if (triggerShape.Disabled || isActivated || !(body is Player)) return;
+			isActivated = true;
+			sprite.Visible = false;
+			triggerShape.CallDeferred("set_disabled", true);
+			effectShape.CallDeferred("set_disabled", false);
+			QueueRedraw();
+			timer.Start();
+			GD.Print("Timer started");
+		}
 	}
 
 	public override void _Process(double delta)
@@ -168,10 +200,11 @@ public partial class Zone : Area2D
 		if (isActivated && currRadius < maxRadius)
 		{
 			currRadius += (float)delta * growSpeed;
-			if (currRadius > maxRadius)
+			if (currRadius >= maxRadius && !effectApplied)
 			{
 				currRadius = maxRadius;
 				ActivateEffect();
+				effectApplied = true;
 			}
 			QueueRedraw();
 		}
@@ -197,21 +230,31 @@ public partial class Zone : Area2D
 		}
 	}
 
-	private void HealPlayer(int val){
-		if (player == null) return;
-		else{
-			player.Heal(30f);
-		}
-	
-	}
-	private async void DamageUpPlayer(int dur, int val) { if (player == null) return; await ToSignal(GetTree().CreateTimer(dur), "timeout"); }
-	private void DamageEnemies(int val)
+	private void HealPlayer(int amount) => player?.Heal(amount);
+	private async Task DamageUpPlayer(int duration, int boost) => await ToSignal(GetTree().CreateTimer(duration), "timeout");
+	private void DamageEnemies(int amount)
 	{
 		foreach (var body in GetOverlappingBodies())
-			if (body is Enemy enemy) enemy.TakeDamage(val);
+			if (body is Enemy enemy) enemy.TakeDamage(amount);
 	}
-	private async void SlowEnemy(float dur) { foreach (var body in GetOverlappingBodies()) if (body is Enemy enemy) enemy.Slow(dur); }
-	private async void StunEnemy(float dur) { foreach (var body in GetOverlappingBodies()) if (body is Enemy enemy) enemy.Stun(dur); }
+	private async Task SlowEnemy(float duration)
+	{
+		foreach (var body in GetOverlappingBodies())
+			if (body is Enemy enemy)
+			{
+				enemy.Slow(duration);
+				enemy.Tint(new Color(0.2f, 0.2f, 0.5f), duration);
+			} 
+	}
+	private async Task StunEnemy(float duration)
+	{
+		foreach (var body in GetOverlappingBodies())
+			if (body is Enemy enemy)
+			{
+				 enemy.Stun(duration);
+				enemy.Tint(new Color(1, 1, 0.3f), duration);
+			}
+	}
 
 	private void PullEnemiesIntoBlackHole(float delta)
 	{
@@ -229,6 +272,17 @@ public partial class Zone : Area2D
 			}
 		}
 	}
+
+	private Color GetZoneColor(ZoneType type) => type switch
+	{
+		ZoneType.heal => new Color(0, 1, 0, 0.5f),
+		ZoneType.damageBoost => new Color(1, 0.5f, 0, 0.7f),
+		ZoneType.damageEnemy => new Color(1, 0, 0, 0.5f),
+		ZoneType.slowEnemy => new Color(0, 0, 1, 0.7f),
+		ZoneType.stunEnemy => new Color(1, 1, 0, 0.7f),
+		ZoneType.blackHole => new Color(0, 0, 0, 0.7f),
+		_ => new Color(1, 1, 1, 0.5f)
+	};
 }
 
 public enum ZoneType

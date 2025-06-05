@@ -1,11 +1,7 @@
-[gd_scene load_steps=16 format=3 uid="uid://mb3ijl33kch"]
+[gd_scene load_steps=15 format=3 uid="uid://mb3ijl33kch"]
 
 [ext_resource type="Script" uid="uid://7ia4do0jhi5a" path="res://scripts/enemys/AbsoluteJuggernaut.cs" id="1_y133c"]
-[ext_resource type="Texture2D" uid="uid://b0h1grf3b1dn3" path="res://assets/enemys/Absolute/absJug.png" id="2_csywx"]
 [ext_resource type="Texture2D" uid="uid://c5v1g2aa723ue" path="res://assets/enemys/Absolute/xabsolute-Sheet.png" id="3_csywx"]
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_qc14x"]
-radius = 52.2398
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_y133c"]
 bg_color = Color(1, 0, 0, 1)
@@ -21,64 +17,67 @@ corner_radius_top_right = 8
 corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_bch6r"]
+[sub_resource type="CircleShape2D" id="CircleShape2D_qc14x"]
+radius = 52.2398
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_y133c"]
 atlas = ExtResource("3_csywx")
 region = Rect2(0, 0, 32, 32)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_xe5uc"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_csywx"]
 atlas = ExtResource("3_csywx")
 region = Rect2(32, 0, 32, 32)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_j1wjk"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_bch6r"]
 atlas = ExtResource("3_csywx")
 region = Rect2(64, 0, 32, 32)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_tx232"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_xe5uc"]
 atlas = ExtResource("3_csywx")
 region = Rect2(96, 0, 32, 32)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_viu6o"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_j1wjk"]
 atlas = ExtResource("3_csywx")
 region = Rect2(128, 0, 32, 32)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_v7swa"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_tx232"]
 atlas = ExtResource("3_csywx")
 region = Rect2(160, 0, 32, 32)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_nhghf"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_viu6o"]
 atlas = ExtResource("3_csywx")
 region = Rect2(192, 0, 32, 32)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_qtccm"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_v7swa"]
 atlas = ExtResource("3_csywx")
 region = Rect2(224, 0, 32, 32)
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_shvix"]
+[sub_resource type="SpriteFrames" id="SpriteFrames_nhghf"]
 animations = [{
 "frames": [{
-"duration": 1.2,
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_y133c")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_csywx")
+}, {
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_bch6r")
 }, {
-"duration": 1.2,
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_xe5uc")
 }, {
-"duration": 1.2,
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_j1wjk")
 }, {
-"duration": 1.2,
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_tx232")
 }, {
-"duration": 1.2,
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_viu6o")
 }, {
-"duration": 1.2,
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_v7swa")
-}, {
-"duration": 1.2,
-"texture": SubResource("AtlasTexture_nhghf")
-}, {
-"duration": 1.2,
-"texture": SubResource("AtlasTexture_qtccm")
 }],
 "loop": true,
 "name": &"default",
@@ -90,14 +89,6 @@ collision_layer = 5
 script = ExtResource("1_y133c")
 MaxHealth = 400.0
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-visible = false
-scale = Vector2(0.201172, 0.201172)
-texture = ExtResource("2_csywx")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("CircleShape2D_qc14x")
-
 [node name="HealthBar" type="ProgressBar" parent="."]
 offset_left = -30.0
 offset_top = -63.0
@@ -108,9 +99,13 @@ theme_override_styles/fill = SubResource("StyleBoxFlat_csywx")
 value = 100.0
 show_percentage = false
 
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_qc14x")
+
 [node name="WaveCooldown" type="Timer" parent="."]
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
-scale = Vector2(2, 2)
-sprite_frames = SubResource("SpriteFrames_shvix")
-frame_progress = 0.377861
+texture_filter = 1
+scale = Vector2(2.715, 2.715)
+sprite_frames = SubResource("SpriteFrames_nhghf")
+autoplay = "default"
