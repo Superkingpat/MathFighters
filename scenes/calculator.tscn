@@ -6,8 +6,10 @@
 [ext_resource type="AudioStream" uid="uid://dxb15y4b0maqy" path="res://assets/audio/calc_charge.mp3" id="4_q1y2q"]
 [ext_resource type="AudioStream" uid="uid://dg213ywyq5qwh" path="res://assets/audio/calc_explodion.mp3" id="5_sio27"]
 
-[node name="Calculator" type="Node2D"]
+[node name="Calculator" type="Node2D" node_paths=PackedStringArray("chargingSoundPlayer", "dischargeSoundPlayer")]
 script = ExtResource("1_iofbv")
+chargingSoundPlayer = NodePath("charging")
+dischargeSoundPlayer = NodePath("explode")
 AttackScene = ExtResource("2_q1y2q")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
