@@ -113,7 +113,7 @@ public partial class ShopManager : CanvasLayer
 			Name = "Speed Boost",
 			Description = "Increases movement speed by 5%",
 			BaseCost = 20,
-			MaxLevel = 10,
+			MaxLevel = 5,
 			CurrentLevel = 0,
 			Action=(lvl)=>{Player.PlayerStats.Speed*=lvl*1.05f;}
 		});
