@@ -1,8 +1,9 @@
-[gd_scene load_steps=16 format=3 uid="uid://bboxj5sqye13t"]
+[gd_scene load_steps=18 format=3 uid="uid://bboxj5sqye13t"]
 
 [ext_resource type="PackedScene" uid="uid://cwsiati3qwbjm" path="res://scenes/player.tscn" id="1_5lqpt"]
 [ext_resource type="PackedScene" path="res://scenes/weapon_pick_up_geo.tscn" id="2_gawm5"]
 [ext_resource type="PackedScene" path="res://scenes/HPBar.tscn" id="2_h5q77"]
+[ext_resource type="AudioStream" uid="uid://cixppo1fubokt" path="res://assets/audio/superkingpat_demo_bg_music.mp3" id="2_qheke"]
 [ext_resource type="Script" uid="uid://22bsow8glsim" path="res://scripts/world/ChunkManager.cs" id="3_4eyuj"]
 [ext_resource type="PackedScene" uid="uid://ba6i5v0ijgd7s" path="res://scenes/geo_triangle.tscn" id="4_cmxnd"]
 [ext_resource type="PackedScene" uid="uid://capughgreucm7" path="res://scenes/calculator.tscn" id="5_kwwa1"]
@@ -16,10 +17,34 @@
 [ext_resource type="PackedScene" uid="uid://tuy7sfrpiv46" path="res://scenes/Enemys/NumberSwarm.tscn" id="15_un572"]
 [ext_resource type="PackedScene" uid="uid://x12u41qu0djr" path="res://scenes/Enemys/Radical.tscn" id="16_pd0bf"]
 
+[sub_resource type="CSharpScript" id="CSharpScript_l6637"]
+script/source = "using Godot;
+using System;
+
+public partial class World1 : Node2D
+{
+	
+	public override void _Input(InputEvent @event)
+	{
+		if (@event.IsActionPressed(\"ui_cancel\")) // ESC key
+		{
+			GetTree().ChangeSceneToFile(\"res://scenes/main_menu.tscn\");
+		}
+	}
+}
+"
+
 [node name="World_1" type="Node2D"]
+script = SubResource("CSharpScript_l6637")
 
 [node name="Player" parent="." instance=ExtResource("1_5lqpt")]
 position = Vector2(409, 366)
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="Player"]
+position = Vector2(-409, -366)
+stream = ExtResource("2_qheke")
+autoplay = true
+parameters/looping = true
 
 [node name="UILayer" type="CanvasLayer" parent="."]
 layer = 100

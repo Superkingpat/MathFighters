@@ -1,0 +1,146 @@
+[gd_scene load_steps=21 format=3 uid="uid://d0bvb4jvrjtpm"]
+
+[ext_resource type="Script" uid="uid://du6h2cvjyok7c" path="res://scripts/world/MainMenu.cs" id="1_8ln24"]
+[ext_resource type="Texture2D" uid="uid://bcxmppiypra8j" path="res://assets/menu/MainBG.png" id="2_rtw2f"]
+[ext_resource type="Texture2D" uid="uid://cgb7djcqersnt" path="res://assets/menu/titles.png" id="3_oa1go"]
+[ext_resource type="Texture2D" uid="uid://klbk0uu52eot" path="res://assets/menu/MainBG-overlay.png" id="4_tbmy8"]
+[ext_resource type="Texture2D" uid="uid://c5tp0mwvcl42l" path="res://assets/menu/buttons_main_menu.png" id="5_jk1qb"]
+[ext_resource type="AudioStream" uid="uid://cixppo1fubokt" path="res://assets/audio/superkingpat_demo_bg_music.mp3" id="6_rtw2f"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_cvwki"]
+texture = ExtResource("2_rtw2f")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_k7amj"]
+texture = ExtResource("3_oa1go")
+region_rect = Rect2(-1, 48, 385, 32)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_0mtrp"]
+texture = ExtResource("4_tbmy8")
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_d1rr7"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_610dt"]
+load_path = "res://.godot/imported/buttons_main_menu.png-9b31443a416bf800306c735024853ca8.ctex"
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_tpbep"]
+texture = SubResource("CompressedTexture2D_610dt")
+region_rect = Rect2(304, 60, 71, 36)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_qtdab"]
+texture = ExtResource("5_jk1qb")
+region_rect = Rect2(0, 64, 71, 32)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_3tmrh"]
+texture = SubResource("CompressedTexture2D_610dt")
+region_rect = Rect2(144, 60, 71, 36)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ybp8l"]
+texture = ExtResource("5_jk1qb")
+region_rect = Rect2(304, 108, 137, 36)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_2w1r8"]
+texture = ExtResource("5_jk1qb")
+region_rect = Rect2(0, 112, 137, 32)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_q4q5n"]
+texture = ExtResource("5_jk1qb")
+region_rect = Rect2(144, 108, 137, 36)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_610dt"]
+texture = ExtResource("5_jk1qb")
+region_rect = Rect2(304, 156, 73, 36)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_m5x4w"]
+texture = ExtResource("5_jk1qb")
+region_rect = Rect2(0, 160, 73, 32)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_xkoo8"]
+texture = ExtResource("5_jk1qb")
+region_rect = Rect2(144, 156, 73, 36)
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_8ln24")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 0
+offset_right = 1153.0
+offset_bottom = 650.0
+theme_override_styles/panel = SubResource("StyleBoxTexture_cvwki")
+
+[node name="Label" type="Label" parent="."]
+custom_minimum_size = Vector2(0, -0.14)
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -498.0
+offset_top = 80.0
+offset_right = 498.0
+offset_bottom = 180.0
+grow_horizontal = 2
+theme_override_styles/normal = SubResource("StyleBoxTexture_k7amj")
+
+[node name="overlay" type="Panel" parent="."]
+layout_mode = 0
+offset_right = 1151.0
+offset_bottom = 650.0
+theme_override_styles/panel = SubResource("StyleBoxTexture_0mtrp")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -194.0
+offset_top = -63.554
+offset_right = 194.0
+offset_bottom = 208.134
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 14
+
+[node name="StartButton" type="Button" parent="VBoxContainer"]
+material = SubResource("CanvasItemMaterial_d1rr7")
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 3
+theme_override_styles/hover = SubResource("StyleBoxTexture_tpbep")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_qtdab")
+theme_override_styles/normal = SubResource("StyleBoxTexture_3tmrh")
+
+[node name="SettingsButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/hover = SubResource("StyleBoxTexture_ybp8l")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_2w1r8")
+theme_override_styles/normal = SubResource("StyleBoxTexture_q4q5n")
+
+[node name="ExitButton" type="Button" parent="VBoxContainer"]
+custom_minimum_size = Vector2(180, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 3
+theme_override_styles/hover = SubResource("StyleBoxTexture_610dt")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_m5x4w")
+theme_override_styles/normal = SubResource("StyleBoxTexture_xkoo8")
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+position = Vector2(574, 393)
+stream = ExtResource("6_rtw2f")
+autoplay = true
+panning_strength = 0.0
+playback_type = 1
+parameters/looping = true
+
+[connection signal="pressed" from="VBoxContainer/StartButton" to="." method="_on_start_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/SettingsButton" to="." method="_on_settings_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/ExitButton" to="." method="_on_exit_button_pressed"]

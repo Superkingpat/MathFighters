@@ -69,7 +69,7 @@ public partial class ShopManager : CanvasLayer
 			ToggleShop();
 			GetViewport().SetInputAsHandled();
 		}
-
+		
 		// Handle scrolling
 		if (_isShopOpen && @event is InputEventMouseButton mouseEvent)
 		{

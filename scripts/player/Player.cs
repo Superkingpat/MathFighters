@@ -145,7 +145,17 @@ public partial class Player : CharacterBody2D
 	public int ExperienceToLevelUp { get { return experienceToLevelUp; } private set { experienceToLevelUp = value; EmitSignal(SignalName.ExperienceChanged, experience, experienceToLevelUp); } }
 	private bool walkingSoundErrorShown = false;
 
-
+	//END GAME ON ESCAPE
+	/* //Chunks stop working
+	public override void _Input(InputEvent @event)
+	{
+		if (@event.IsActionPressed("ui_cancel")) // ESC key
+		{
+			Die();
+			
+		}
+	}
+	*/
 	public override void _Ready()
 	{
 		//The AnimatedSprite2D handles animations
@@ -287,18 +297,6 @@ if (winningSound != null)
 		PlayerStats.UpdateCurrentHealthToMax();
 	}
 
-	public override void _Input(InputEvent @event)
-	{
-		if (@event is InputEventKey eventKey && eventKey.Pressed && !eventKey.Echo)
-		{
-			if (eventKey.Keycode == Key.Z)
-			{
-				GainExperience(150);
-				GD.Print("Added 150 EXP by pressing Z");
-			}
-		}
-	}
-
 	//_PhysicsProcess updates the physics engine and animations in the background. MoveAndSlide() is used here, which means we don't need to care about delta time, it's handled automaticly
 	public override void _PhysicsProcess(double delta) {
 		Vector2 velocity = Vector2.Zero;
@@ -325,7 +323,7 @@ if (winningSound != null)
 		}
 
 		if (velocity.Length() > 0) {
-            // Use PlayerStats.Speed
+			// Use PlayerStats.Speed
 			velocity = velocity.Normalized() * PlayerStats.Speed;
 			UpdateAnimation(velocity);
 			PlayFootstepSound(); // Play walking sound when moving
@@ -471,6 +469,7 @@ if (winningSound != null)
 		//QueueFree();a
 		this.PlayerStats.UpdateCurrentHealthToMax();
 		this.Position = new Vector2(0, 0);
+		GetTree().ChangeSceneToFile("res://scenes/main_menu.tscn");
 	}
 
 	public void TakeDamage(float dmg) {
