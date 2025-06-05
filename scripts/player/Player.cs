@@ -108,13 +108,13 @@ public partial class Player : CharacterBody2D
 	private Area2D screenBounds;
 	private AudioStreamPlayer2D shootingSound;
 	private AudioStreamPlayer2D weaponPickupSound;
-	private AudioStreamPlayer2D walkingSound;
-	private AudioStreamPlayer2D losingLifeSound;
-	private AudioStreamPlayer2D winningSound;
+
 	private float lastKickTime = 0f; 
 	[Export] public float MaxHealth = 100f;
 	public float CurrentHealth { get; private set; }
-	
+		private AudioStreamPlayer2D walkingSound;
+	private AudioStreamPlayer2D losingLifeSound;
+	private AudioStreamPlayer2D winningSound;
 
 	// Removed redundant MaxHealth and CurrentHealth as they are now in PlayerStats
 	// Removed int Damage = 1; as DamageMod in PlayerStats should handle this
@@ -135,11 +135,11 @@ public partial class Player : CharacterBody2D
 
 	[Signal]
 	public delegate void ExperienceChangedEventHandler(int currentExperience, int experienceNeeded);
+	private bool walkingSoundErrorShown = false;
 
 	public int Level { get { return level; } private set { level = value; } }
 	public int Experience { get { return experience; } private set { experience = value; EmitSignal(SignalName.ExperienceChanged, experience, experienceToLevelUp); } }
 	public int ExperienceToLevelUp { get { return experienceToLevelUp; } private set { experienceToLevelUp = value; EmitSignal(SignalName.ExperienceChanged, experience, experienceToLevelUp); } }
-	private bool walkingSoundErrorShown = false;
 	public override void _Ready()
 	{
 		//The AnimatedSprite2D handles animations
@@ -150,10 +150,8 @@ public partial class Player : CharacterBody2D
 		weaponHolder = GetNode<Node2D>("WeaponHolder");
 		shootingSound = GetNode<AudioStreamPlayer2D>("ShootingSound");
 		weaponPickupSound = GetNode<AudioStreamPlayer2D>("WeaponPickUpSound");
-
-				try { walkingSound = GetNode<AudioStreamPlayer2D>("WalkingSound"); GD.Print("WalkingSound node found!"); } 
+		try { walkingSound = GetNode<AudioStreamPlayer2D>("WalkingSound"); GD.Print("WalkingSound node found!"); } 
 		catch { GD.PrintErr("WalkingSound node not found!"); }
-		
 		try { winningSound = GetNode<AudioStreamPlayer2D>("WinningSound"); GD.Print("WinningSound node found!"); } 
 		catch { GD.PrintErr("WinningSound node not found!"); }
 		
@@ -277,6 +275,7 @@ public partial class Player : CharacterBody2D
 			}
 		}
 		GD.Print("=== End of AudioStreamPlayer2D list ===");
+
 		PlayerStats.UpdateCurrentHealthToMax();
 	}
 
@@ -321,12 +320,12 @@ public partial class Player : CharacterBody2D
 			// Use PlayerStats.Speed
 			velocity = velocity.Normalized() * PlayerStats.Speed;
 			UpdateAnimation(velocity);
+			
 			PlayFootstepSound(); // Play walking sound when moving
 		}
 		else
 		{
 			PlayIdleAnimation();
-			// Stop walking sound when not moving
 			if (walkingSound != null && walkingSound.Playing)
 			{
 				walkingSound.Stop();
@@ -352,6 +351,8 @@ public partial class Player : CharacterBody2D
 			EquipWeapon(currentWeaponIndex);
 		}
 	}
+	
+
 	private void PlayFootstepSound() {
 		if (walkingSound != null && walkingSound.Stream != null) {
 			if (!walkingSound.Playing) {
@@ -466,6 +467,7 @@ public partial class Player : CharacterBody2D
 		PlayWinningSound();
 	}
 
+	
 	private void CheckLevelUp() {
 		if (Experience >= ExperienceToLevelUp) {
 			Experience -= ExperienceToLevelUp;
@@ -570,6 +572,7 @@ public partial class Player : CharacterBody2D
 	private void Die()
 	{
 		GD.Print("Player died!");
+
 		PlayLosingLifeSound();
 
 		// Disable movement, play animation, trigger game over, etc.
@@ -579,6 +582,7 @@ public partial class Player : CharacterBody2D
 		this.Position = new Vector2(0, 0);
 	}
 
+	
 	private void PlayLosingLifeSound()
 	{
 		if (losingLifeSound != null)
@@ -678,7 +682,7 @@ public partial class Player : CharacterBody2D
 }
 
 
-/*public static class AudioLogHelper
+/*public static class AudioLogHelper //TEZAVA
 {
 	//treba popravek
 	private static readonly string LogFilePath = "user://audio_log.txt"; 
