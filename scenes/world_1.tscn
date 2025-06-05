@@ -41,6 +41,7 @@ script = SubResource("CSharpScript_l6637")
 position = Vector2(409, 366)
 
 [node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="Player"]
+process_mode = 3
 position = Vector2(-409, -366)
 stream = ExtResource("2_qheke")
 autoplay = true
