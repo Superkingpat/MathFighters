@@ -170,7 +170,7 @@ public partial class Spawner : Node
 	private static void Heal(int amount)
 	{
 		var player = ChunkManager.Instance.Player;
-		player.PlayerStats.CurrentHealth += amount;
+		player.PlayerStats.Heal(amount);
 	}
 
 	private static void GetGold(int amount)

@@ -15,9 +15,10 @@ public partial class ShopManager : CanvasLayer
 	private Player Player;
 	private Dictionary<string, PlayerUpgrade> _availableUpgrades = new();
 	private Dictionary<string, PlayerUpgrade> _purchasedUpgrades = new();
+	private string _key="";
 	
 	// Path for saving game data
-	private readonly string _savePath = "user://shop_data.json";
+	private readonly string _savePath = "user://shop_data_enc.json";
 	
 	public override void _Ready()
 	{
@@ -29,7 +30,7 @@ public partial class ShopManager : CanvasLayer
 		{
 			Player.PlayerStats.GoldChanged += OnGoldChanged;
 		}
-
+		_key = EncryptionKeys.ENCRYPT_KEY;
 
 
 		// Hide shop on start
@@ -110,11 +111,11 @@ public partial class ShopManager : CanvasLayer
 		{
 			Id = "speed",
 			Name = "Speed Boost",
-			Description = "Increases movement speed by 15%",
+			Description = "Increases movement speed by 5%",
 			BaseCost = 20,
 			MaxLevel = 10,
 			CurrentLevel = 0,
-			Action=(lvl)=>{Player.PlayerStats.Speed*=lvl*1.15f;}
+			Action=(lvl)=>{Player.PlayerStats.Speed*=lvl*1.05f;}
 		});
 
 		_availableUpgrades.Add("damage", new PlayerUpgrade
@@ -136,7 +137,11 @@ public partial class ShopManager : CanvasLayer
 			BaseCost = 40,
 			MaxLevel = 10,
 			CurrentLevel = 0,
-			Action=(lvl)=>{Player.PlayerStats.BaseHealth+=lvl*25;}
+			Action=(lvl)=>
+			{
+				Player.PlayerStats.BaseHealth += lvl * 25;
+				Player.PlayerStats.CurrentHealth += lvl * 25;
+			}
 		});
 	}
 	
@@ -273,7 +278,7 @@ public partial class ShopManager : CanvasLayer
 			});
 
 			using Godot.FileAccess file = Godot.FileAccess.Open(_savePath, Godot.FileAccess.ModeFlags.Write);
-			file.StoreString(jsonString);
+			file.StoreString(EncryptToBase64( jsonString));
 			GD.Print("Shop data saved successfully.");
 		}
 		catch (Exception e)
@@ -281,7 +286,27 @@ public partial class ShopManager : CanvasLayer
 			GD.PrintErr($"Error saving shop data: {e.Message}");
 		}
 	}
-	
+
+	private string EncryptToBase64(string data)
+	{
+		byte[] bytes = System.Text.Encoding.UTF8.GetBytes(data);
+		for (int i = 0; i < bytes.Length; i++)
+		{
+			bytes[i] = (byte)(bytes[i] ^ _key[i % _key.Length]);
+		}
+		return Convert.ToBase64String(bytes);
+	}
+
+	private string DecryptFromBase64(string encrypted)
+	{
+		byte[] bytes = Convert.FromBase64String(encrypted);
+		for (int i = 0; i < bytes.Length; i++)
+		{
+			bytes[i] = (byte)(bytes[i] ^ _key[i % _key.Length]);
+		}
+		return System.Text.Encoding.UTF8.GetString(bytes);
+	}
+
 	// Load shop data from disk
 	private void LoadShopData()
 	{
@@ -290,12 +315,12 @@ public partial class ShopManager : CanvasLayer
 			GD.Print("No save file found. Starting with default values.");
 			return;
 		}
-		
+
 		try
 		{
 			using Godot.FileAccess file = Godot.FileAccess.Open(_savePath, Godot.FileAccess.ModeFlags.Read);
-			string jsonString = file.GetAsText();
-			
+			string jsonString = DecryptFromBase64 ( file.GetAsText());
+
 			ShopData data = JsonSerializer.Deserialize<ShopData>(jsonString);
 
 			if (data != null)
@@ -304,11 +329,12 @@ public partial class ShopManager : CanvasLayer
 				_purchasedUpgrades = data.PurchasedUpgrades;
 
 				foreach (var kvp in _purchasedUpgrades)
+				{
+					if (_availableUpgrades.TryGetValue(kvp.Key, out var baseUpgrade))
 					{
-					if (_availableUpgrades.TryGetValue(kvp.Key, out var baseUpgrade)){
-							kvp.Value.Action = baseUpgrade.Action;
-						}
+						kvp.Value.Action = baseUpgrade.Action;
 					}
+				}
 
 				GD.Print("Shop data loaded successfully.");
 			}

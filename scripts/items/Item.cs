@@ -16,7 +16,7 @@ public partial class Item : Area2D
 	{
 		//GD.Print($"Item at{itemposition}");
 		Position  = itemposition;
-
+		sprite.Scale =new Vector2(ItemSize.X / icon.GetSize().X, ItemSize.Y / icon.GetSize().Y);
 		sprite.Texture=icon;
 		var rect2d =new RectangleShape2D();
 		rect2d.Size=ItemSize;

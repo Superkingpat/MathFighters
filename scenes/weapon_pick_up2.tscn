@@ -5,7 +5,7 @@
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_4csfe"]
 
-[node name="WeaponPickUp" type="Area2D"]
+[node name="WeaponPickUp2" type="Area2D"]
 script = ExtResource("1_363yb")
 WeaponScene = ExtResource("2_8na6b")
 
