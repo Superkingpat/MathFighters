@@ -6,12 +6,20 @@ public partial class GeoTriangle : Weapon {
 	public int currTriangleCount = 0;
 	private float timeSinceLastShot = 0f;
 	[Export] public float AttackCooldown = 1f;
-	public override void _Ready() {
+	[Export] private AudioStreamPlayer2D returnSound;
+	public override void _Ready()
+	{
 		base._Ready();
 		AttackAnimation = "attack_geo";
 	}
-	public override void _Process(double delta) {
+	public override void _Process(double delta)
+	{
 		timeSinceLastShot += (float)delta;
+		
+		if (returnSound != null && currTriangleCount > 0 && Input.IsActionJustPressed("right_attack")) {
+			returnSound.PitchScale = (float)GD.RandRange(0.9f, 1.1f);
+			returnSound.Play();
+		}
 	}
 	public override Sprite2D GetPickupSprite() {
 		return GetNode<Sprite2D>("Sprite2D");

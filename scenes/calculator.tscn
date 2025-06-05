@@ -1,8 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://capughgreucm7"]
+[gd_scene load_steps=6 format=3 uid="uid://capughgreucm7"]
 
 [ext_resource type="Script" uid="uid://cxh8krutfnll0" path="res://scripts/weapons/calculator/Calculator.cs" id="1_iofbv"]
 [ext_resource type="PackedScene" uid="uid://k005bauhij3s" path="res://scenes/calculator_attack.tscn" id="2_q1y2q"]
-[ext_resource type="Texture2D" uid="uid://bielyua6rouk7" path="res://assets/weapons/calculator/Calculator.png" id="3_j8sg6"]
+[ext_resource type="Texture2D" uid="uid://bielyua6rouk7" path="res://assets/weapons/calculator/calculator.png" id="3_j8sg6"]
+[ext_resource type="AudioStream" uid="uid://dxb15y4b0maqy" path="res://assets/audio/calc_charge.mp3" id="4_q1y2q"]
+[ext_resource type="AudioStream" uid="uid://dg213ywyq5qwh" path="res://assets/audio/calc_explodion.mp3" id="5_sio27"]
 
 [node name="Calculator" type="Node2D"]
 script = ExtResource("1_iofbv")
@@ -12,3 +14,9 @@ AttackScene = ExtResource("2_q1y2q")
 position = Vector2(3, 5)
 scale = Vector2(0.609619, 0.608643)
 texture = ExtResource("3_j8sg6")
+
+[node name="charging" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_q1y2q")
+
+[node name="explode" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("5_sio27")
