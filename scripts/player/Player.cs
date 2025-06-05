@@ -11,7 +11,7 @@ public partial class Player : CharacterBody2D
 		// Public properties for direct access and modification
 		public float BaseHealth { get; set; } = 100f; // Base part of health
 		public int S_Health { get; set; } = 2;       // Skill part of health (e.g., 2 * S_Health)
-		private float _currentHealth = 0;
+		public float CurrentHealth { get; set; } // Current health, set internally
 		public float DamageMod { get; set; } = 1f;    // General damage multiplier (e.g., 1.1 for +10%)
 		public float Speed { get; set; } = 200.0f;    // Player movement speed
 		public float RangeMod { get; set; } = 1f;     // Weapon range multiplier (if applicable)
@@ -111,8 +111,7 @@ public partial class Player : CharacterBody2D
 	private AudioStreamPlayer2D walkingSound;
 	private AudioStreamPlayer2D losingLifeSound;
 	private AudioStreamPlayer2D winningSound;
-	private AudioStreamPlayer2D kickingSound;
-		private float kickRange = 100f; 
+	private float kickRange = 100f; 
 	private float kickDamage = 25f; 
 	private float kickCooldown = 0.5f; 
 	private float lastKickTime = 0f; 
@@ -144,8 +143,6 @@ public partial class Player : CharacterBody2D
 	public int Experience { get { return experience; } private set { experience = value; EmitSignal(SignalName.ExperienceChanged, experience, experienceToLevelUp); } }
 	public int ExperienceToLevelUp { get { return experienceToLevelUp; } private set { experienceToLevelUp = value; EmitSignal(SignalName.ExperienceChanged, experience, experienceToLevelUp); } }
 	private bool walkingSoundErrorShown = false;
-
-
 	public override void _Ready()
 	{
 		//The AnimatedSprite2D handles animations
@@ -157,13 +154,13 @@ public partial class Player : CharacterBody2D
 		shootingSound = GetNode<AudioStreamPlayer2D>("ShootingSound");
 		weaponPickupSound = GetNode<AudioStreamPlayer2D>("WeaponPickUpSound");
 
-		try { walkingSound = GetNode<AudioStreamPlayer2D>("WalkingSound"); GD.Print("WalkingSound node found!"); } 
+				try { walkingSound = GetNode<AudioStreamPlayer2D>("WalkingSound"); GD.Print("WalkingSound node found!"); } 
 		catch { GD.PrintErr("WalkingSound node not found!"); }
 		
 		try { winningSound = GetNode<AudioStreamPlayer2D>("WinningSound"); GD.Print("WinningSound node found!"); } 
 		catch { GD.PrintErr("WinningSound node not found!"); }
-		Instance = this; // Set the static instance here
-if (winningSound != null)
+		
+		if (winningSound != null)
 		{
 			string[] winningSoundPaths = {
 				"res://assets/audio/winning.wav"
@@ -246,7 +243,7 @@ if (winningSound != null)
 		if (walkingSound != null)
 		{
 			string[] walkingSoundPaths = {
-				"res://assets/audio/walking_sound.wav"
+				"res://assets/audio/walking.wav"
 			};
 			
 			bool walkingSoundLoaded = false;
@@ -283,7 +280,6 @@ if (winningSound != null)
 			}
 		}
 		GD.Print("=== End of AudioStreamPlayer2D list ===");
-		// Ensure PlayerStats.CurrentHealth is correctly set at start
 		PlayerStats.UpdateCurrentHealthToMax();
 	}
 
@@ -332,7 +328,7 @@ if (winningSound != null)
 		}
 		else
 		{
-			PlayIdleAnimation();PlayIdleAnimation();
+			PlayIdleAnimation();
 			// Stop walking sound when not moving
 			if (walkingSound != null && walkingSound.Playing)
 			{
@@ -586,7 +582,7 @@ if (winningSound != null)
 		this.Position = new Vector2(0, 0);
 	}
 
-private void PlayLosingLifeSound()
+	private void PlayLosingLifeSound()
 	{
 		if (losingLifeSound != null)
 		{
@@ -680,33 +676,8 @@ private void PlayLosingLifeSound()
 	public int GetExperienceToLevelUp() {
 		return ExperienceToLevelUp;
 	}
+	
 
-	public float GetKickRange() {
-		return kickRange;
-	}
-	
-	public void SetKickRange(float newRange) {
-		kickRange = newRange;
-		//GD.Print($"Kick range set to: {kickRange}");
-	}
-	
-	public float GetKickDamage() {
-		return kickDamage;
-	}
-	
-	public void SetKickDamage(float newDamage) {
-		kickDamage = newDamage;
-		//GD.Print($"Kick damage set to: {kickDamage}");
-	}
-	
-	public float GetKickCooldown() {
-		return kickCooldown;
-	}
-	
-	public void SetKickCooldown(float newCooldown) {
-		kickCooldown = newCooldown;
-		//GD.Print($"Kick cooldown set to: {kickCooldown}");
-	}
 }
 
 
