@@ -111,9 +111,6 @@ public partial class Player : CharacterBody2D
 	private AudioStreamPlayer2D walkingSound;
 	private AudioStreamPlayer2D losingLifeSound;
 	private AudioStreamPlayer2D winningSound;
-	private float kickRange = 100f; 
-	private float kickDamage = 25f; 
-	private float kickCooldown = 0.5f; 
 	private float lastKickTime = 0f; 
 	[Export] public float MaxHealth = 100f;
 	public float CurrentHealth { get; private set; }
