@@ -149,52 +149,14 @@ public partial class Zone : Area2D
 
 	private void _on_body_entered(Node2D body)
 	{
-		if (triggerShape.Disabled) return;
-		currRadius = 0f;
-		//GD.Print("==>Body entered");
-		if(!isActivated && body is Player){
-			isActivated = true;
-			sprite.Visible = false;
-			triggerShape.CallDeferred("set_disabled", true);
-			effectShape.CallDeferred("set_disabled", false);
-			QueueRedraw();
-			timer.Start();
-			//GD.Print("Timer started");
-			
-			switch (Type)
-			{
-				case ZoneType.heal:
-					zoneColor = new Color(0, 1, 0, 0.5f);
-					break;
-				case ZoneType.damageBoost:
-					zoneColor = new Color(1, 0.5f, 0, 0.7f);
-					break;
-				case ZoneType.damageEnemy:
-					zoneColor = new Color(1, 0, 0, 0.5f);
-					break;
-				case ZoneType.slowEnemy:
-					zoneColor = new Color(0, 0, 1, 0.7f);
-					break;
-				case ZoneType.stunEnemy:
-					zoneColor = new Color(1, 1, 0, 0.7f);
-					break;
-				case ZoneType.blackHole:
-					zoneColor = new Color(0, 0, 0, 0.7f);
-					break;
-			}
-		}
-
-		else if (triggerShape.Disabled || isActivated || !(body is Player)) return;
-		else
-		{
-			isActivated = true;
-			sprite.Visible = false;
-			triggerShape.CallDeferred("set_disabled", true);
-			effectShape.CallDeferred("set_disabled", false);
-			QueueRedraw();
-			timer.Start();
-			GD.Print("Timer started");
-		}
+		if (triggerShape.Disabled || isActivated || !(body is Player)) return;
+		isActivated = true;
+		sprite.Visible = false;
+		triggerShape.CallDeferred("set_disabled", true);
+		effectShape.CallDeferred("set_disabled", false);
+		QueueRedraw();
+		timer.Start();
+		GD.Print("Timer started");
 	}
 
 	public override void _Process(double delta)

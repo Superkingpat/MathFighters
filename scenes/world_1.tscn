@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://bboxj5sqye13t"]
+[gd_scene load_steps=16 format=3 uid="uid://bboxj5sqye13t"]
 
 [ext_resource type="PackedScene" uid="uid://cwsiati3qwbjm" path="res://scenes/player.tscn" id="1_5lqpt"]
 [ext_resource type="PackedScene" path="res://scenes/weapon_pick_up_geo.tscn" id="2_gawm5"]
@@ -11,6 +11,10 @@
 [ext_resource type="PackedScene" path="res://scenes/ChunkManager.tscn" id="7_ypmbo"]
 [ext_resource type="PackedScene" path="res://scenes/Spawner.tscn" id="8_h5q77"]
 [ext_resource type="PackedScene" uid="uid://mb3ijl33kch" path="res://scenes/Enemys/AbsoluteJuggernaut.tscn" id="11_6deva"]
+[ext_resource type="PackedScene" uid="uid://dtkkgawogwgdt" path="res://scenes/Enemys/ExponentialLeaper.tscn" id="12_qheke"]
+[ext_resource type="PackedScene" uid="uid://cbjhy3ld6ury6" path="res://scenes/Enemys/DividerProjectile.tscn" id="14_hqfdy"]
+[ext_resource type="PackedScene" uid="uid://tuy7sfrpiv46" path="res://scenes/Enemys/NumberSwarm.tscn" id="15_un572"]
+[ext_resource type="PackedScene" uid="uid://x12u41qu0djr" path="res://scenes/Enemys/Radical.tscn" id="16_pd0bf"]
 
 [node name="World_1" type="Node2D"]
 
@@ -72,3 +76,15 @@ layer = 128
 
 [node name="AbsoluteJuggernaut" parent="." instance=ExtResource("11_6deva")]
 position = Vector2(-40, 473)
+
+[node name="ExponentialLeaper" parent="." instance=ExtResource("12_qheke")]
+position = Vector2(116, 329)
+
+[node name="CharacterBody2D" parent="." instance=ExtResource("14_hqfdy")]
+position = Vector2(101, 455)
+
+[node name="Enemy" parent="." instance=ExtResource("15_un572")]
+position = Vector2(-38, 331)
+
+[node name="Radical" parent="." instance=ExtResource("16_pd0bf")]
+position = Vector2(153, 384)
